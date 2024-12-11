@@ -8,7 +8,7 @@ class Accueil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         children: [
           Header(isConnect: true),
@@ -51,15 +51,6 @@ class SliderImage extends StatelessWidget {
       margin : EdgeInsets.only(top:150),
       width:  MediaQuery.of(context).size.width*0.5,
       height: MediaQuery.of(context).size.height * 0.5,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF1F1513), 
-            blurRadius: 10,
-            offset: Offset(5, 5),
-          ),
-        ],
-      ),
       child:ImageSlideshow(
         width: double.infinity,
         height: MediaQuery.of(context).size.height *0.5,
