@@ -12,7 +12,7 @@ class Accueil extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Header(isConnect: true),
+          Header(isConnect: false),
           Expanded(
             child: Center(
               child: BodyAccueil(),
@@ -36,8 +36,11 @@ class BodyAccueil extends StatelessWidget {
       child: SingleChildScrollView(
         child : Column(
           children: [
+            Text("Bienvenu sur My Wallet", style: TextStyle(fontSize: MediaQuery.of(context).size.width < 640 ?30:40,color : Color(0xFFFBD3CB)),),
+            SizedBox(height:MediaQuery.of(context).size.height*0.05),
             WalletAnimation(),
             SliderImage(),
+            SizedBox(height:MediaQuery.of(context).size.height*0.05),
           ],
         ),
       ),
@@ -49,12 +52,12 @@ class SliderImage extends StatelessWidget {
   @override 
   Widget build(BuildContext context){
     return Container(
-      margin : EdgeInsets.only(top:150),
-      width:  MediaQuery.of(context).size.width*0.5,
+      margin : EdgeInsets.only(top:100),
+      width:  MediaQuery.of(context).size.width*0.8,
       height: MediaQuery.of(context).size.height * 0.5,
       child:ImageSlideshow(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height *0.5,
+        height: MediaQuery.of(context).size.height,
         initialPage:0,
         indicatorColor: Color(0xFFAC4D39),
         indicatorBackgroundColor: Color(0xFF4E1511),

@@ -38,7 +38,8 @@ class _HeaderState extends State<Header> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (MediaQuery.of(context).size.width > 550) Image.asset('assets/logo.png'),
+            if (MediaQuery.of(context).size.width > 550 ) Image.asset('assets/logo.png', width : MediaQuery.of(context).size.width*0.2),
+            if (MediaQuery.of(context).size.width < 550 && widget.isConnect==false) Image.asset('assets/logo.png', width : MediaQuery.of(context).size.width*0.5),
             if (widget.isConnect && (MediaQuery.of(context).size.width>670 || button == false)) const SearchBar(),
             Row(
               children: [
@@ -58,7 +59,7 @@ class _HeaderState extends State<Header> {
                   ),
                   ],
                   if (MediaQuery.of(context).size.width>670 || button == true)...[
-                  SizedBox(width: (MediaQuery.of(context).size.width < 670 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:50 ) :0 )),
+                  SizedBox(width: (MediaQuery.of(context).size.width < 670 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/8:50 ) :0 )),
                   //SvgPicture.asset('assets/docsLogo.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
                   HoverableSvgButton(
                     svgPath : 'assets/docsLogo.svg',
@@ -71,7 +72,7 @@ class _HeaderState extends State<Header> {
                     isActive : menu == 1,
                     activeColor : const Color(0xFF6E2920),
                   ),
-                  SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/5 ): 50)),
+                  SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/6 ): 50)),
                   //SvgPicture.asset('assets/walletlogo.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
                   HoverableSvgButton(
                     svgPath : 'assets/walletlogo.svg',
@@ -84,18 +85,18 @@ class _HeaderState extends State<Header> {
                     isActive : menu == 2,
                     activeColor : const Color(0xFF6E2920),
                   ),
-                  SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/5 ): 50)),
+                  SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/6 ): 50)),
                   ],
                 ],
                 //SvgPicture.asset('assets/account.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
-                if (MediaQuery.of(context).size.width>670 || button == true)...[
+                if ( widget.isConnect==false || MediaQuery.of(context).size.width>670 || button == true)...[
                 HoverableSvgButton(
                     svgPath : 'assets/account.svg',
                     color : const Color(0xFF4E1511),
                     hoverColor : const Color(0xFF6E2920),
-                    onClick :  () => setState(() {
+                    onClick : widget.isConnect ? () => setState(() {
                       menu = (menu==3?0:3);
-                    }),
+                    }) : () => navigateTo(context, ''),
                     size : MediaQuery.of(context).size.height * 0.05,
                     isActive : menu == 3,
                     activeColor : const Color(0xFF6E2920),
@@ -113,8 +114,8 @@ class _HeaderState extends State<Header> {
         decoration: BoxDecoration(
           color: const Color(0xFF181111),
           border: Border.all(
-            color: const Color(0xFF181111), // border color
-            width: 0.0, // border width
+            color: const Color(0xFF181111), 
+            width: 0.0, 
           ),
         ),
         child:SingleChildScrollView(
