@@ -72,39 +72,3 @@ class SliderImage extends StatelessWidget {
     );
   }
 }
-
-/*
-
-Widget ImageShadow(String path, BuildContext context){
-    return DropShadowImage(
-      offset: Offset(30,30),
-      scale: 1,
-      blurRadius: 12,
-      borderRadius: 20,
-      image: Image.asset(path),
-    );
-  }
-
-
-return Container(
-      alignment: Alignment.center,
-      margin : EdgeInsets.only(right:50,),
-      padding : EdgeInsets.only(right:50,),
-      width : MediaQuery.of(context).size.width*0.5,
-      height : MediaQuery.of(context).size.height * 0.5,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF4E1511), 
-            blurRadius: 10,
-            offset: Offset(5, 5),
-          ),
-        ],
-      ),
-      child: Image.asset(
-        width : MediaQuery.of(context).size.width*0.45,
-        height : MediaQuery.of(context).size.height * 0.45,
-        path,
-        fit: BoxFit.contain,
-      ),
-    );*/

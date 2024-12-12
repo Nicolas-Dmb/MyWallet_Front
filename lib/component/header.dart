@@ -96,7 +96,7 @@ class _HeaderState extends State<Header> {
                     hoverColor : const Color(0xFF6E2920),
                     onClick : widget.isConnect ? () => setState(() {
                       menu = (menu==3?0:3);
-                    }) : () => navigateTo(context, ''),
+                    }) : ()=>navigateTo(context, '/login'),
                     size : MediaQuery.of(context).size.height * 0.05,
                     isActive : menu == 3,
                     activeColor : const Color(0xFF6E2920),
