@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'component/header.dart';
+import 'component/walletAnimation.dart';
 
 class Accueil extends StatelessWidget {
   const Accueil({super.key});
@@ -30,16 +31,16 @@ class BodyAccueil extends StatelessWidget {
   Widget build(BuildContext context){
     return Container(
       color : const Color(0xFF181111),
-      child : Column(
-        children: [
-          Row (
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SliderImage(),
-            ],
-          )
-        ],
-      )
+      height :double.infinity,
+      width : MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        child : Column(
+          children: [
+            WalletAnimation(),
+            SliderImage(),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -7,17 +7,20 @@ import './textButton.dart';
 class Header extends StatefulWidget {
   final bool isConnect;
   int menu=0;
+  bool button = false;
 
   Header({
     super.key,
     required this.isConnect,
   });
+
   @override
     State<Header> createState() => _HeaderState();
   }
 
 class _HeaderState extends State<Header> {
-  int menu = 1; // Valeur initiale
+  int menu = 0;
+  bool button = false;
 
   void navigateTo(BuildContext context, String routeName) {
     Navigator.pushNamed(context, routeName);
@@ -29,56 +32,75 @@ class _HeaderState extends State<Header> {
       children:[
       Container(
         padding : EdgeInsets.only(left:30.0, right:30.0),
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: (MediaQuery.of(context).size.height < 685 ? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height * 0.1),
         width: MediaQuery.of(context).size.width,
         color: const Color(0xFF181111),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset('assets/logo.png'),
-            if (widget.isConnect) const SearchBar(),
+            if (MediaQuery.of(context).size.width > 550) Image.asset('assets/logo.png'),
+            if (widget.isConnect && (MediaQuery.of(context).size.width>670 || button == false)) const SearchBar(),
             Row(
               children: [
                 if (widget.isConnect) ...[
+                  if(MediaQuery.of(context).size.width<670)...[
+                    HoverableSvgButton(
+                      svgPath : (button == false ?'assets/more.svg':'assets/less.svg'),
+                      color : const Color(0xFF4E1511),
+                      hoverColor : const Color(0xFF6E2920),
+                      onClick : () => setState(() {
+                        button = (button == false ? true : false);
+                        menu = (button == false ? 0 : menu);
+                      }), // navigateTo(context, ''),
+                      size : MediaQuery.of(context).size.height * 0.05,
+                      isActive : menu == 0,
+                      activeColor : const Color(0xFF6E2920),
+                  ),
+                  ],
+                  if (MediaQuery.of(context).size.width>670 || button == true)...[
+                  SizedBox(width: (MediaQuery.of(context).size.width < 670 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:50 ) :0 )),
                   //SvgPicture.asset('assets/docsLogo.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
                   HoverableSvgButton(
                     svgPath : 'assets/docsLogo.svg',
                     color : const Color(0xFF4E1511),
                     hoverColor : const Color(0xFF6E2920),
                     onClick : () => setState(() {
-                      menu = 1;
+                      menu = (menu == 1 ? 0 : 1);
                     }),//navigateTo(context, ''),
                     size : MediaQuery.of(context).size.height * 0.05,
                     isActive : menu == 1,
                     activeColor : const Color(0xFF6E2920),
                   ),
-                  const SizedBox(width: 50),
+                  SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/5 ): 50)),
                   //SvgPicture.asset('assets/walletlogo.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
                   HoverableSvgButton(
                     svgPath : 'assets/walletlogo.svg',
                     color : const Color(0xFF4E1511),
                     hoverColor : const Color(0xFF6E2920),
                     onClick : () => setState(() {
-                      menu = 2;
+                      menu = (menu==2?0:2);
                     }),
                     size : MediaQuery.of(context).size.height * 0.05,
                     isActive : menu == 2,
                     activeColor : const Color(0xFF6E2920),
                   ),
-                  const SizedBox(width: 50),
+                  SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/5 ): 50)),
+                  ],
                 ],
                 //SvgPicture.asset('assets/account.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
+                if (MediaQuery.of(context).size.width>670 || button == true)...[
                 HoverableSvgButton(
                     svgPath : 'assets/account.svg',
                     color : const Color(0xFF4E1511),
                     hoverColor : const Color(0xFF6E2920),
                     onClick :  () => setState(() {
-                      menu = 3;
+                      menu = (menu==3?0:3);
                     }),
                     size : MediaQuery.of(context).size.height * 0.05,
                     isActive : menu == 3,
                     activeColor : const Color(0xFF6E2920),
                   ),
+                ],
               ],
             ),
           ],
@@ -86,9 +108,15 @@ class _HeaderState extends State<Header> {
       ),
       Container(
         padding : EdgeInsets.symmetric(horizontal: 10),
-        color: const Color(0xFF181111),
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height*0.05,
+        height: (menu==0 ? 0 : MediaQuery.of(context).size.height*0.05),
+        decoration: BoxDecoration(
+          color: const Color(0xFF181111),
+          border: Border.all(
+            color: const Color(0xFF181111), // border color
+            width: 0.0, // border width
+          ),
+        ),
         child:SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -114,7 +142,7 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      width: MediaQuery.of(context).size.width * 0.3,
+      width:  MediaQuery.of(context).size.width < 550 ? MediaQuery.of(context).size.width * 0.7 : MediaQuery.of(context).size.width * 0.3,
       height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         color: const Color(0xFF391714),
@@ -175,16 +203,16 @@ class _FirstButton extends StatelessWidget{
         text = "";
     }
     return Container(
-      width : MediaQuery.of(context).size.width /4,
-      decoration: BoxDecoration(border: Border(right: BorderSide(color:  Color(0xFF4E1511)))),
-      child : HoverableTextButton(
+        width : (MediaQuery.of(context).size.width < 670 ? MediaQuery.of(context).size.width/2:MediaQuery.of(context).size.width /4),
+        decoration: BoxDecoration(border: Border(right: BorderSide(color:  Color(0xFF4E1511)))),
+        child : HoverableTextButton(
           text : text,
           color : Color(0xFFFBD3CB),
           hoverColor : const Color(0xFFFF977D),
           onClick : () => navigateTo(context, ''),
           fontSize : 20,
-        ),
-      );
+      ),
+    );
   }
 }
 
@@ -218,7 +246,7 @@ class _SecondButton extends StatelessWidget{
         text = "";
     }
     return Container(
-      width : MediaQuery.of(context).size.width /4,
+      width : (MediaQuery.of(context).size.width < 670 ? MediaQuery.of(context).size.width/2:MediaQuery.of(context).size.width /4),
       decoration: BoxDecoration(border: Border(right: BorderSide(color:  Color(0xFF4E1511)))),
       child : HoverableTextButton(
           text : text,
@@ -226,7 +254,7 @@ class _SecondButton extends StatelessWidget{
           hoverColor : Color(0xFFFF977D),
           onClick : () => navigateTo(context, ''),
           fontSize : 20,
-        ),
+      ),
     );
   }
 }
@@ -261,7 +289,7 @@ class _ThirdButton extends StatelessWidget{
         text = "";
     }
     return Container(
-      width : MediaQuery.of(context).size.width /4,
+      width : (MediaQuery.of(context).size.width < 670 ? MediaQuery.of(context).size.width/2:MediaQuery.of(context).size.width /4),
       decoration: BoxDecoration(border: Border(right: BorderSide(color:  Color(0xFF4E1511)))),
       child : HoverableTextButton(
           text : text,
@@ -269,7 +297,7 @@ class _ThirdButton extends StatelessWidget{
           hoverColor : const Color(0xFFFF977D),
           onClick : () => navigateTo(context, ''),
           fontSize : 20,
-        ),
+      ),
     );
   }
 }
@@ -301,17 +329,17 @@ class _LastButton extends StatelessWidget{
         text = "Déconnexion";
         break;
       default:
-        text = "";
+        text ="";
     }
     return Container(
-      width : MediaQuery.of(context).size.width /4,
+      width :(MediaQuery.of(context).size.width < 670 ? MediaQuery.of(context).size.width/2:MediaQuery.of(context).size.width /4),
       child :HoverableTextButton(
           text : text,
           color : Color(0xFFFBD3CB),
           hoverColor : const Color(0xFFFF977D),
           onClick : () => navigateTo(context, ''),
           fontSize : 20,
-        ),
+      ),
     );
   }
 }
