@@ -19,7 +19,7 @@ class _WalletAnimationState extends State<WalletAnimation> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Annuler le timer pour éviter les fuites
+    _timer?.cancel(); 
     super.dispose();
   }
 

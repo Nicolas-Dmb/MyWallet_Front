@@ -5,20 +5,20 @@ class HoverableSvgButton extends StatefulWidget {
   final String svgPath;
   final Color color;
   final Color hoverColor;
-  final Color activeColor; // Couleur active
+  final Color activeColor; 
   final VoidCallback onClick;
   final double size;
-  final bool isActive; // Nouveau paramètre
+  final bool isActive;
 
   const HoverableSvgButton({
     Key? key,
     required this.svgPath,
     required this.color,
     required this.hoverColor,
-    required this.activeColor, // Couleur active
+    required this.activeColor, 
     required this.onClick,
     required this.size,
-    required this.isActive, // Initialisation de l'état actif
+    required this.isActive, 
   }) : super(key: key);
 
   @override
