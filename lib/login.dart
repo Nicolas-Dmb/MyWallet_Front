@@ -68,20 +68,20 @@ class _StateLoginForm extends State<LoginForm> {
             _responseMessage = null;
         });
 
-        final url = Uri.parse('http://127.0.0.1:8000/api/token/');
+        final url = Uri.parse('https://mywalletapi-502906a76c4f.herokuapp.com/api/token/');
 
         try {
             final response = await http.post(
             url,
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: json.encode({
                 'email': _emailController.text,
                 'password': _passwordController.text,
             }),
             );
-
             if (response.statusCode == 200) {
             final responseData = json.decode(response.body);
             setState(() {
@@ -94,7 +94,7 @@ class _StateLoginForm extends State<LoginForm> {
             }
         } catch (error) {
             setState(() {
-            _responseMessage = 'Erreur : Une erreur est survenue. Veuillez réessayer plus tard.';
+            _responseMessage = 'Erreur : Une erreur est survenue. Veuillez réessayer plus tard.${error}';
             });
         } finally {
             setState(() {
@@ -111,15 +111,16 @@ class _StateLoginForm extends State<LoginForm> {
                 _responseMessage = null;
             });
 
-            final url = Uri.parse('http://127.0.0.1:8000/api/user/');
+            final url = Uri.parse('https://mywalletapi-502906a76c4f.herokuapp.com/api/user/');
 
             try{
                 final response = await http.post(
                     url,
                     headers:{
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
-                    body:{
+                    body:json.encode({
                         "first_name": _firstNameController.text,
                         "last_name": _lastNameController.text,
                         "username": _usernameController.text,
@@ -127,12 +128,13 @@ class _StateLoginForm extends State<LoginForm> {
                         "phone": _phoneController.text,
                         'password': _passwordController.text,
                         "confirm_password": _confirmPWController.text,
-                    }
+                    }),
                 );
                 final  responseData= json.decode(response.body);
-                if(response.statusCode==200){
+                if(response.statusCode==201){
                     setState((){
-                        _responseMessage = responseData['message'] ?? 'Succès!';
+                        _responseMessage = responseData['message'] ?? 'Compte créé avec succès!';
+                        isAccount = true;
                     });
                 }else{
                     setState((){
@@ -141,7 +143,7 @@ class _StateLoginForm extends State<LoginForm> {
                 }
             }catch (error){
                 setState((){
-                    _responseMessage = "Erreur  : une erreur s'est produite lors de la création du compte";
+                    _responseMessage = "Erreur  : une erreur s'est produite lors de la création du compte  / ${error}";
                 });
             }finally{
                 setState((){
