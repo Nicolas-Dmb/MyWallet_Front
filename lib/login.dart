@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'component/header.dart';
+import 'component/tokenManager.dart';
 
 /*
 Mise en page terminé mais
@@ -14,6 +15,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Column(
         children: [
           Header(isConnect: false),
@@ -38,6 +40,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _StateLoginForm extends State<LoginForm> {
+    final TokenManager tokenManager = TokenManager();
+    final storage = new FlutterSecureStorage();
     final _formKey = GlobalKey<FormState>();
     //Pour se connecter 
     final TextEditingController _emailController = TextEditingController();
@@ -54,6 +58,10 @@ class _StateLoginForm extends State<LoginForm> {
     bool hiddenPassword = true;
     bool isAccount = true;
 
+    void navigateTo(BuildContext context, String routeName) {
+    Navigator.pushNamed(context, routeName);
+    }
+    
     @override
     void dispose() {
         _emailController.dispose();
@@ -83,10 +91,15 @@ class _StateLoginForm extends State<LoginForm> {
             }),
             );
             if (response.statusCode == 200) {
-            final responseData = json.decode(response.body);
-            setState(() {
-                _responseMessage = responseData['message'] ?? 'Succès!';
-            });
+                final responseData = json.decode(response.body);
+                setState(() {
+                    _responseMessage = responseData['message'] ?? 'Succès!';
+                });
+                final storage = FlutterSecureStorage();
+                await storage.write(key: 'access_token', value: responseData["access"]); 
+                await storage.write(key: 'refresh_token', value: responseData["refresh"]); 
+                tokenManager.startTokenRenewal();
+                navigateTo(context, '/main');
             } else {
             setState(() {
                 _responseMessage = 'Erreur: ${response.statusCode}';
@@ -195,7 +208,7 @@ class _StateLoginForm extends State<LoginForm> {
                     TextFormField(
                         controller : _usernameController,
                         style : TextStyle(color: Color(0xFFFBD3CB)),
-                        decoration : const InputDecoration(labelText: 'Username'),
+                        decoration : const InputDecoration(labelText: 'Identifiant'),
                         validator: (value){
                             if (value == null || value.isEmpty){
                                 return 'Veuillez entrer votre Identifiant';

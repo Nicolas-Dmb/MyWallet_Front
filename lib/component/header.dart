@@ -190,18 +190,23 @@ class _FirstButton extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     String text;
+    String path;
     switch (menu) {
       case 1:
         text = "Stratégie";
+        path = '';
         break;
       case 2:
         text = "Bourse";
+        path = '';
         break;
       case 3:
         text = "Compte";
+        path = '/compte';
         break;
       default:
         text = "";
+        path = '';
     }
     return Container(
         width : (MediaQuery.of(context).size.width < 670 ? MediaQuery.of(context).size.width/2:MediaQuery.of(context).size.width /4),
@@ -210,7 +215,7 @@ class _FirstButton extends StatelessWidget{
           text : text,
           color : Color(0xFFFBD3CB),
           hoverColor : const Color(0xFFFF977D),
-          onClick : () => navigateTo(context, ''),
+          onClick : () => navigateTo(context, path),
           fontSize : 20,
       ),
     );

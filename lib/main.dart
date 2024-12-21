@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'accueil.dart';
 import 'login.dart';
+import 'hoverView.dart';
+import 'compte.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +22,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Accueil(),
         '/login': (context) => Login(),
+        '/main':(context) => HoverView(),
+        '/compte':(context) => Compte(),
       },
     );
   }
