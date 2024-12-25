@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const Accueil(),
         '/login': (context) => Login(),
         '/main':(context) => HoverView(),
-        '/compte':(context) => Compte(),
+        '/compte':(context) => SettingPage(),
       },
     );
   }
