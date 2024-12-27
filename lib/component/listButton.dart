@@ -22,8 +22,15 @@ class _InlineScrollableXState extends State<InlineScrollableX> {
 
   @override
   void initState() {
-    super.initState();
+  super.initState();
+    if (widget.defaultValue.isEmpty) {
+      print("Erreur : defaultValue est vide !");
+    } else {
+      print("widget.defaultValue : ${widget.defaultValue}");
+    }
+
     selectedValue = widget.defaultValue;
+    print("selectedValue : $selectedValue");
   }
 
   void setSelectedValue(String? value) {

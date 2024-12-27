@@ -168,17 +168,6 @@ class _DataAccountState extends State<DataAccount>{
         final formattedDate = _dateBirth != null
             ? "${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"
             : '';
-        print(
-        "username: ${_username.text}, "
-        "last_name: ${_nom.text}, "
-        "first_name: ${_prenom.text}, "
-        "email: ${_email.text}, "
-        "phone: ${_tel.text}, "
-        "country: ${_pays.text}, "
-        "job: ${_profession.text}, "
-        "income: ${_revenus.text}, "
-        "birthday: $formattedDate"
-        );
         checkAccessToken(context);
         final url = Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/user/${_id}/");
         try{
@@ -236,25 +225,32 @@ class _DataAccountState extends State<DataAccount>{
             ),
             child : Column(
                 children:[
-                    Image.asset('assets/informations.png', width : MediaQuery.of(context).size.width*0.3),
-                    onLoad==true ?
-                    const Center(child: CircularProgressIndicator()) 
-                    : ElevatedButton(
-                            onPressed: () {
-                                setState(() {
-                                    _modif = !_modif;
-                                });
-                            },
-                            child: const Text('Modifier'),
-                            style :ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFEC6142), 
-                                foregroundColor: const Color(0xFFFF977D),
-                                overlayColor: const Color(0xFF391714), 
-                                textStyle: const TextStyle( 
-                                fontWeight: FontWeight.bold,
+                    Row(
+                        mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                        children:[
+                        Image.asset('assets/informations.png', width : MediaQuery.of(context).size.width*0.3),
+                        SizedBox(width: MediaQuery.of(context).size.width*0.3),
+                        onLoad==true ?
+                        const Center(child: CircularProgressIndicator()) 
+                        : ElevatedButton(
+                                onPressed: () {
+                                    setState(() {
+                                        _modif = !_modif;
+                                    });
+                                },
+                                child: const Text('Modifier'),
+                                style :ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFEC6142), 
+                                    foregroundColor: const Color(0xFFFF977D),
+                                    overlayColor: const Color(0xFF391714), 
+                                    textStyle: const TextStyle( 
+                                    fontWeight: FontWeight.bold,
+                                    ),
                                 ),
-                            ),
                         ),
+                        ],
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height*0.1),
                     Form(
                         key : _formKey,
                         child: Column(
@@ -408,24 +404,33 @@ class _DataAccountState extends State<DataAccount>{
                                             ),
                                         ),
                                         SizedBox(width: MediaQuery.of(context).size.width*0.2),
-                                        Center(
-                                            child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                        SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.3,
+                                        child : Row(
+                                        mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                                        children:[
+                                            Center(
+                                                child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                            ),
+                                            
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                    final selectedDate = await showDatePicker(
+                                                        context: context,
+                                                        initialDate: DateTime.now(),
+                                                        firstDate: DateTime(1930),
+                                                        lastDate: DateTime(2030),
+                                                    );
+                                                    if (selectedDate != null) {
+                                                        setState(() {
+                                                        _dateBirth = selectedDate;
+                                                        });
+                                                    }
+                                                },
+                                                child: Text(_dateBirth == null ? 'Select date':"${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"),
+                                            ),
+                                        ],
                                         ),
-                                        ElevatedButton(
-                                            onPressed: () async {
-                                                final selectedDate = await showDatePicker(
-                                                    context: context,
-                                                    initialDate: DateTime.now(),
-                                                    firstDate: DateTime(1930),
-                                                    lastDate: DateTime(2030),
-                                                );
-                                                if (selectedDate != null) {
-                                                    setState(() {
-                                                    _dateBirth = selectedDate;
-                                                    });
-                                                }
-                                            },
-                                            child: Text(_dateBirth == null ? 'Select date':"${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"),
                                         ),
                                     ],
                                 ),
@@ -471,6 +476,7 @@ class DataSettingState extends State<DataSetting>{
     bool _modif = false;
     String? _errorMessage; 
     bool onLoad = true;
+    String? id;
     List<String> choices = [
         'Gray', 
         'Red', 
@@ -540,11 +546,14 @@ class DataSettingState extends State<DataSetting>{
 
                 if (responseData.isNotEmpty) {
                     final dataResponse = responseData[0];
+                    print("dataResponse=$dataResponse");
                     setState((){
                         _device.text = dataResponse['currency'].toString() ?? '';
                         _nightMode.text = dataResponse['nightMode'].toString() ?? '';
                         _color.text = dataResponse['color'].toString() ?? '';
+                        id = dataResponse['id'].toString() ?? '';
                     });
+                    print("_color.text=${_color.text}");
                 }
             }else{
                 setState((){
@@ -572,9 +581,9 @@ class DataSettingState extends State<DataSetting>{
         });
         print('currency: ${_device.text} / nightMode: ${_nightMode.text} / color: ${_color.text}');
         checkAccessToken(context);
-        final url = Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/setting/");
+        final url = Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/setting/$id/");
         try{
-            final response = await http.post(
+            final response = await http.patch(
                 url,
                 headers:{
                     'Content-Type': 'application/json',
@@ -610,7 +619,9 @@ class DataSettingState extends State<DataSetting>{
 
     @override
     Widget build(BuildContext context){
-        return Container(
+        return _color.text.isEmpty
+            ? CircularProgressIndicator()
+            :Container(
             color: const Color(0xFF181111),
             //height : double.infinity,
             padding : EdgeInsets.symmetric(
@@ -620,25 +631,31 @@ class DataSettingState extends State<DataSetting>{
             width: MediaQuery.of(context).size.width,
             child : Column( 
                 children:[
-                    Image.asset('assets/personnalisation.png', width : MediaQuery.of(context).size.width*0.3),
-                    onLoad==true ?
-                    const Center(child: CircularProgressIndicator()) 
-                    : ElevatedButton(
-                        onPressed: () {
-                            setState(() {
-                                _modif = !_modif;
-                            });
-                        },
-                        child: const Text('Modifier'),
-                        style :ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFEC6142), 
-                            foregroundColor: const Color(0xFFFF977D),
-                            overlayColor: const Color(0xFF391714), 
-                            textStyle: const TextStyle( 
-                            fontWeight: FontWeight.bold,
+                    Row(
+                        mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                        children:[
+                            Image.asset('assets/personnalisation.png', width : MediaQuery.of(context).size.width*0.3),
+                            onLoad==true ?
+                            const Center(child: CircularProgressIndicator()) 
+                            : ElevatedButton(
+                                onPressed: () {
+                                    setState(() {
+                                        _modif = !_modif;
+                                    });
+                                },
+                                child: const Text('Modifier'),
+                                style :ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFEC6142), 
+                                    foregroundColor: const Color(0xFFFF977D),
+                                    overlayColor: const Color(0xFF391714), 
+                                    textStyle: const TextStyle( 
+                                    fontWeight: FontWeight.bold,
+                                    ),
+                                ),
                             ),
-                        ),
+                        ],
                     ),
+                    SizedBox(height: MediaQuery.of(context).size.height*0.1),
                     Form(
                         key : _formKey,
                         child: Column(
@@ -647,12 +664,14 @@ class DataSettingState extends State<DataSetting>{
                                 Text("Background color :", style: TextStyle(color: Color(0xFFFBD3CB)),),
                                 //Color
                                 InlineScrollableX(
-                                    choices: choices,
+                                    choices:_modif? choices:[_color.text],
                                     defaultValue: _color.text,
-                                    onClick: (selectedValue) {
+                                    onClick: _modif? (selectedValue) {
                                     setState(() {
                                         _color.text = selectedValue; //permet de mettre a jour color.text
                                     });
+                                    }:(selectedValue) {
+                                        _color.text = _color.text;
                                     },
                                 ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.1),
@@ -660,9 +679,13 @@ class DataSettingState extends State<DataSetting>{
                                 Text("NightMode :",style: TextStyle(color: Color(0xFFFBD3CB)),),
                                 Switch(
                                     value: _nightMode.text=='true'?true:false,
-                                    onChanged: (value) {
+                                    onChanged: _modif ? (value) {
                                     setState(() {
                                         _nightMode.text = _nightMode.text=='true'?'false':'true';
+                                    });
+                                    }: (value) {
+                                    setState(() {
+                                        _nightMode.text = _nightMode.text;
                                     });
                                     },
                                 ),
@@ -670,15 +693,17 @@ class DataSettingState extends State<DataSetting>{
                                 //Devise
                                 Text("Devise :",style: TextStyle(color: Color(0xFFFBD3CB)),),
                                 InlineScrollableX(
-                                    choices: choicesDevise,
+                                    choices: _modif? choicesDevise : [_device.text],
                                     defaultValue: _device.text,
-                                    onClick: (selectedValue) {
+                                    onClick: _modif ? (selectedValue) {
                                     setState(() {
                                         _device.text = selectedValue; //permet de mettre a jour color.text
                                     });
+                                    }:(selectedValue) {
+                                        _device.text=_device.text;
                                     },
                                 ),
-                                SizedBox(height: MediaQuery.of(context).size.width*0.1),
+                                SizedBox(height: MediaQuery.of(context).size.height*0.1),
                                 if( _modif &&  onLoad==false )
                                     ElevatedButton(
                                         onPressed:()=> setSetting(),
