@@ -38,8 +38,8 @@ class _HeaderState extends State<Header> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (MediaQuery.of(context).size.width > 550 ) Image.asset('assets/logo.png', width : MediaQuery.of(context).size.width*0.2),
-            if (MediaQuery.of(context).size.width < 550 && widget.isConnect==false) Image.asset('assets/logo.png', width : MediaQuery.of(context).size.width*0.5),
+            if (MediaQuery.of(context).size.width > 550 )  IconButton(icon:Image.asset('assets/logo.png', width : MediaQuery.of(context).size.width*0.2),iconSize: MediaQuery.of(context).size.width*0.2, onPressed: widget.isConnect ? ()=>navigateTo(context, '/main'):()=>navigateTo(context, '/'),padding: EdgeInsets.zero,),
+            if (MediaQuery.of(context).size.width < 550 && widget.isConnect==false) IconButton(icon:Image.asset('assets/logo.png', width : MediaQuery.of(context).size.width*0.5), iconSize: MediaQuery.of(context).size.width*0.5, onPressed: widget.isConnect ? ()=>navigateTo(context, '/main'):()=>navigateTo(context, '/'), padding: EdgeInsets.zero,),
             if (widget.isConnect && (MediaQuery.of(context).size.width>670 || button == false)) const SearchBar(),
             Row(
               children: [

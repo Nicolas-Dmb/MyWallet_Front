@@ -220,7 +220,7 @@ class _DataAccountState extends State<DataAccount>{
             color: const Color(0xFF181111),
             //height : double.infinity,
             padding : EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width > 700 ?  MediaQuery.of(context).size.width*0.1 : 0,
+                horizontal: MediaQuery.of(context).size.width > 700 ?  MediaQuery.of(context).size.width*0.1 : MediaQuery.of(context).size.width*0.05,
                 vertical:MediaQuery.of(context).size.height*0.05,
             ),
             child : Column(
@@ -265,7 +265,7 @@ class _DataAccountState extends State<DataAccount>{
                                         decoration : const InputDecoration(labelText: 'Identifiant'),
                                         validator : (value){
                                             if (value == null || value.isEmpty){
-                                            return 'Veuillez entrer un Identifiant';
+                                                return 'Veuillez entrer un Identifiant';
                                             }
                                             return null;
                                         },
@@ -290,7 +290,7 @@ class _DataAccountState extends State<DataAccount>{
                                                 },
                                             ),
                                         ),
-                                        SizedBox(width: MediaQuery.of(context).size.width*0.2),
+                                        SizedBox(width: MediaQuery.of(context).size.width>700 ? MediaQuery.of(context).size.width*0.2:MediaQuery.of(context).size.width*0.05),
                                         SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.3,
                                             child : TextFormField(
@@ -329,7 +329,7 @@ class _DataAccountState extends State<DataAccount>{
                                                 },
                                             ),
                                         ),
-                                        SizedBox(width: MediaQuery.of(context).size.width*0.2),
+                                        SizedBox(width: MediaQuery.of(context).size.width>700 ? MediaQuery.of(context).size.width*0.2:MediaQuery.of(context).size.width*0.05),
                                         SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.3,
                                             child :TextFormField(
@@ -366,7 +366,7 @@ class _DataAccountState extends State<DataAccount>{
                                                 },
                                             ),
                                         ),
-                                        SizedBox(width: MediaQuery.of(context).size.width*0.2),
+                                        SizedBox(width: MediaQuery.of(context).size.width>700 ? MediaQuery.of(context).size.width*0.2:MediaQuery.of(context).size.width*0.05),
                                         SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.3,
                                             child : TextFormField(
@@ -403,34 +403,61 @@ class _DataAccountState extends State<DataAccount>{
                                                 },
                                             ),
                                         ),
-                                        SizedBox(width: MediaQuery.of(context).size.width*0.2),
+                                        SizedBox(width: MediaQuery.of(context).size.width>700 ? MediaQuery.of(context).size.width*0.2:MediaQuery.of(context).size.width*0.05),
                                         SizedBox(
                                         width: MediaQuery.of(context).size.width * 0.3,
-                                        child : Row(
-                                        mainAxisAlignment : MainAxisAlignment.spaceBetween,
-                                        children:[
-                                            Center(
-                                                child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                        child : MediaQuery.of(context).size.width > 770
+                                            ?  Row(
+                                            mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                                            children:[
+                                                Center(
+                                                    child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                                ),
+                                                
+                                                ElevatedButton(
+                                                    onPressed: () async {
+                                                        final selectedDate = await showDatePicker(
+                                                            context: context,
+                                                            initialDate: DateTime.now(),
+                                                            firstDate: DateTime(1930),
+                                                            lastDate: DateTime(2030),
+                                                        );
+                                                        if (selectedDate != null) {
+                                                            setState(() {
+                                                            _dateBirth = selectedDate;
+                                                            });
+                                                        }
+                                                    },
+                                                    child: Text(_dateBirth == null ? 'Select date':"${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"),
+                                                ),
+                                            ],
+                                            )
+                                        
+                                            : Column(
+                                            mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                                            children:[
+                                                Center(
+                                                    child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                                ),
+                                                
+                                                ElevatedButton(
+                                                    onPressed: () async {
+                                                        final selectedDate = await showDatePicker(
+                                                            context: context,
+                                                            initialDate: DateTime.now(),
+                                                            firstDate: DateTime(1930),
+                                                            lastDate: DateTime(2030),
+                                                        );
+                                                        if (selectedDate != null) {
+                                                            setState(() {
+                                                            _dateBirth = selectedDate;
+                                                            });
+                                                        }
+                                                    },
+                                                    child: Text(_dateBirth == null ? 'Select date':"${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"),
+                                                ),
+                                            ],
                                             ),
-                                            
-                                            ElevatedButton(
-                                                onPressed: () async {
-                                                    final selectedDate = await showDatePicker(
-                                                        context: context,
-                                                        initialDate: DateTime.now(),
-                                                        firstDate: DateTime(1930),
-                                                        lastDate: DateTime(2030),
-                                                    );
-                                                    if (selectedDate != null) {
-                                                        setState(() {
-                                                        _dateBirth = selectedDate;
-                                                        });
-                                                    }
-                                                },
-                                                child: Text(_dateBirth == null ? 'Select date':"${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"),
-                                            ),
-                                        ],
-                                        ),
                                         ),
                                     ],
                                 ),
@@ -546,14 +573,12 @@ class DataSettingState extends State<DataSetting>{
 
                 if (responseData.isNotEmpty) {
                     final dataResponse = responseData[0];
-                    print("dataResponse=$dataResponse");
                     setState((){
                         _device.text = dataResponse['currency'].toString() ?? '';
                         _nightMode.text = dataResponse['nightMode'].toString() ?? '';
                         _color.text = dataResponse['color'].toString() ?? '';
                         id = dataResponse['id'].toString() ?? '';
                     });
-                    print("_color.text=${_color.text}");
                 }
             }else{
                 setState((){
@@ -579,7 +604,6 @@ class DataSettingState extends State<DataSetting>{
         setState((){
             onLoad=true;
         });
-        print('currency: ${_device.text} / nightMode: ${_nightMode.text} / color: ${_color.text}');
         checkAccessToken(context);
         final url = Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/setting/$id/");
         try{
@@ -625,7 +649,7 @@ class DataSettingState extends State<DataSetting>{
             color: const Color(0xFF181111),
             //height : double.infinity,
             padding : EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width > 700 ?  MediaQuery.of(context).size.width*0.1 : 0,
+                horizontal: MediaQuery.of(context).size.width > 700 ?  MediaQuery.of(context).size.width*0.1 : MediaQuery.of(context).size.width*0.05,
                 vertical:MediaQuery.of(context).size.height*0.05,
             ),
             width: MediaQuery.of(context).size.width,
@@ -673,6 +697,7 @@ class DataSettingState extends State<DataSetting>{
                                     }:(selectedValue) {
                                         _color.text = _color.text;
                                     },
+                                    modif : _modif,
                                 ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.1),
                                 //NightMode
@@ -702,6 +727,7 @@ class DataSettingState extends State<DataSetting>{
                                     }:(selectedValue) {
                                         _device.text=_device.text;
                                     },
+                                    modif : _modif,
                                 ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.1),
                                 if( _modif &&  onLoad==false )

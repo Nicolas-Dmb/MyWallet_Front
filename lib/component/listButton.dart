@@ -5,11 +5,13 @@ class InlineScrollableX extends StatefulWidget {
   final List<String>  choices;
   final String defaultValue;
   final Function(String) onClick;
+  final bool modif;
 
   const InlineScrollableX({
     required this.choices,
     required this.defaultValue,
     required this.onClick,
+    required this.modif,
     super.key
     });
 
@@ -37,7 +39,7 @@ class _InlineScrollableXState extends State<InlineScrollableX> {
     setState(() {
       selectedValue = value;
     });
-    widget.onClick(value ?? ''); 
+    widget.onClick(widget.modif ? value ?? widget.defaultValue : widget.defaultValue ); 
   }
 
   @override
@@ -45,9 +47,9 @@ class _InlineScrollableXState extends State<InlineScrollableX> {
     return Column(
       children: [
         Choice<String>.inline(
-          clearable: true,
+          clearable: false,
           value: ChoiceSingle.value(selectedValue),
-          onChanged: ChoiceSingle.onChanged(setSelectedValue),
+          onChanged: widget.modif ? ChoiceSingle.onChanged(setSelectedValue):null,
           itemCount: widget.choices.length,
           itemBuilder: (state, i) {
             return ChoiceChip(

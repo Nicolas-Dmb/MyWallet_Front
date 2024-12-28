@@ -6,6 +6,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'component/header.dart';
 import 'component/lineChart.dart';
 import 'component/tokenManager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'component/getSetting.dart';
 
 class HoverView extends StatefulWidget{
 
@@ -19,6 +22,24 @@ class HoverView extends StatefulWidget{
 class _HoverViewState extends State<HoverView>{
     final FlutterSecureStorage storage = FlutterSecureStorage();
     String? _accessToken;
+    final GetSettingAccount settings = GetSettingAccount();
+    //late SharedPreferences prefs;
+
+    //Init 
+    @override
+    void initState() {
+        super.initState();
+        initializeSettings();
+    }
+
+    Future<void> initializeSettings() async {
+        // Initialiser SharedPreferences via votre classe
+        await settings.initialize();
+        final prefs = await SharedPreferences.getInstance();
+        print('username ${prefs.getString('username')}');
+        print('email ${prefs.getString('email')}');
+        print('nightMode ${prefs.getString('nightMode')}');
+    }
 
     //vérifier si l'user est connecté
     Future<void> checkAccessToken(BuildContext context) async {
