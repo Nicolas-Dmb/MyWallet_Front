@@ -37,6 +37,7 @@ class _HoverableTextButtonState extends State<HoverableTextButton> {
                     widget.text,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                    fontFamily: 'TANNIMBUS',
                     color: isHovered ? widget.hoverColor : widget.color, 
                     fontSize: widget.fontSize,
                     ),

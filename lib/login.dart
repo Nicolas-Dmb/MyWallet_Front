@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'component/header.dart';
 import 'component/tokenManager.dart';
+import 'component/getSetting.dart';
 
 
 /*
@@ -42,6 +43,7 @@ class LoginForm extends StatefulWidget {
 
 class _StateLoginForm extends State<LoginForm> {
     final TokenManager tokenManager = TokenManager();
+    final GetSettingAccount settings = GetSettingAccount();
     final storage = new FlutterSecureStorage();
     final _formKey = GlobalKey<FormState>();
     //Pour se connecter 
@@ -100,6 +102,7 @@ class _StateLoginForm extends State<LoginForm> {
                 await storage.write(key: 'access_token', value: responseData["access"]); 
                 await storage.write(key: 'refresh_token', value: responseData["refresh"]); 
                 tokenManager.startTokenRenewal();
+                await settings.initialize();
                 navigateTo(context, '/main');
             } else {
             setState(() {
@@ -315,7 +318,7 @@ class _StateLoginForm extends State<LoginForm> {
                         onPressed: isAccount ? _loginForm : _signUpForm,
                         child: const Text('Envoyer'),
                         style :ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFEC6142), 
+                            backgroundColor: const Color(0xFF5E1C16),
                             foregroundColor: const Color(0xFFFF977D),
                             overlayColor: const Color(0xFF391714), 
                             textStyle: const TextStyle( 

@@ -6,12 +6,18 @@ class InlineScrollableX extends StatefulWidget {
   final String defaultValue;
   final Function(String) onClick;
   final bool modif;
+  final int color;
+  final int textColor;
+  final int activeColor;
 
   const InlineScrollableX({
     required this.choices,
     required this.defaultValue,
     required this.onClick,
     required this.modif,
+    required this.textColor,
+    required this.color,
+    required this.activeColor,
     super.key
     });
 
@@ -55,7 +61,9 @@ class _InlineScrollableXState extends State<InlineScrollableX> {
             return ChoiceChip(
               selected: state.selected(widget.choices[i]),
               onSelected: state.onSelected(widget.choices[i]),
-              label: Text(widget.choices[i]),
+              label: Text(widget.choices[i],style: TextStyle(color: Color(widget.textColor),),), 
+              selectedColor: Color(widget.activeColor),
+              backgroundColor: Color(widget.color),
             );
           },
           listBuilder: ChoiceList.createScrollable(

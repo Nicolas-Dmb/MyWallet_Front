@@ -9,6 +9,8 @@ import 'component/tokenManager.dart';
 import 'component/header.dart';
 import 'component/lineChart.dart';
 import 'component/textButton.dart';
+import 'component/getSetting.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SettingPage extends StatelessWidget{
@@ -17,7 +19,25 @@ class SettingPage extends StatelessWidget{
     @override
     Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF181111),
+    body: Column(
+        children: [
+        Header(isConnect: true),
+        Expanded(
+            child: SingleChildScrollView(
+            child: Column(
+                children: [
+                DataAccount(),
+                DataSetting(),
+                ],
+            ),
+            ),
+        ),
+        ],
+    ),
+    );
+    }
+}
+    /*return Scaffold(
         body: Column(
             children: [
             Header(isConnect: true),
@@ -42,7 +62,7 @@ class SettingPage extends StatelessWidget{
         ),
     );
   }
-}
+}*/
 
 class DataAccount extends StatefulWidget{
     const DataAccount({Key? key}):super(key:key);
@@ -53,12 +73,15 @@ class DataAccount extends StatefulWidget{
 
 class _DataAccountState extends State<DataAccount>{
     final FlutterSecureStorage storage = FlutterSecureStorage();
+    final GetSettingAccount settings = GetSettingAccount();
     String? _accessToken;
     final _formKey = GlobalKey<FormState>();
     bool _modif = false;
     String? _errorMessage; 
     bool onLoad = true;
     String? _id;
+    bool isReady = false;
+    late Map<String, dynamic> colors;  
 
     //compte
     final TextEditingController _username = TextEditingController();
@@ -78,6 +101,16 @@ class _DataAccountState extends State<DataAccount>{
             if (_accessToken != null) {
             _getSetting();
             }
+        });
+        initializeSettings();
+    }
+
+    Future<void> initializeSettings() async {
+        // Initialiser SharedPreferences via votre classex
+        final prefs = await SharedPreferences.getInstance();
+        setState((){
+            colors = jsonDecode(prefs.getString('colors').toString()??'');
+            isReady = true;
         });
     }
     //Vérifier que le token est présent
@@ -195,6 +228,7 @@ class _DataAccountState extends State<DataAccount>{
                 setState(() {
                     _modif = false;
                 });
+                await settings.initialize();
             }else{
                 final responseData = json.decode(response.body);
                 setState((){
@@ -216,8 +250,23 @@ class _DataAccountState extends State<DataAccount>{
 
     @override
     Widget build(BuildContext contex){
-        return Container(
-            color: const Color(0xFF181111),
+        return !isReady ?
+            Container( 
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color:Color(0xFF181111),
+                child: Row(
+                    mainAxisAlignment : MainAxisAlignment.center,
+                    children:[
+                        Container(
+                            width : MediaQuery.of(context).size.width*0.1,
+                            height: MediaQuery.of(context).size.height*0.1,
+                            child: CircularProgressIndicator(),
+                        ),
+                    ],
+                ),
+            ) :Container(
+            color: Color(int.parse(colors['background1'])),
             //height : double.infinity,
             padding : EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width > 700 ?  MediaQuery.of(context).size.width*0.1 : MediaQuery.of(context).size.width*0.05,
@@ -228,7 +277,15 @@ class _DataAccountState extends State<DataAccount>{
                     Row(
                         mainAxisAlignment : MainAxisAlignment.spaceBetween,
                         children:[
-                        Image.asset('assets/informations.png', width : MediaQuery.of(context).size.width*0.3),
+                        Text(
+                            'Informations',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                            fontFamily: 'TANNIMBUS',
+                            color: Color(int.parse(colors['text2'])), 
+                            fontSize: MediaQuery.of(context).size.width<500 ? 15: 20,
+                            ),
+                        ),
                         SizedBox(width: MediaQuery.of(context).size.width*0.3),
                         onLoad==true ?
                         const Center(child: CircularProgressIndicator()) 
@@ -240,9 +297,9 @@ class _DataAccountState extends State<DataAccount>{
                                 },
                                 child: const Text('Modifier'),
                                 style :ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFEC6142), 
-                                    foregroundColor: const Color(0xFFFF977D),
-                                    overlayColor: const Color(0xFF391714), 
+                                    backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                    foregroundColor: Color(int.parse(colors['text1'])), 
+                                    overlayColor: Color(int.parse(colors['interactive1'])),
                                     textStyle: const TextStyle( 
                                     fontWeight: FontWeight.bold,
                                     ),
@@ -261,7 +318,7 @@ class _DataAccountState extends State<DataAccount>{
                                     child : TextFormField(
                                         readOnly : !_modif,
                                         controller : _username,
-                                        style : TextStyle(color: Color(0xFFFBD3CB)),
+                                        style : TextStyle(color: Color(int.parse(colors['text2']))),
                                         decoration : const InputDecoration(labelText: 'Identifiant'),
                                         validator : (value){
                                             if (value == null || value.isEmpty){
@@ -280,7 +337,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child : TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _nom,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Nom'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty){
@@ -296,7 +353,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child : TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _prenom,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Prénom'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty){
@@ -317,7 +374,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child : TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _email,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Email'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty) {
@@ -335,7 +392,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child :TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _tel,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Téléphone'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty){
@@ -356,7 +413,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child : TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _pays,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Pays'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty){
@@ -372,7 +429,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child : TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _profession,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Profession'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty){
@@ -393,7 +450,7 @@ class _DataAccountState extends State<DataAccount>{
                                             child : TextFormField(
                                                 readOnly : !_modif,
                                                 controller : _revenus,
-                                                style : TextStyle(color: Color(0xFFFBD3CB)),
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 decoration : const InputDecoration(labelText: 'Revenus'),
                                                 validator : (value){
                                                     if (value == null || value.isEmpty){
@@ -411,7 +468,7 @@ class _DataAccountState extends State<DataAccount>{
                                             mainAxisAlignment : MainAxisAlignment.spaceBetween,
                                             children:[
                                                 Center(
-                                                    child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                                    child: Text('Date de naissance :', style: TextStyle(color: Color(int.parse(colors['text2']))),),
                                                 ),
                                                 
                                                 ElevatedButton(
@@ -437,7 +494,7 @@ class _DataAccountState extends State<DataAccount>{
                                             mainAxisAlignment : MainAxisAlignment.spaceBetween,
                                             children:[
                                                 Center(
-                                                    child: Text('Date de naissance :', style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                                    child: Text('Date de naissance :', style: TextStyle(color: Color(int.parse(colors['text2']))),),
                                                 ),
                                                 
                                                 ElevatedButton(
@@ -466,9 +523,9 @@ class _DataAccountState extends State<DataAccount>{
                                         onPressed:()=> _setSetting(),
                                         child: const Text('Envoyer'),
                                         style :ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(0xFFEC6142), 
-                                            foregroundColor: const Color(0xFFFF977D),
-                                            overlayColor: const Color(0xFF391714), 
+                                            backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                            foregroundColor: Color(int.parse(colors['text1'])), 
+                                            overlayColor: Color(int.parse(colors['interactive1'])),
                                             textStyle: const TextStyle( 
                                                 fontWeight: FontWeight.bold,
                                             ),
@@ -498,14 +555,18 @@ class DataSetting extends StatefulWidget{
 }
 class DataSettingState extends State<DataSetting>{
     final FlutterSecureStorage storage = FlutterSecureStorage();
+    final GetSettingAccount settings = GetSettingAccount();
     String? _accessToken;
     final _formKey = GlobalKey<FormState>();
     bool _modif = false;
     String? _errorMessage; 
+    bool isReady = false;
+    late Map<String, dynamic> colors;  
     bool onLoad = true;
+    String? nightMode;
     String? id;
     List<String> choices = [
-        'Gray', 
+        'Grey', 
         'Red', 
         'Pink', 
         'Purple', 
@@ -530,6 +591,17 @@ class DataSettingState extends State<DataSetting>{
             if (_accessToken != null) {
             getSetting();
             }
+        });
+        initializeSettings();
+    }
+
+    Future<void> initializeSettings() async {
+        // Initialiser SharedPreferences via votre classex
+        final prefs = await SharedPreferences.getInstance();
+        setState((){
+            colors = jsonDecode(prefs.getString('colors').toString()??'');
+            nightMode = prefs.getString('nightMode').toString()??'';
+            isReady = true;
         });
     }
 
@@ -625,6 +697,12 @@ class DataSettingState extends State<DataSetting>{
                 setState((){
                     _modif=false;
                 });
+                await settings.initialize();
+                Future.delayed(Duration(seconds: 1), () {
+                    setState(() {
+                        Navigator.pushReplacementNamed(context, '/compte'); // Lancer l'initialisation après 1 seconde
+                    });
+                });
             }else{
                 setState((){
                     _errorMessage = "Error : ${response}";
@@ -643,10 +721,10 @@ class DataSettingState extends State<DataSetting>{
 
     @override
     Widget build(BuildContext context){
-        return _color.text.isEmpty
+        return _color.text.isEmpty || !isReady
             ? CircularProgressIndicator()
             :Container(
-            color: const Color(0xFF181111),
+            color: Color(int.parse(colors['background1'])),
             //height : double.infinity,
             padding : EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width > 700 ?  MediaQuery.of(context).size.width*0.1 : MediaQuery.of(context).size.width*0.05,
@@ -658,7 +736,15 @@ class DataSettingState extends State<DataSetting>{
                     Row(
                         mainAxisAlignment : MainAxisAlignment.spaceBetween,
                         children:[
-                            Image.asset('assets/personnalisation.png', width : MediaQuery.of(context).size.width*0.3),
+                            Text(
+                                'Affichage',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'TANNIMBUS',
+                                    color: Color(int.parse(colors['text2'])), 
+                                    fontSize: 20,
+                                ),
+                            ),
                             onLoad==true ?
                             const Center(child: CircularProgressIndicator()) 
                             : ElevatedButton(
@@ -669,9 +755,9 @@ class DataSettingState extends State<DataSetting>{
                                 },
                                 child: const Text('Modifier'),
                                 style :ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFEC6142), 
-                                    foregroundColor: const Color(0xFFFF977D),
-                                    overlayColor: const Color(0xFF391714), 
+                                    backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                    foregroundColor: Color(int.parse(colors['text1'])), 
+                                    overlayColor: Color(int.parse(colors['interactive1'])),
                                     textStyle: const TextStyle( 
                                     fontWeight: FontWeight.bold,
                                     ),
@@ -685,7 +771,7 @@ class DataSettingState extends State<DataSetting>{
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                                Text("Background color :", style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                Text("Background color :", style: TextStyle(color: Color(int.parse(colors['text2'])),),),
                                 //Color
                                 InlineScrollableX(
                                     choices:_modif? choices:[_color.text],
@@ -698,11 +784,16 @@ class DataSettingState extends State<DataSetting>{
                                         _color.text = _color.text;
                                     },
                                     modif : _modif,
+                                    textColor: int.parse(colors['text1']),
+                                    color:nightMode=='true'?int.parse(colors['interactive3']):int.parse(colors['interactive1']),
+                                    activeColor:nightMode=='true'?int.parse(colors['interactive1']):int.parse(colors['interactive3']),
                                 ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.1),
                                 //NightMode
-                                Text("NightMode :",style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                Text("NightMode :",style: TextStyle(color: Color(int.parse(colors['text2'])),),),
                                 Switch(
+                                    activeColor:nightMode=='true'?Color(int.parse(colors['interactive1'])):Color(int.parse(colors['interactive3'])),
+                                    inactiveThumbColor:nightMode=='true'?Color(int.parse(colors['interactive3'])):Color(int.parse(colors['interactive1'])),
                                     value: _nightMode.text=='true'?true:false,
                                     onChanged: _modif ? (value) {
                                     setState(() {
@@ -716,7 +807,7 @@ class DataSettingState extends State<DataSetting>{
                                 ),
                                 SizedBox(height: MediaQuery.of(context).size.width*0.1),
                                 //Devise
-                                Text("Devise :",style: TextStyle(color: Color(0xFFFBD3CB)),),
+                                Text("Devise :",style: TextStyle(color: Color(int.parse(colors['text2'])),),),
                                 InlineScrollableX(
                                     choices: _modif? choicesDevise : [_device.text],
                                     defaultValue: _device.text,
@@ -728,6 +819,9 @@ class DataSettingState extends State<DataSetting>{
                                         _device.text=_device.text;
                                     },
                                     modif : _modif,
+                                    textColor: int.parse(colors['text1']),
+                                    color: nightMode=='true'?int.parse(colors['interactive3']):int.parse(colors['interactive1']),
+                                    activeColor:nightMode=='true'?int.parse(colors['interactive1']):int.parse(colors['interactive3']),
                                 ),
                                 SizedBox(height: MediaQuery.of(context).size.height*0.1),
                                 if( _modif &&  onLoad==false )
@@ -735,9 +829,9 @@ class DataSettingState extends State<DataSetting>{
                                         onPressed:()=> setSetting(),
                                         child: const Text('Envoyer'),
                                         style :ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(0xFFEC6142), 
-                                            foregroundColor: const Color(0xFFFF977D),
-                                            overlayColor: const Color(0xFF391714), 
+                                            backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                            foregroundColor: Color(int.parse(colors['text1'])), 
+                                            overlayColor: Color(int.parse(colors['interactive1'])),
                                             textStyle: const TextStyle( 
                                                 fontWeight: FontWeight.bold,
                                             ),
