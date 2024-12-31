@@ -37,32 +37,6 @@ class SettingPage extends StatelessWidget{
     );
     }
 }
-    /*return Scaffold(
-        body: Column(
-            children: [
-            Header(isConnect: true),
-                Expanded(
-                    child: SingleChildScrollView(
-                        child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                                minHeight: MediaQuery.of(context).size.height,
-                            ),
-                            child: IntrinsicHeight(
-                                child: Column(
-                                    children: [
-                                    DataAccount(),
-                                    DataSetting(),
-                                    ],
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ],
-        ),
-    );
-  }
-}*/
 
 class DataAccount extends StatefulWidget{
     const DataAccount({Key? key}):super(key:key);

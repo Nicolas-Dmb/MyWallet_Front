@@ -400,18 +400,23 @@ class _LastButton extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     String text;
+    String path;
     switch (menu) {
       case 1:
         text = "Comunnauté";
+        path = "";
         break;
       case 2:
         text = "Achat / Vente";
+        path = "/achat_vente";
         break;
       case 3:
         text = "Déconnexion";
+        path = "";
         break;
       default:
         text ="";
+        path="";
     }
     return Container(
       width :(MediaQuery.of(context).size.width < 670 ? MediaQuery.of(context).size.width/2:MediaQuery.of(context).size.width /4),
@@ -419,7 +424,7 @@ class _LastButton extends StatelessWidget{
           text : text,
           color :  Color(int.parse(colors['text2'])) ,
           hoverColor :  Color(int.parse(colors['text1'])) ,
-          onClick : () => navigateTo(context, ''),
+          onClick : () => navigateTo(context, path),
           fontSize : 20,
       ),
     );

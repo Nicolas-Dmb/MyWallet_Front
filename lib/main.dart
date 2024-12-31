@@ -4,6 +4,7 @@ import 'accueil.dart';
 import 'login.dart';
 import 'hoverView.dart';
 import 'compte.dart';
+import 'achat_vente.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => Login(),
         '/main':(context) => HoverView(),
         '/compte':(context) => SettingPage(),
+        '/achat_vente':(context) => AchatVente(),
       },
     );
   }
