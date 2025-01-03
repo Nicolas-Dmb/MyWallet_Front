@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'component/header.dart';
 import 'component/tokenManager.dart';
 import 'component/getSetting.dart';
+import 'component/bourseForm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AchatVente extends StatelessWidget{
@@ -47,6 +48,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
     String? _errorMessage; 
     String? _id;
     bool isReady = false;
+    String? _currency;
     late Map<String, dynamic> colors;  
     final List<String> listAssets = <String>['Bourse','Cryptomonnaie','Immobilier'];
 
@@ -67,6 +69,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
         setState((){
             colors = jsonDecode(prefs.getString('colors').toString()??'');
             _id = prefs.getString('userId').toString()??'';
+            _currency = prefs.getString('devise').toString()??'';
             isReady = true;
         });
     }
@@ -140,6 +143,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
                                     backgroundColor: !_isSell ? Color(int.parse(colors['interactive3'])): Color(int.parse(colors['button1'])), 
                                     foregroundColor: !_isSell ? Color(int.parse(colors['text1'])):Color(int.parse(colors['text2'])), 
                                     overlayColor: Color(int.parse(colors['interactive1'])),
+                                    fixedSize:Size(MediaQuery.of(context).size.width*0.1,MediaQuery.of(context).size.height*0.1),
                                     textStyle: const TextStyle( 
                                         fontWeight: FontWeight.bold,
                                     ),
@@ -164,7 +168,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
                         onChanged: (String? value) {
                             // This is called when the user selects an item.
                             setState(() {
-                            _typeAsset = value;
+                                _typeAsset = value;
                             });
                         },
                         items: listAssets.map<DropdownMenuItem<String>>((String value) {
@@ -174,6 +178,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
                             );
                         }).toList(),
                     ), 
+                    BourseForm(isSell:_isSell),
                 ],
             ),
         );    

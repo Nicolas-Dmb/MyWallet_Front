@@ -451,7 +451,7 @@ class _DataAccountState extends State<DataAccount>{
                                                             context: context,
                                                             initialDate: DateTime.now(),
                                                             firstDate: DateTime(1930),
-                                                            lastDate: DateTime(2030),
+                                                            lastDate: DateTime.now(),
                                                         );
                                                         if (selectedDate != null) {
                                                             setState(() {
