@@ -123,7 +123,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
                                     backgroundColor: _isSell ? Color(int.parse(colors['interactive3'])): Color(int.parse(colors['button1'])), 
                                     foregroundColor: _isSell ? Color(int.parse(colors['text1'])):Color(int.parse(colors['text2'])), 
                                     overlayColor: Color(int.parse(colors['interactive1'])),
-                                    fixedSize:Size(MediaQuery.of(context).size.width*0.1,MediaQuery.of(context).size.height*0.1),
+                                    fixedSize:MediaQuery.of(context).size.width > 900 ? Size(MediaQuery.of(context).size.width*0.1,MediaQuery.of(context).size.height*0.1):Size(MediaQuery.of(context).size.width*0.4,MediaQuery.of(context).size.height*0.1),
                                     textStyle: const TextStyle( 
                                         fontWeight: FontWeight.bold,
                                     ),
@@ -143,7 +143,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
                                     backgroundColor: !_isSell ? Color(int.parse(colors['interactive3'])): Color(int.parse(colors['button1'])), 
                                     foregroundColor: !_isSell ? Color(int.parse(colors['text1'])):Color(int.parse(colors['text2'])), 
                                     overlayColor: Color(int.parse(colors['interactive1'])),
-                                    fixedSize:Size(MediaQuery.of(context).size.width*0.1,MediaQuery.of(context).size.height*0.1),
+                                    fixedSize:MediaQuery.of(context).size.width > 900 ? Size(MediaQuery.of(context).size.width*0.1,MediaQuery.of(context).size.height*0.1) : Size(MediaQuery.of(context).size.width*0.4,MediaQuery.of(context).size.height*0.1),
                                     textStyle: const TextStyle( 
                                         fontWeight: FontWeight.bold,
                                     ),
