@@ -221,453 +221,469 @@ class _BourseFormState extends State<BourseForm>{
                 ),
         ) :
         SingleChildScrollView(
-            child : Column(
+            child : Stack(
                 children:[
                     //barre de recherche
                     SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                    SearchBar.SearchBar(colors:colors, categorie:'bourse',onClick:(Map<String, dynamic> returnValue){
-                        setState(() {
-                        _name.text = returnValue?['company'] ?? ''; // Ajout de la gestion de nullité
-                        _ticker.text = returnValue?['ticker'] ?? ''; // Ajout de la gestion de nullité
-                        });
-                    },
-                    ),
-                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                    //Réglagle pour ordi
-                    if (MediaQuery.of(context).size.width > 900)... [ 
-                        Row(
-                            mainAxisAlignment : MainAxisAlignment.center,
-                            children:[
-                                Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                DropdownButton<String>(
-                                    value: _categorie.text,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 12,
-                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                    onChanged: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                            _categorie.text = value??'';
-                                        });
-                                    },
-                                    items: listAssets.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        );
-                                    }).toList(),
-                                ), 
-                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                DropdownButton<String>(
-                                    value:  _localisation.text.isEmpty
-                                            ? country[0]
-                                            : _localisation.text,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 12,
-                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                    onChanged: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                            _localisation.text = value ?? country[0]; 
-                                        });
-                                    },
-                                    items: country.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        );
-                                    }).toList(),
-                                ),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                DropdownButton<String>(
-                                    value:  _activite.text.isEmpty
-                                            ? industry[0]
-                                            :  _activite.text,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 12,
-                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                    onChanged: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                            _activite.text = value ?? '';
-                                        });
-                                    },
-                                    items: industry.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        );
-                                    }).toList(),
-                                ), 
-                            ],
-                        ),
-                        SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                        Row(
-                            mainAxisAlignment : MainAxisAlignment.center,
-                            children:[
-                                Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                ElevatedButton(
-                                    onPressed: () async {
-                                        final selectedDate = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(1960),
-                                            lastDate: DateTime.now(),
-                                        );
-                                        if (selectedDate != null) {
-                                            setState(() {
-                                            _date = selectedDate;
-                                            });
-                                        }
-                                    },
-                                    child: Text(_date == null ? 'Select date':"${_date!.year.toString().padLeft(4, '0')}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}"),
-                                ),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                SizedBox(
-                                    width:MediaQuery.of(context).size.width/4,
-                                    child:TextFormField( 
-                                        decoration: InputDecoration(labelText: "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                        controller : _nombre,
-                                        style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                        keyboardType: TextInputType.number, 
-                                        inputFormatters: <TextInputFormatter>[ 
-                                            FilteringTextInputFormatter.digitsOnly,
-                                        ], // Only numbers can be entered 
-                                        validator : (value){
-                                            if (value == null || value.isEmpty||value=='0'){
-                                                return 'Veuillez entrer un nombre supérieur à 0';
-                                            }
-                                            return null;
-                                        },
+                    Column(
+                        children:[
+                            SizedBox(height:MediaQuery.of(context).size.height*0.15),
+                            //Réglagle pour ordi
+                            if (MediaQuery.of(context).size.width > 900)... [ 
+                                    Row(
+                                        mainAxisAlignment : MainAxisAlignment.center,
+                                        children:[
+                                            Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                            DropdownButton<String>(
+                                                value: _categorie.text,
+                                                icon: const Icon(Icons.arrow_downward),
+                                                elevation: 12,
+                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                onChanged: (String? value) {
+                                                    // This is called when the user selects an item.
+                                                    setState(() {
+                                                        _categorie.text = value??'';
+                                                    });
+                                                },
+                                                items: listAssets.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                    );
+                                                }).toList(),
+                                            ), 
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                            DropdownButton<String>(
+                                                value:  _localisation.text.isEmpty
+                                                        ? country[0]
+                                                        : _localisation.text,
+                                                icon: const Icon(Icons.arrow_downward),
+                                                elevation: 12,
+                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                onChanged: (String? value) {
+                                                    // This is called when the user selects an item.
+                                                    setState(() {
+                                                        _localisation.text = value ?? country[0]; 
+                                                    });
+                                                },
+                                                items: country.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                    );
+                                                }).toList(),
+                                            ),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                            DropdownButton<String>(
+                                                value:  _activite.text.isEmpty
+                                                        ? industry[0]
+                                                        :  _activite.text,
+                                                icon: const Icon(Icons.arrow_downward),
+                                                elevation: 12,
+                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                onChanged: (String? value) {
+                                                    // This is called when the user selects an item.
+                                                    setState(() {
+                                                        _activite.text = value ?? '';
+                                                    });
+                                                },
+                                                items: industry.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                    );
+                                                }).toList(),
+                                            ), 
+                                        ],
                                     ),
-                                ),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                SizedBox(
-                                    width:MediaQuery.of(context).size.width/4,
-                                    child:TextFormField( 
-                                        decoration: InputDecoration(labelText: "Prix Unitaire",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                        controller :_prixUnit,
-                                        style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                        keyboardType: TextInputType.number, 
-                                        inputFormatters: <TextInputFormatter>[ 
-                                            FilteringTextInputFormatter.digitsOnly 
-                                        ], // Only numbers can be entered 
-                                        validator : (value){
-                                            if (value == null || value.isEmpty||value=='0'){
-                                                return 'Veuillez entrer un nombre supérieur à 0';
-                                            }
-                                            return null;
-                                        },
-                                    ),
-                                ),
-                            ],
-                        ),
-                        SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                        Row(
-                            mainAxisAlignment : MainAxisAlignment.center,
-                            children:[  
-                                Text("Compte",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                DropdownButton<String>(
-                                    value: _typeCompte.text.isEmpty
-                                            ? listAccountStock[0]
-                                            :   _typeCompte.text,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 16,
-                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                    onChanged: (String? value) {
-                                        setState(() {
-                                            _typeCompte.text = value ??'';
-                                        });
-                                    },
-                                    items: listAccountStock.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        );
-                                    }).toList(),
-                                ), 
-                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                SizedBox(
-                                    width:MediaQuery.of(context).size.width/4,
-                                    child:TextFormField( 
-                                        decoration: InputDecoration(labelText: "Plateforme",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                        controller :_plateforme,
-                                        style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                    ),
-                                ),
-                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                if (listAccountdebit.length>0)...[
-                                    Text("Compte à débiter",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                    SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                    DropdownButton<Map<String, dynamic>>(
-                                        value: _compteDebiteAccount.text.isEmpty
-                                            ? {}
-                                            : listAccountdebit?.firstWhere(
-                                                (account) =>
-                                                    '${account['bank']} / ${account['account']}' == _compteDebiteAccount.text,
-                                                orElse: () => {},
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    Row(
+                                        mainAxisAlignment : MainAxisAlignment.center,
+                                        children:[
+                                            Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                    final selectedDate = await showDatePicker(
+                                                        context: context,
+                                                        initialDate: DateTime.now(),
+                                                        firstDate: DateTime(1960),
+                                                        lastDate: DateTime.now(),
+                                                    );
+                                                    if (selectedDate != null) {
+                                                        setState(() {
+                                                        _date = selectedDate;
+                                                        });
+                                                    }
+                                                },
+                                                child: Text(_date == null ? 'Select date':"${_date!.year.toString().padLeft(4, '0')}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}"),
+                                            ),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            SizedBox(
+                                                width:MediaQuery.of(context).size.width/4,
+                                                child:TextFormField( 
+                                                    decoration: InputDecoration(labelText: "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                    controller : _nombre,
+                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                    keyboardType: TextInputType.number, 
+                                                    inputFormatters: <TextInputFormatter>[ 
+                                                        FilteringTextInputFormatter.digitsOnly,
+                                                    ], // Only numbers can be entered 
+                                                    validator : (value){
+                                                        if (value == null || value.isEmpty||value=='0'){
+                                                            return 'Veuillez entrer un nombre supérieur à 0';
+                                                        }
+                                                        return null;
+                                                    },
                                                 ),
+                                            ),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            SizedBox(
+                                                width:MediaQuery.of(context).size.width/4,
+                                                child:TextFormField( 
+                                                    decoration: InputDecoration(labelText: "Prix Unitaire",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                    controller :_prixUnit,
+                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                    keyboardType: TextInputType.number, 
+                                                    inputFormatters: <TextInputFormatter>[ 
+                                                        FilteringTextInputFormatter.digitsOnly 
+                                                    ], // Only numbers can be entered 
+                                                    validator : (value){
+                                                        if (value == null || value.isEmpty||value=='0'){
+                                                            return 'Veuillez entrer un nombre supérieur à 0';
+                                                        }
+                                                        return null;
+                                                    },
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    Row(
+                                        mainAxisAlignment : MainAxisAlignment.center,
+                                        children:[  
+                                            Text("Compte",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                            DropdownButton<String>(
+                                                value: _typeCompte.text.isEmpty
+                                                        ? listAccountStock[0]
+                                                        :   _typeCompte.text,
+                                                icon: const Icon(Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                onChanged: (String? value) {
+                                                    setState(() {
+                                                        _typeCompte.text = value ??'';
+                                                    });
+                                                },
+                                                items: listAccountStock.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                    );
+                                                }).toList(),
+                                            ), 
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            SizedBox(
+                                                width:MediaQuery.of(context).size.width/4,
+                                                child:TextFormField( 
+                                                    decoration: InputDecoration(labelText: "Plateforme",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                    controller :_plateforme,
+                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                ),
+                                            ),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            if (listAccountdebit.length>0)...[
+                                                Text("Compte à débiter",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                                DropdownButton<Map<String, dynamic>>(
+                                                    value: _compteDebiteAccount.text.isEmpty
+                                                        ? {}
+                                                        : listAccountdebit?.firstWhere(
+                                                            (account) =>
+                                                                '${account['bank']} / ${account['account']}' == _compteDebiteAccount.text,
+                                                            orElse: () => {},
+                                                            ),
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 16,
+                                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                    onChanged: (Map<String, dynamic>? value) {
+                                                        setState(() {
+                                                            if (value != null) {
+                                                                _compteDebiteAccount.text = value['account']?.toString() ?? '';
+                                                                _compteDebiteBank.text = value['bank']?.toString() ?? '';
+                                                            }
+                                                        });
+                                                    },
+                                                    items: listAccountdebit.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> account) {
+                                                        return DropdownMenuItem<Map<String, dynamic>>(
+                                                            value: account,
+                                                            child: Text(
+                                                            '${account['bank']} / ${account['account']}',
+                                                            style: TextStyle(color: Color(int.parse(colors['text1']))),
+                                                            ),
+                                                        );
+                                                    }).toList(),
+                                                ), 
+                                            ],
+                                        ],
+                                    ),
+                            //Réglage pour phone et tablette
+                            ]else ...[
+                                Column(
+                                children:[
+                                    Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                    DropdownButton<String>(
+                                        value: _categorie.text,
                                         icon: const Icon(Icons.arrow_downward),
-                                        elevation: 16,
+                                        elevation: 12,
                                         style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                        onChanged: (Map<String, dynamic>? value) {
+                                        onChanged: (String? value) {
+                                            // This is called when the user selects an item.
                                             setState(() {
-                                                if (value != null) {
-                                                    _compteDebiteAccount.text = value['account']?.toString() ?? '';
-                                                    _compteDebiteBank.text = value['bank']?.toString() ?? '';
-                                                }
+                                                _categorie.text = value??'';
                                             });
                                         },
-                                        items: listAccountdebit.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> account) {
-                                            return DropdownMenuItem<Map<String, dynamic>>(
-                                                value: account,
-                                                child: Text(
-                                                '${account['bank']} / ${account['account']}',
-                                                style: TextStyle(color: Color(int.parse(colors['text1']))),
-                                                ),
+                                        items: listAssets.map<DropdownMenuItem<String>>((String value) {
+                                            return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
                                             );
                                         }).toList(),
                                     ), 
-                                ],
-                            ],
-                        ),
-                    //Réglage pour phone et tablette
-                    ]else ...[
-                        Column(
-                        children:[
-                            Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                            DropdownButton<String>(
-                                value: _categorie.text,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 12,
-                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                onChanged: (String? value) {
-                                    // This is called when the user selects an item.
-                                    setState(() {
-                                        _categorie.text = value??'';
-                                    });
-                                },
-                                items: listAssets.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                    );
-                                }).toList(),
-                            ), 
-                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                            Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                            DropdownButton<String>(
-                                value:  _localisation.text.isEmpty
-                                        ? country[0]
-                                        : _localisation.text,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 12,
-                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                onChanged: (String? value) {
-                                    // This is called when the user selects an item.
-                                    setState(() {
-                                        _localisation.text = value ?? country[0]; 
-                                    });
-                                },
-                                items: country.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                    );
-                                }).toList(),
-                            ),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                            Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                            DropdownButton<String>(
-                                value:  _activite.text.isEmpty
-                                        ? industry[0]
-                                        :  _activite.text,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 12,
-                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                onChanged: (String? value) {
-                                    // This is called when the user selects an item.
-                                    setState(() {
-                                        _activite.text = value ?? '';
-                                    });
-                                },
-                                items: industry.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                    );
-                                }).toList(),
-                            ), 
-                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                            Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.02),
-                            ElevatedButton(
-                                onPressed: () async {
-                                    final selectedDate = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(1960),
-                                        lastDate: DateTime.now(),
-                                    );
-                                    if (selectedDate != null) {
-                                        setState(() {
-                                        _date = selectedDate;
-                                        });
-                                    }
-                                },
-                                child: Text(_date == null ? 'Select date':"${_date!.year.toString().padLeft(4, '0')}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}"),
-                            ),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.05),
-                            SizedBox(
-                                width:MediaQuery.of(context).size.width/2,
-                                child:TextFormField( 
-                                    decoration: InputDecoration(labelText: "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                    controller : _nombre,
-                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                    keyboardType: TextInputType.number, 
-                                    inputFormatters: <TextInputFormatter>[ 
-                                        FilteringTextInputFormatter.digitsOnly,
-                                    ], // Only numbers can be entered 
-                                    validator : (value){
-                                        if (value == null || value.isEmpty||value=='0'){
-                                            return 'Veuillez entrer un nombre supérieur à 0';
-                                        }
-                                        return null;
-                                    },
-                                ),
-                            ),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.05),
-                            SizedBox(
-                                width:MediaQuery.of(context).size.width/2,
-                                child:TextFormField( 
-                                    decoration: InputDecoration(labelText: "Prix Unitaire",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                    controller :_prixUnit,
-                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                    keyboardType: TextInputType.number, 
-                                    inputFormatters: <TextInputFormatter>[ 
-                                        FilteringTextInputFormatter.digitsOnly 
-                                    ], // Only numbers can be entered 
-                                    validator : (value){
-                                        if (value == null || value.isEmpty||value=='0'){
-                                            return 'Veuillez entrer un nombre supérieur à 0';
-                                        }
-                                        return null;
-                                    },
-                                ),
-                            ),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                            Text("Compte",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                            DropdownButton<String>(
-                                value: _typeCompte.text.isEmpty
-                                        ? listAccountStock[0]
-                                        :   _typeCompte.text,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                onChanged: (String? value) {
-                                    setState(() {
-                                        _typeCompte.text = value ??'';
-                                    });
-                                },
-                                items: listAccountStock.map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                    );
-                                }).toList(),
-                            ), 
-                            SizedBox(height:MediaQuery.of(context).size.height*0.05),
-                            SizedBox(
-                                width:MediaQuery.of(context).size.width/2,
-                                child:TextFormField( 
-                                    decoration: InputDecoration(labelText: "Plateforme",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                    controller :_plateforme,
-                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                ),
-                            ),
-                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                            if (listAccountdebit.length>0)...[
-                                Text("Compte à débiter",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                SizedBox(height:MediaQuery.of(context).size.height*0.02),
-                                DropdownButton<Map<String, dynamic>>(
-                                    value: _compteDebiteAccount.text.isEmpty
-                                        ? {}
-                                        : listAccountdebit?.firstWhere(
-                                            (account) =>
-                                                '${account['bank']} / ${account['account']}' == _compteDebiteAccount.text,
-                                            orElse: () => {},
-                                            ),
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 16,
-                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                    onChanged: (Map<String, dynamic>? value) {
-                                        setState(() {
-                                            if (value != null) {
-                                                _compteDebiteAccount.text = value['account']?.toString() ?? '';
-                                                _compteDebiteBank.text = value['bank']?.toString() ?? '';
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                    DropdownButton<String>(
+                                        value:  _localisation.text.isEmpty
+                                                ? country[0]
+                                                : _localisation.text,
+                                        icon: const Icon(Icons.arrow_downward),
+                                        elevation: 12,
+                                        style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                        onChanged: (String? value) {
+                                            // This is called when the user selects an item.
+                                            setState(() {
+                                                _localisation.text = value ?? country[0]; 
+                                            });
+                                        },
+                                        items: country.map<DropdownMenuItem<String>>((String value) {
+                                            return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            );
+                                        }).toList(),
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                    DropdownButton<String>(
+                                        value:  _activite.text.isEmpty
+                                                ? industry[0]
+                                                :  _activite.text,
+                                        icon: const Icon(Icons.arrow_downward),
+                                        elevation: 12,
+                                        style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                        onChanged: (String? value) {
+                                            // This is called when the user selects an item.
+                                            setState(() {
+                                                _activite.text = value ?? '';
+                                            });
+                                        },
+                                        items: industry.map<DropdownMenuItem<String>>((String value) {
+                                            return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            );
+                                        }).toList(),
+                                    ), 
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.02),
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                            final selectedDate = await showDatePicker(
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(1960),
+                                                lastDate: DateTime.now(),
+                                            );
+                                            if (selectedDate != null) {
+                                                setState(() {
+                                                _date = selectedDate;
+                                                });
                                             }
-                                        });
-                                    },
-                                    items: listAccountdebit.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> account) {
-                                        return DropdownMenuItem<Map<String, dynamic>>(
-                                            value: account,
-                                            child: Text(
-                                            '${account['bank']} / ${account['account']}',
-                                            style: TextStyle(color: Color(int.parse(colors['text1']))),
-                                            ),
-                                        );
-                                    }).toList(),
-                                ), 
-                            ],
-                        ],
-                        ),
-                    ],
-                    //Réglage de base 
-                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                    if(onLoad==false )
-                        ElevatedButton(
-                            onPressed:()=> sendData(),
-                            child: const Text('Envoyer'),
-                            style :ElevatedButton.styleFrom(
-                                backgroundColor: Color(int.parse(colors['interactive3'])), 
-                                foregroundColor: Color(int.parse(colors['text1'])), 
-                                overlayColor: Color(int.parse(colors['interactive1'])),
-                                textStyle: const TextStyle( 
-                                    fontWeight: FontWeight.bold,
+                                        },
+                                        child: Text(_date == null ? 'Select date':"${_date!.year.toString().padLeft(4, '0')}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}"),
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.05),
+                                    SizedBox(
+                                        width:MediaQuery.of(context).size.width/2,
+                                        child:TextFormField( 
+                                            decoration: InputDecoration(labelText: "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                            controller : _nombre,
+                                            style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                            keyboardType: TextInputType.number, 
+                                            inputFormatters: <TextInputFormatter>[ 
+                                                FilteringTextInputFormatter.digitsOnly,
+                                            ], // Only numbers can be entered 
+                                            validator : (value){
+                                                if (value == null || value.isEmpty||value=='0'){
+                                                    return 'Veuillez entrer un nombre supérieur à 0';
+                                                }
+                                                return null;
+                                            },
+                                        ),
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.05),
+                                    SizedBox(
+                                        width:MediaQuery.of(context).size.width/2,
+                                        child:TextFormField( 
+                                            decoration: InputDecoration(labelText: "Prix Unitaire",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                            controller :_prixUnit,
+                                            style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                            keyboardType: TextInputType.number, 
+                                            inputFormatters: <TextInputFormatter>[ 
+                                                FilteringTextInputFormatter.digitsOnly 
+                                            ], // Only numbers can be entered 
+                                            validator : (value){
+                                                if (value == null || value.isEmpty||value=='0'){
+                                                    return 'Veuillez entrer un nombre supérieur à 0';
+                                                }
+                                                return null;
+                                            },
+                                        ),
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    Text("Compte",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                    DropdownButton<String>(
+                                        value: _typeCompte.text.isEmpty
+                                                ? listAccountStock[0]
+                                                :   _typeCompte.text,
+                                        icon: const Icon(Icons.arrow_downward),
+                                        elevation: 16,
+                                        style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                        onChanged: (String? value) {
+                                            setState(() {
+                                                _typeCompte.text = value ??'';
+                                            });
+                                        },
+                                        items: listAccountStock.map<DropdownMenuItem<String>>((String value) {
+                                            return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            );
+                                        }).toList(),
+                                    ), 
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.05),
+                                    SizedBox(
+                                        width:MediaQuery.of(context).size.width/2,
+                                        child:TextFormField( 
+                                            decoration: InputDecoration(labelText: "Plateforme",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                            controller :_plateforme,
+                                            style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                        ),
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                    if (listAccountdebit.length>0)...[
+                                        Text("Compte à débiter",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                        SizedBox(height:MediaQuery.of(context).size.height*0.02),
+                                        DropdownButton<Map<String, dynamic>>(
+                                            value: _compteDebiteAccount.text.isEmpty
+                                                ? {}
+                                                : listAccountdebit?.firstWhere(
+                                                    (account) =>
+                                                        '${account['bank']} / ${account['account']}' == _compteDebiteAccount.text,
+                                                    orElse: () => {},
+                                                    ),
+                                            icon: const Icon(Icons.arrow_downward),
+                                            elevation: 16,
+                                            style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                            onChanged: (Map<String, dynamic>? value) {
+                                                setState(() {
+                                                    if (value != null) {
+                                                        _compteDebiteAccount.text = value['account']?.toString() ?? '';
+                                                        _compteDebiteBank.text = value['bank']?.toString() ?? '';
+                                                    }
+                                                });
+                                            },
+                                            items: listAccountdebit.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> account) {
+                                                return DropdownMenuItem<Map<String, dynamic>>(
+                                                    value: account,
+                                                    child: Text(
+                                                    '${account['bank']} / ${account['account']}',
+                                                    style: TextStyle(color: Color(int.parse(colors['text1']))),
+                                                    ),
+                                                );
+                                            }).toList(),
+                                        ), 
+                                    ],
+                                ],
                                 ),
-                            ),
+                            ],
+                            //Réglage de base 
+                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                            if(onLoad==false )
+                                ElevatedButton(
+                                    onPressed:()=> sendData(),
+                                    child: const Text('Envoyer'),
+                                    style :ElevatedButton.styleFrom(
+                                        backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                        foregroundColor: Color(int.parse(colors['text1'])), 
+                                        overlayColor: Color(int.parse(colors['interactive1'])),
+                                        textStyle: const TextStyle( 
+                                            fontWeight: FontWeight.bold,
+                                        ),
+                                    ),
+                                ),
+                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                            if(onLoad==true) const Center(child: CircularProgressIndicator()),
+                            if (_errorMessage != null)
+                                Center(
+                                    child: Text(
+                                    _errorMessage!,
+                                    style: TextStyle(color: Colors.red),
+                                    ),
+                                ),
+                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                            if (_responseMessage != null)
+                                Center(
+                                    child: Text(
+                                    _responseMessage!,
+                                    style: TextStyle(color: Colors.green),
+                                    ),
+                                ),
+                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                        ],
+                    ),
+                    Positioned(
+                        top: 2.5, // Position sous la barre de recherche (ajustez selon votre besoin)
+                        left:MediaQuery.of(context).size.width < 550
+                            ? ((MediaQuery.of(context).size.width- MediaQuery.of(context).size.width*1.08) / 2)
+                            : ((MediaQuery.of(context).size.width) / 2)- MediaQuery.of(context).size.width * 0.5,
+                        right: 0,
+                        child: Column(
+                            children: [
+                                Text("Séléctionner un actif",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                SizedBox(height:MediaQuery.of(context).size.height*0.02),
+                                SearchBar.SearchBar(colors:colors, categorie:'bourse',onClick:(Map<String, dynamic> returnValue){
+                                    setState(() {
+                                    _name.text = returnValue?['company'] ?? ''; // Ajout de la gestion de nullité
+                                    _ticker.text = returnValue?['ticker'] ?? ''; // Ajout de la gestion de nullité
+                                    });
+                                }),
+                            ],
                         ),
-                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                    if(onLoad==true) const Center(child: CircularProgressIndicator()),
-                    if (_errorMessage != null)
-                        Center(
-                            child: Text(
-                            _errorMessage!,
-                            style: TextStyle(color: Colors.red),
-                            ),
-                        ),
-                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                    if (_responseMessage != null)
-                        Center(
-                            child: Text(
-                            _responseMessage!,
-                            style: TextStyle(color: Colors.green),
-                            ),
-                        ),
-                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                    ),
                 ],
             ),
         );    
     }
-}
+}//- MediaQuery.of(context).size.width * 0.7     - MediaQuery.of(context).size.width * 0.3
