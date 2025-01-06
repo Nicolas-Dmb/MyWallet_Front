@@ -12,7 +12,7 @@ import 'searchBar.dart' as SearchBar;
 class BourseForm extends StatefulWidget{
     late bool isSell; 
     BourseForm({
-        required this.isSell,
+        required isSell,
         super.key,
         });
 
@@ -27,9 +27,9 @@ class _BourseFormState extends State<BourseForm>{
     String? _errorMessage; 
     String? _responseMessage; 
     bool isReady = false;
-    final List<String> listAssets = <String>['','Action','ETF','Forex','Matieres_Premieres'];
-    List<String> industry = <String>['','Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold'];
-    List<String> country = <String>['','Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie'];
+    final List<String> listAssets = <String>['','BTC','ETH','Stablecoins','Altcoins','NFT'];
+    final List<String> industry = <String>['','Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold'];
+    final List<String> country = <String>['','Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie'];
     final List<String> listAccountStock = <String>['','PEA','CTO','Ass_Vie','CSL_LEP','autre'];
     late List<Map<String, dynamic>> listAccountdebit;
     bool onLoad = true;
@@ -145,39 +145,34 @@ class _BourseFormState extends State<BourseForm>{
 
         final Map<String, dynamic> body = {
             //pour créer le buy :
-            if( _currency=="Euro")"currency":'EUR',
-            if( _currency!="Euro")"currency":'USD',
+            "currency": _currency,
             "name": _name.text,
             "plateforme": _plateforme.text,
             if (_typeCompte.text != '') "account": _typeCompte.text,//{'required': False},
-            //number_sold: [This field is required.], price_sold: [This field is required.]}}
-            if(widget.isSell)"number_sold":_nombre.text,
-            if(widget.isSell)"price_sold":_prixUnit.text,
-            if(widget.isSell)"date_sold":formattedDate,
-            if(!widget.isSell)"number_buy": _nombre.text,
-            if(!widget.isSell)"price_buy": _prixUnit.text,
-            if(!widget.isSell)"date_buy": formattedDate,
+            "number_buy": _nombre.text,
+            "price_buy": _prixUnit.text,
+            "date_buy": formattedDate,
             "ticker": _ticker.text,
             //Bourse detail
             "bourseDetail":{
                 "sous_category": _categorie.text,
-                if (_activite.text != '') "industry": _activite.text,
+                if (_activite.text != '') "industry": _activite.text,//{'required': False},
             },
             //Si API ne connait pas : 
             "type": 'Bourse',
             "categories": 'Default',
             "country": _localisation.text,
             "sector": 'Default',
-            "company": 'Default',
-            //dans tous les cas: 
+            "company": _name.text,
+            //dans tous les cas si spécifié : 
             if(_compteDebiteAccount.text != '' && _compteDebiteBank.text != '')
             "cashDetail":{
                 "account": _compteDebiteAccount.text,
                 "bank": _compteDebiteBank.text,
-            },
+            }
         };
         checkAccessToken(context);
-        final url = widget.isSell ? Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/sell/") : Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/buy/");
+        final url = widget.isSell ? Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/buy/") : Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/sell/");
         try{
             final response = await http.post(
                 url,
@@ -197,7 +192,6 @@ class _BourseFormState extends State<BourseForm>{
                 setState((){
                     _errorMessage = "Error : ${responseData}";
                 });
-                print("ResponseData de send buy : ${responseData}");
             }
         }catch (e){
             setState((){
@@ -235,42 +229,7 @@ class _BourseFormState extends State<BourseForm>{
                         children:[
                             SizedBox(height:MediaQuery.of(context).size.height*0.15),
                             //Réglagle pour ordi
-                            if (MediaQuery.of(context).size.width > 900)... [
-                                    Row(
-                                        mainAxisAlignment : MainAxisAlignment.center,
-                                        children:[
-                                            SizedBox(
-                                                width:MediaQuery.of(context).size.width/4,
-                                                child:TextFormField( 
-                                                    decoration: InputDecoration(labelText: "Ticker",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                                    controller :_ticker,
-                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                                    validator : (value){
-                                                        if (value == null || value.isEmpty){
-                                                            return 'Veuillez entrer un ticker';
-                                                        }
-                                                        return null;
-                                                    },
-                                                ),
-                                            ),
-                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                            SizedBox(
-                                                width:MediaQuery.of(context).size.width/4,
-                                                child:TextFormField( 
-                                                    decoration: InputDecoration(labelText: "Nom de l'actif",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                                    controller :_name,
-                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                                    validator : (value){
-                                                        if (value == null || value.isEmpty){
-                                                            return 'Veuillez entrer un Nom';
-                                                        }
-                                                        return null;
-                                                    },
-                                                ),
-                                            ),
-                                        ], 
-                                    ),
-                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                            if (MediaQuery.of(context).size.width > 900)... [ 
                                     Row(
                                         mainAxisAlignment : MainAxisAlignment.center,
                                         children:[
@@ -479,35 +438,6 @@ class _BourseFormState extends State<BourseForm>{
                                 Center(
                                     child:Column(
                                     children:[
-                                        SizedBox(
-                                            width:MediaQuery.of(context).size.width/4,
-                                            child:TextFormField( 
-                                                decoration: InputDecoration(labelText: "Ticker",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                                controller :_ticker,
-                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                                validator : (value){
-                                                    if (value == null || value.isEmpty){
-                                                        return 'Veuillez entrer un ticker';
-                                                    }
-                                                    return null;
-                                                },
-                                            ),
-                                        ),
-                                        SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                                        SizedBox(
-                                            width:MediaQuery.of(context).size.width/4,
-                                            child:TextFormField( 
-                                                decoration: InputDecoration(labelText: "Nom de l'actif",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
-                                                controller :_name,
-                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
-                                                validator : (value){
-                                                    if (value == null || value.isEmpty){
-                                                        return 'Veuillez entrer un Nom';
-                                                    }
-                                                    return null;
-                                                },
-                                            ),
-                                        ),
                                         Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.01),
                                         DropdownButton<String>(
@@ -749,17 +679,7 @@ class _BourseFormState extends State<BourseForm>{
                                 SearchBar.SearchBar(colors:colors, categorie:'bourse',onClick:(Map<String, dynamic> returnValue){
                                     setState(() {
                                     _name.text = returnValue?['company'] ?? ''; // Ajout de la gestion de nullité
-                                    _ticker.text = returnValue?['ticker'] ?? '';
-                                    if(returnValue?['type'] == 'ETF') _categorie.text = 'ETF';
-                                    //gère l'auto remplissage des lists 
-                                    _localisation.text = '';
-                                    _activite.text = ''; 
-                                    industry = <String>['Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold',''];
-                                    country = <String>['Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie',''];
-                                    if(country.contains(returnValue?['country'])) country.remove(returnValue?['country']);
-                                    if(returnValue?['country']!=null) country.insert(0, returnValue?['country']);
-                                    if(industry.contains(returnValue?['sector'])) industry.remove(returnValue?['sector']);
-                                    if(returnValue?['country']!=null) industry.insert(0, returnValue?['sector']);
+                                    _ticker.text = returnValue?['ticker'] ?? ''; // Ajout de la gestion de nullité
                                     });
                                 }),
                             ],
@@ -769,4 +689,4 @@ class _BourseFormState extends State<BourseForm>{
             ),
         );    
     }
-}
+}//- MediaQuery.of(context).size.width * 0.7     - MediaQuery.of(context).size.width * 0.3

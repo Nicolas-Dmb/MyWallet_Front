@@ -302,7 +302,7 @@ Widget build(BuildContext context) {
                 Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: MediaQuery.of(context).size.width < 550
-                        ? MediaQuery.of(context).size.width 
+                        ? MediaQuery.of(context).size.width*0.7
                         : MediaQuery.of(context).size.width * 0.3,
                     height: MediaQuery.of(context).size.height * 0.05,
                     decoration: BoxDecoration(
@@ -435,16 +435,16 @@ Widget build(BuildContext context) {
                                             );
                                         }
                                         return SizedBox(); 
-                                    },
+                                        },
+                                    ),
                                 ),
-                            ),
-                        ],
+                            ],
+                        ),
                     ),
-                ),
-            ],
-        ),
-    );
-}
+                ],
+            ),
+        );
+    }
 }
     /*@override
 Widget build(BuildContext context) {
