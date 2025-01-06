@@ -17,16 +17,28 @@ class AchatVente extends StatelessWidget{
     return Scaffold(
     body: Column(
         children: [
-        Header(isConnect: true),
-        Expanded(
-            child: SingleChildScrollView(
-            child: Column(
-                children: [
-                    AchatVenteForm(),
-                ],
+            Stack(
+                children:[
+                    Container(
+                        padding: EdgeInsets.only(top:(MediaQuery.of(context).size.height < 685 ? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height * 0.1)),
+                        height: MediaQuery.of(context).size.height,  // Utiliser la hauteur de l'écran
+                        child: SingleChildScrollView(
+                        child: Column(
+                            children: [
+                            //SizedBox(height: 150),  // Espace pour le header
+                                AchatVenteForm(),
+                            ],
+                        ),
+                        ),
+                    ),
+                    Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: Header(isConnect: true),
+                    ),
+                ]
             ),
-            ),
-        ),
         ],
     ),
     );
@@ -178,6 +190,7 @@ class _AchatVenteState extends State<AchatVenteForm>{
                             );
                         }).toList(),
                     ), 
+                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
                     BourseForm(isSell:_isSell),
                 ],
             ),

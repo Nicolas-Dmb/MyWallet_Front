@@ -87,7 +87,7 @@ class _HeaderState extends State<Header> {
         children:[
           Column(
             children: [
-              Container(
+              Container(               
                 padding : EdgeInsets.only(left:30.0, right:30.0),
                 height: (MediaQuery.of(context).size.height < 685 ? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height * 0.1),
                 width: MediaQuery.of(context).size.width,
@@ -111,18 +111,26 @@ class _HeaderState extends State<Header> {
                       children: [
                         if (widget.isConnect) ...[
                           if(MediaQuery.of(context).size.width<670)...[
-                            HoverableSvgButton(
-                              svgPath : (button == false ?'assets/more.svg':'assets/less.svg'),
-                              color : widget.isConnect ? Color(int.parse(colors['interactive2'])) : Color(0xFF4E1511),
-                              hoverColor : widget.isConnect ? Color(int.parse(colors['border1'])) : Color(0xFF6E2920),
-                              onClick : () => setState(() {
-                                button = (button == false ? true : false);
-                                menu = (button == false ? 0 : menu);
-                              }), // navigateTo(context, ''),
-                              size : MediaQuery.of(context).size.height * 0.05,
-                              isActive : menu == 0,
-                              activeColor : widget.isConnect ? Color(int.parse(colors['border1'])) : const Color(0xFF6E2920),
-                          ),
+                            SizedBox(
+                              width: !button && MediaQuery.of(context).size.width<670 && widget.isConnect ? MediaQuery.of(context).size.width - 60.0 : MediaQuery.of(context).size.height * 0.05,
+                              child: Row(
+                                children:[
+                                  SizedBox(width: !button && MediaQuery.of(context).size.width<670 && widget.isConnect ? MediaQuery.of(context).size.width - 60.0 - MediaQuery.of(context).size.height * 0.05 : 0),
+                                  HoverableSvgButton(
+                                    svgPath : (button == false ?'assets/more.svg':'assets/less.svg'),
+                                    color : widget.isConnect ? Color(int.parse(colors['interactive2'])) : Color(0xFF4E1511),
+                                    hoverColor : widget.isConnect ? Color(int.parse(colors['border1'])) : Color(0xFF6E2920),
+                                    onClick : () => setState(() {
+                                      button = (button == false ? true : false);
+                                      menu = (button == false ? 0 : menu);
+                                    }), // navigateTo(context, ''),
+                                    size : MediaQuery.of(context).size.height * 0.05,
+                                    isActive : menu == 0,
+                                    activeColor : widget.isConnect ? Color(int.parse(colors['border1'])) : const Color(0xFF6E2920),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                           if (MediaQuery.of(context).size.width>670 || button == true)...[
                           SizedBox(width: (MediaQuery.of(context).size.width < 670 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/8:50 ) :0 )),
@@ -138,7 +146,7 @@ class _HeaderState extends State<Header> {
                             isActive : menu == 1,
                             activeColor : widget.isConnect ? Color(int.parse(colors['border1'])) : const Color(0xFF6E2920),
                           ),
-                          SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/6 ): 50)),
+                          SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/6 ):MediaQuery.of(context).size.width < 1024 ? 30 :50)),
                           //SvgPicture.asset('assets/walletlogo.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
                           HoverableSvgButton(
                             svgPath : 'assets/walletlogo.svg',
@@ -151,7 +159,7 @@ class _HeaderState extends State<Header> {
                             isActive : menu == 2,
                             activeColor : widget.isConnect ? Color(int.parse(colors['border1'])) : const Color(0xFF6E2920),
                           ),
-                          SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/6 ): 50)),
+                          SizedBox(width: (MediaQuery.of(context).size.width < 550 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/7:MediaQuery.of(context).size.width/6 ): MediaQuery.of(context).size.width < 1024 ? 30 :50)),
                           ],
                         ],
                         //SvgPicture.asset('assets/account.svg',color: const Color(0xFF4E1511),height:MediaQuery.of(context).size.height * 0.05),
@@ -199,35 +207,75 @@ class _HeaderState extends State<Header> {
               ),
             ],
           ),
+          //gestion de la searchbar
           if (widget.isConnect && (MediaQuery.of(context).size.width>670 || button == false))...[
-            Center(
-              child:Column(
-                children: [
-                  Positioned(
-                    top: MediaQuery.of(context).size.width < 550 ?( MediaQuery.of(context).size.height < 685 ? (MediaQuery.of(context).size.height*0.15 + MediaQuery.of(context).size.height * 0.05)/2 : (MediaQuery.of(context).size.height * 0.1 + MediaQuery.of(context).size.height * 0.05)/2) : 0, 
-                    left: (MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.3/2)) / 2,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                        SearchBar.SearchBar(
-                          colors: colors,
-                          categorie: 'all',
-                          onClick: (Map<String, dynamic> returnValue) {
-                            navigateTo(context, '/asset/${returnValue?['ticker'] ?? ''}');
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            //Pour tel
+            if(widget.isConnect && (MediaQuery.of(context).size.width<670 && button == false))...[
+              Container(
+                padding : EdgeInsets.only(
+                    left:MediaQuery.of(context).size.width * 0.1, 
+                    top:MediaQuery.of(context).size.height < 685 ? ((MediaQuery.of(context).size.height*0.15)/2)-(MediaQuery.of(context).size.height * 0.05)+5 : ((MediaQuery.of(context).size.height * 0.1)/2)-(MediaQuery.of(context).size.height * 0.05)+5,
+                ),
+                child:Column(
+                  children: [
+                    //Positioned(
+                      //top: 0,//MediaQuery.of(context).size.width < 550 ?( MediaQuery.of(context).size.height < 685 ? (MediaQuery.of(context).size.height*0.15 + MediaQuery.of(context).size.height * 0.05)/2 : (MediaQuery.of(context).size.height * 0.1 + MediaQuery.of(context).size.height * 0.05)/2) : 0, 
+                      //left: //(MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.3/2)) / 2,
+                      //right: 0,
+                      //child: 
+                      //Column(
+                        //children: [
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          //SizedBox(width: (MediaQuery.of(context).size.width < 670 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/8:50 ) :0 )),
+                          SearchBar.SearchBar(
+                            colors: colors,
+                            categorie: 'all',
+                            onClick: (Map<String, dynamic> returnValue) {
+                              navigateTo(context, '/asset/${returnValue?['ticker'] ?? ''}');
+                            },
+                          ),
+                        //],
+                      //),
+                    //),
+                  ],
+                ),
               ),
-            ),
+            ],
+            //Pour ordi
+            if(MediaQuery.of(context).size.width>670)...[
+              Center(
+                child:Column(
+                  children: [
+                    //Positioned(
+                      //top: 0,//MediaQuery.of(context).size.width < 550 ?( MediaQuery.of(context).size.height < 685 ? (MediaQuery.of(context).size.height*0.15 + MediaQuery.of(context).size.height * 0.05)/2 : (MediaQuery.of(context).size.height * 0.1 + MediaQuery.of(context).size.height * 0.05)/2) : 0, 
+                      //left: //(MediaQuery.of(context).size.width - (MediaQuery.of(context).size.width * 0.3/2)) / 2,
+                      //right: 0,
+                      //child: 
+                      //Column(
+                        //children: [
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          //SizedBox(width: (MediaQuery.of(context).size.width < 670 ? (MediaQuery.of(context).size.width < 450 ? MediaQuery.of(context).size.width/8:50 ) :0 )),
+                          SearchBar.SearchBar(
+                            colors: colors,
+                            categorie: 'all',
+                            onClick: (Map<String, dynamic> returnValue) {
+                              navigateTo(context, '/asset/${returnValue?['ticker'] ?? ''}');
+                            },
+                          ),
+                        //],
+                      //),
+                    //),
+                  ],
+                ),
+              ),
+            ],
           ],
         ],
-    );
+      );
   }
 }
+
+
 /*
 class SearchBar extends StatelessWidget {
   final Map<String, dynamic> colors; 

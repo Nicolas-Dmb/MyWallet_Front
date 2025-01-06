@@ -342,7 +342,7 @@ Widget build(BuildContext context) {
                 ),
                 Container(
                     width: MediaQuery.of(context).size.width < 550
-                        ? MediaQuery.of(context).size.width 
+                        ? MediaQuery.of(context).size.width*0.7
                         : MediaQuery.of(context).size.width * 0.3,
                     height: _input.text.length>0 && isSelect==false ? search==false ? ((printListG.length+printListU.length+assetsGPT.length)*60)+40 : ((printListG.length+printListU.length+assetsGPT.length)*60): MediaQuery.of(context).size.height * 0,
                     constraints:BoxConstraints(
