@@ -21,17 +21,29 @@ class SettingPage extends StatelessWidget{
     return Scaffold(
     body: Column(
         children: [
-        Header(isConnect: true),
-        Expanded(
-            child: SingleChildScrollView(
-            child: Column(
-                children: [
-                DataAccount(),
-                DataSetting(),
-                ],
+            Stack(
+                children:[
+                    Container(
+                        padding: EdgeInsets.only(top:(MediaQuery.of(context).size.height < 685 ? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height * 0.1)),
+                        height: MediaQuery.of(context).size.height,  // Utiliser la hauteur de l'écran
+                        child: SingleChildScrollView(
+                        child: Column(
+                            children: [
+                            //SizedBox(height: 150),  // Espace pour le header
+                                DataAccount(),
+                                DataSetting(),
+                            ],
+                        ),
+                        ),
+                    ),
+                    Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: Header(isConnect: true),
+                    ),
+                ]
             ),
-            ),
-        ),
         ],
     ),
     );
@@ -269,7 +281,7 @@ class _DataAccountState extends State<DataAccount>{
                                         _modif = !_modif;
                                     });
                                 },
-                                child: const Text('Modifier'),
+                                child: _modif ? const Text('Annuler') : const Text('Modifier'),
                                 style :ElevatedButton.styleFrom(
                                     backgroundColor: Color(int.parse(colors['interactive3'])), 
                                     foregroundColor: Color(int.parse(colors['text1'])), 
@@ -459,6 +471,14 @@ class _DataAccountState extends State<DataAccount>{
                                                             });
                                                         }
                                                     },
+                                                    style :ElevatedButton.styleFrom(
+                                                        backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                                        foregroundColor: Color(int.parse(colors['text1'])), 
+                                                        overlayColor: Color(int.parse(colors['interactive1'])),
+                                                        textStyle: const TextStyle( 
+                                                            fontWeight: FontWeight.bold,
+                                                        ),
+                                                    ),
                                                     child: Text(_dateBirth == null ? 'Select date':"${_dateBirth!.year.toString().padLeft(4, '0')}-${_dateBirth!.month.toString().padLeft(2, '0')}-${_dateBirth!.day.toString().padLeft(2, '0')}"),
                                                 ),
                                             ],
@@ -727,7 +747,7 @@ class DataSettingState extends State<DataSetting>{
                                         _modif = !_modif;
                                     });
                                 },
-                                child: const Text('Modifier'),
+                                child: _modif ? const Text('Annuler') : const Text('Modifier'),
                                 style :ElevatedButton.styleFrom(
                                     backgroundColor: Color(int.parse(colors['interactive3'])), 
                                     foregroundColor: Color(int.parse(colors['text1'])), 

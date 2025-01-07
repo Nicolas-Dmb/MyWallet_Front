@@ -165,10 +165,10 @@ class _BourseFormState extends State<BourseForm>{
             },
             //Si API ne connait pas : 
             "type": 'Bourse',
-            "categories": 'Default',
+            "categories": 'Bourse',//categories est affecté à category via une self.action de assets.create_asset_withoutAPI
             "country": _localisation.text,
-            "sector": 'Default',
-            "company": 'Default',
+            "sector": _localisation.text,
+            "company": _name.text,
             //dans tous les cas: 
             if(_compteDebiteAccount.text != '' && _compteDebiteBank.text != '')
             "cashDetail":{
@@ -189,15 +189,66 @@ class _BourseFormState extends State<BourseForm>{
                 body:json.encode(body),
             );
             if(response.statusCode == 201){
-                setState((){
+                setState(() {
                     _responseMessage = "L'achat a bien été enregistré.";
+
+                    // Réinitialiser les champs
+                    _name.clear();
+                    _ticker.clear();
+                    _categorie.clear();
+                    _localisation.clear();
+                    _activite.clear();
+                    _nombre.clear();
+                    _prixUnit.clear();
+                    _plateforme.clear();
+                    _typeCompte.clear();
+                    _compteDebiteAccount.clear();
+                    _compteDebiteBank.clear();
+                    _date = DateTime.now(); // Réinitialiser la date à la valeur actuelle
+
+                    // Optionnel: Réinitialiser la couleur et autres valeurs si nécessaire
+                    industry = <String>[
+                    '',
+                    'Technologie',
+                    'Santé',
+                    'Finance',
+                    'Énergie',
+                    'Matériaux de base',
+                    'Industrie',
+                    'Consommation cyclique',
+                    'Consommation non cyclique',
+                    'Télécommunications',
+                    'Immobilier',
+                    'Services publics',
+                    'Commodities',
+                    'Gold'
+                    ];
+                    country = <String>[
+                    '',
+                    'Europe',
+                    'Amérique du Nord',
+                    'Amérique du sud',
+                    'Afrique',
+                    'Asie',
+                    'Moyen-Orient',
+                    'Océanie'
+                    ];
+                    _categorie.text = 'Action';
+                    _localisation.text = '';
+                    _activite.text = '';
+                    _typeCompte.text ='';
+                    _date = DateTime.now();
+                });
+            }else if(response.statusCode == 410){
+                final responseData = json.decode(response.body);
+                setState((){
+                    _errorMessage = widget.isSell ? "Attention : La vente a bien été enregistrée, mais le compte a credité n'a pas pu être mis à jour.":"Attention : L'achat a bien été enregistré, mais le compte a débité n'a pas pu être mis à jour.";
                 });
             }else{
                 final responseData = json.decode(response.body);
                 setState((){
                     _errorMessage = "Error : ${responseData}";
                 });
-                print("ResponseData de send buy : ${responseData}");
             }
         }catch (e){
             setState((){
@@ -366,6 +417,14 @@ class _BourseFormState extends State<BourseForm>{
                                                         });
                                                     }
                                                 },
+                                                style :ElevatedButton.styleFrom(
+                                                    backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                                    foregroundColor: Color(int.parse(colors['text1'])), 
+                                                    overlayColor: Color(int.parse(colors['interactive1'])),
+                                                    textStyle: const TextStyle( 
+                                                        fontWeight: FontWeight.bold,
+                                                    ),
+                                                ),
                                                 child: Text(_date == null ? 'Select date':"${_date!.year.toString().padLeft(4, '0')}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}"),
                                             ),
                                             SizedBox(width:MediaQuery.of(context).size.width*0.1),
@@ -611,6 +670,14 @@ class _BourseFormState extends State<BourseForm>{
                                                 }
                                             },
                                             child: Text(_date == null ? 'Select date':"${_date!.year.toString().padLeft(4, '0')}-${_date!.month.toString().padLeft(2, '0')}-${_date!.day.toString().padLeft(2, '0')}"),
+                                            style :ElevatedButton.styleFrom(
+                                                backgroundColor: Color(int.parse(colors['interactive3'])), 
+                                                foregroundColor: Color(int.parse(colors['text1'])), 
+                                                overlayColor: Color(int.parse(colors['interactive1'])),
+                                                textStyle: const TextStyle( 
+                                                    fontWeight: FontWeight.bold,
+                                                ),
+                                            ),
                                         ),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.05),
                                         SizedBox(
@@ -781,12 +848,28 @@ class _BourseFormState extends State<BourseForm>{
                                     //gère l'auto remplissage des lists 
                                     _localisation.text = '';
                                     _activite.text = ''; 
-                                    industry = <String>['Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold',''];
-                                    country = <String>['Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie',''];
+                                    industry = <String>['','Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold'];
+                                    country = <String>['','Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie'];
+                                    /*
                                     if(country.contains(returnValue?['country'])) country.remove(returnValue?['country']);
                                     if(returnValue?['country']!=null) country.insert(0, returnValue?['country']);
                                     if(industry.contains(returnValue?['sector'])) industry.remove(returnValue?['sector']);
-                                    if(returnValue?['country']!=null) industry.insert(0, returnValue?['sector']);
+                                    if(returnValue?['sector']!=null) industry.insert(0, returnValue?['sector'][0]);*/
+                                    if(country.contains(returnValue?['country'])){
+                                        country = <String>['Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie',''];
+                                        country.remove(returnValue?['country']);
+                                    }
+                                    if(returnValue?['country']!=null){
+                                        country.insert(0, returnValue?['country']);
+                                    }
+                                    if(industry.contains(returnValue?['sector'])){
+                                        industry = <String>['Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold',''];
+                                        industry.remove(returnValue?['sector']);
+                                        industry.insert(0, returnValue?['sector']);
+                                    }
+                                    if(returnValue?['sector']!=null){
+                                        industry.insert(0, returnValue?['sector']);
+                                    }
                                     });
                                 }),
                             ],

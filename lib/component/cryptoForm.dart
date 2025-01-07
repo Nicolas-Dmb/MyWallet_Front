@@ -12,7 +12,7 @@ import 'searchBar.dart' as SearchBar;
 class BourseForm extends StatefulWidget{
     late bool isSell; 
     BourseForm({
-        required isSell,
+        required this.isSell,
         super.key,
         });
 
@@ -24,12 +24,12 @@ class _BourseFormState extends State<BourseForm>{
     final FlutterSecureStorage storage = FlutterSecureStorage();
     String? _accessToken;
     final _formKey = GlobalKey<FormState>();
-    String? _errorMessage; 
-    String? _responseMessage; 
+    String? _errorMessage;
+    String? _responseMessage;
     bool isReady = false;
     final List<String> listAssets = <String>['','BTC','ETH','Stablecoins','Altcoins','NFT'];
-    final List<String> industry = <String>['','Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold'];
-    final List<String> country = <String>['','Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie'];
+    List<String> industry = <String>['','Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold'];
+    List<String> country = <String>['','Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie'];
     final List<String> listAccountStock = <String>['','PEA','CTO','Ass_Vie','CSL_LEP','autre'];
     late List<Map<String, dynamic>> listAccountdebit;
     bool onLoad = true;
@@ -37,8 +37,8 @@ class _BourseFormState extends State<BourseForm>{
     late String? _currency;
 
     //input
-    final TextEditingController _name = TextEditingController();//avec la searchbar
-    final TextEditingController _ticker = TextEditingController();//avec la searchbar
+    final TextEditingController _name = TextEditingController();
+    final TextEditingController _ticker = TextEditingController();
     final TextEditingController _categorie = TextEditingController();
     final TextEditingController _localisation = TextEditingController();
     final TextEditingController _activite = TextEditingController();
@@ -145,34 +145,39 @@ class _BourseFormState extends State<BourseForm>{
 
         final Map<String, dynamic> body = {
             //pour créer le buy :
-            "currency": _currency,
+            if( _currency=="Euro")"currency":'EUR',
+            if( _currency!="Euro")"currency":'USD',
             "name": _name.text,
             "plateforme": _plateforme.text,
-            if (_typeCompte.text != '') "account": _typeCompte.text,//{'required': False},
-            "number_buy": _nombre.text,
-            "price_buy": _prixUnit.text,
-            "date_buy": formattedDate,
+            if (_typeCompte.text != '') "account": _typeCompte.text,
+            //number_sold : 
+            if(widget.isSell)"number_sold":_nombre.text,
+            if(widget.isSell)"price_sold":_prixUnit.text,
+            if(widget.isSell)"date_sold":formattedDate,
+            if(!widget.isSell)"number_buy": _nombre.text,
+            if(!widget.isSell)"price_buy": _prixUnit.text,
+            if(!widget.isSell)"date_buy": formattedDate,
             "ticker": _ticker.text,
-            //Bourse detail
+            //Bourse detail : 
             "bourseDetail":{
                 "sous_category": _categorie.text,
-                if (_activite.text != '') "industry": _activite.text,//{'required': False},
+                if (_activite.text != '') "industry": _activite.text,
             },
             //Si API ne connait pas : 
             "type": 'Bourse',
-            "categories": 'Default',
+            "categories": 'Default',//categories est affecté à category via une self.action de assets.create_asset_withoutAPI
             "country": _localisation.text,
             "sector": 'Default',
-            "company": _name.text,
-            //dans tous les cas si spécifié : 
+            "company": 'Default',
+            //dans tous les cas : 
             if(_compteDebiteAccount.text != '' && _compteDebiteBank.text != '')
             "cashDetail":{
                 "account": _compteDebiteAccount.text,
                 "bank": _compteDebiteBank.text,
-            }
+            },
         };
         checkAccessToken(context);
-        final url = widget.isSell ? Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/buy/") : Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/sell/");
+        final url = widget.isSell ? Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/sell/") : Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/wallet/buy/");
         try{
             final response = await http.post(
                 url,
@@ -192,6 +197,7 @@ class _BourseFormState extends State<BourseForm>{
                 setState((){
                     _errorMessage = "Error : ${responseData}";
                 });
+                print("ResponseData de send buy : ${responseData}");
             }
         }catch (e){
             setState((){
@@ -227,9 +233,45 @@ class _BourseFormState extends State<BourseForm>{
                     SizedBox(height:MediaQuery.of(context).size.height*0.1),
                     Column(
                         children:[
-                            SizedBox(height:MediaQuery.of(context).size.height*0.15),
                             //Réglagle pour ordi
-                            if (MediaQuery.of(context).size.width > 900)... [ 
+                            SizedBox(height:MediaQuery.of(context).size.height*0.2),
+                            if (MediaQuery.of(context).size.width > 900)... [
+                                    Row(
+                                        mainAxisAlignment : MainAxisAlignment.center,
+                                        children:[
+                                            //SizedBox(height:MediaQuery.of(context).size.height*0.15),
+                                            SizedBox(
+                                                width:MediaQuery.of(context).size.width/4,
+                                                child:TextFormField( 
+                                                    decoration: InputDecoration(labelText: "Ticker",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                    controller :_ticker,
+                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                    validator : (value){
+                                                        if (value == null || value.isEmpty){
+                                                            return 'Veuillez entrer un ticker';
+                                                        }
+                                                        return null;
+                                                    },
+                                                ),
+                                            ),
+                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            SizedBox(
+                                                width:MediaQuery.of(context).size.width/4,
+                                                child:TextFormField( 
+                                                    decoration: InputDecoration(labelText: "Nom de l'actif",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                    controller :_name,
+                                                    style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                    validator : (value){
+                                                        if (value == null || value.isEmpty){
+                                                            return 'Veuillez entrer un Nom';
+                                                        }
+                                                        return null;
+                                                    },
+                                                ),
+                                            ),
+                                        ], 
+                                    ),
+                                    SizedBox(height:MediaQuery.of(context).size.height*0.1),
                                     Row(
                                         mainAxisAlignment : MainAxisAlignment.center,
                                         children:[
@@ -254,58 +296,61 @@ class _BourseFormState extends State<BourseForm>{
                                                 }).toList(),
                                             ), 
                                             SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                            Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                            DropdownButton<String>(
-                                                value:  _localisation.text.isEmpty
-                                                        ? country[0]
-                                                        : _localisation.text,
-                                                icon: const Icon(Icons.arrow_downward),
-                                                elevation: 12,
-                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                                onChanged: (String? value) {
-                                                    // This is called when the user selects an item.
-                                                    setState(() {
-                                                        _localisation.text = value ?? country[0]; 
-                                                    });
-                                                },
-                                                items: country.map<DropdownMenuItem<String>>((String value) {
-                                                    return DropdownMenuItem<String>(
-                                                        value: value,
-                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                                    );
-                                                }).toList(),
-                                            ),
-                                            SizedBox(width:MediaQuery.of(context).size.width*0.1),
-                                            Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                            SizedBox(width:MediaQuery.of(context).size.width*0.05),
-                                            DropdownButton<String>(
-                                                value:  _activite.text.isEmpty
-                                                        ? industry[0]
-                                                        :  _activite.text,
-                                                icon: const Icon(Icons.arrow_downward),
-                                                elevation: 12,
-                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                                onChanged: (String? value) {
-                                                    // This is called when the user selects an item.
-                                                    setState(() {
-                                                        _activite.text = value ?? '';
-                                                    });
-                                                },
-                                                items: industry.map<DropdownMenuItem<String>>((String value) {
-                                                    return DropdownMenuItem<String>(
-                                                        value: value,
-                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                                    );
-                                                }).toList(),
-                                            ), 
+                                            if(!widget.isSell)...[
+                                                Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                                DropdownButton<String>(
+                                                    value:  _localisation.text.isEmpty
+                                                            ? country[0]
+                                                            : _localisation.text,
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 12,
+                                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                    onChanged: (String? value) {
+                                                        // This is called when the user selects an item.
+                                                        setState(() {
+                                                            _localisation.text = value ?? country[0]; 
+                                                        });
+                                                    },
+                                                    items: country.map<DropdownMenuItem<String>>((String value) {
+                                                        return DropdownMenuItem<String>(
+                                                            value: value,
+                                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                        );
+                                                    }).toList(),
+                                                ),
+                                                SizedBox(width:MediaQuery.of(context).size.width*0.1),
+                                            
+                                                Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                SizedBox(width:MediaQuery.of(context).size.width*0.05),
+                                                DropdownButton<String>(
+                                                    value:  _activite.text.isEmpty
+                                                            ? industry[0]
+                                                            :  _activite.text,
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 12,
+                                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                    onChanged: (String? value) {
+                                                        // This is called when the user selects an item.
+                                                        setState(() {
+                                                            _activite.text = value ?? '';
+                                                        });
+                                                    },
+                                                    items: industry.map<DropdownMenuItem<String>>((String value) {
+                                                        return DropdownMenuItem<String>(
+                                                            value: value,
+                                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                        );
+                                                    }).toList(),
+                                                ), 
+                                            ],
                                         ],
                                     ),
                                     SizedBox(height:MediaQuery.of(context).size.height*0.1),
                                     Row(
                                         mainAxisAlignment : MainAxisAlignment.center,
                                         children:[
-                                            Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            widget.isSell ? Text("Date de vente",style: TextStyle(color: Color(int.parse(colors['text1'])))) : Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))) ,
                                             SizedBox(width:MediaQuery.of(context).size.width*0.05),
                                             ElevatedButton(
                                                 onPressed: () async {
@@ -327,7 +372,7 @@ class _BourseFormState extends State<BourseForm>{
                                             SizedBox(
                                                 width:MediaQuery.of(context).size.width/4,
                                                 child:TextFormField( 
-                                                    decoration: InputDecoration(labelText: "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                    decoration: InputDecoration(labelText:widget.isSell ?"Nombre vendu" :"Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
                                                     controller : _nombre,
                                                     style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                     keyboardType: TextInputType.number, 
@@ -438,74 +483,118 @@ class _BourseFormState extends State<BourseForm>{
                                 Center(
                                     child:Column(
                                     children:[
-                                        Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                                        DropdownButton<String>(
-                                            value: _categorie.text,
-                                            icon: const Icon(Icons.arrow_downward),
-                                            elevation: 12,
-                                            style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                            onChanged: (String? value) {
-                                                // This is called when the user selects an item.
-                                                setState(() {
-                                                    _categorie.text = value??'';
-                                                });
-                                            },
-                                            items: listAssets.map<DropdownMenuItem<String>>((String value) {
-                                                return DropdownMenuItem<String>(
-                                                    value: value,
-                                                    child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                                );
-                                            }).toList(),
-                                        ), 
-                                        SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                                        Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                                        DropdownButton<String>(
-                                            value:  _localisation.text.isEmpty
-                                                    ? country[0]
-                                                    : _localisation.text,
-                                            icon: const Icon(Icons.arrow_downward),
-                                            elevation: 12,
-                                            style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                            onChanged: (String? value) {
-                                                // This is called when the user selects an item.
-                                                setState(() {
-                                                    _localisation.text = value ?? country[0]; 
-                                                });
-                                            },
-                                            items: country.map<DropdownMenuItem<String>>((String value) {
-                                                return DropdownMenuItem<String>(
-                                                    value: value,
-                                                    child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                                );
-                                            }).toList(),
+                                        SizedBox(
+                                            width:MediaQuery.of(context).size.width*0.7,
+                                            child:TextFormField( 
+                                                decoration: InputDecoration(labelText: "Ticker",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                controller :_ticker,
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                validator : (value){
+                                                    if (value == null || value.isEmpty){
+                                                        return 'Veuillez entrer un ticker';
+                                                    }
+                                                    return null;
+                                                },
+                                            ),
                                         ),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                                        Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                        SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                                        DropdownButton<String>(
-                                            value:  _activite.text.isEmpty
-                                                    ? industry[0]
-                                                    :  _activite.text,
-                                            icon: const Icon(Icons.arrow_downward),
-                                            elevation: 12,
-                                            style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                            onChanged: (String? value) {
-                                                // This is called when the user selects an item.
-                                                setState(() {
-                                                    _activite.text = value ?? '';
-                                                });
-                                            },
-                                            items: industry.map<DropdownMenuItem<String>>((String value) {
-                                                return DropdownMenuItem<String>(
-                                                    value: value,
-                                                    child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                                );
-                                            }).toList(),
-                                        ), 
+                                        SizedBox(
+                                            width:MediaQuery.of(context).size.width*0.7,
+                                            child:TextFormField( 
+                                                decoration: InputDecoration(labelText: "Nom de l'actif",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                controller :_name,
+                                                style : TextStyle(color: Color(int.parse(colors['text2']))),
+                                                validator : (value){
+                                                    if (value == null || value.isEmpty){
+                                                        return 'Veuillez entrer un Nom';
+                                                    }
+                                                    return null;
+                                                },
+                                            ),
+                                        ),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.1),
-                                        Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                        Text("Catégorie",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                        SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                        Container(
+                                            width:MediaQuery.of(context).size.width*0.7,
+                                            child:DropdownButton<String>(
+                                                isExpanded: true,
+                                                value: _categorie.text,
+                                                icon: const Icon(Icons.arrow_downward),
+                                                elevation: 12,
+                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                onChanged: (String? value) {
+                                                    // This is called when the user selects an item.
+                                                    setState(() {
+                                                        _categorie.text = value??'';
+                                                    });
+                                                },
+                                                items: listAssets.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                    );
+                                                }).toList(),
+                                            ), 
+                                        ),
+                                        SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                        if(!widget.isSell)...[
+                                            Text("Secteur Géographique",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                            Container(
+                                                width:MediaQuery.of(context).size.width*0.7,
+                                                child:DropdownButton<String>(
+                                                    isExpanded: true,
+                                                    value:  _localisation.text.isEmpty
+                                                            ? country[0]
+                                                            : _localisation.text,
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 12,
+                                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                    onChanged: (String? value) {
+                                                        // This is called when the user selects an item.
+                                                        setState(() {
+                                                            _localisation.text = value ?? country[0]; 
+                                                        });
+                                                    },
+                                                    items: country.map<DropdownMenuItem<String>>((String value) {
+                                                        return DropdownMenuItem<String>(
+                                                            value: value,
+                                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                        );
+                                                    }).toList(),
+                                                ),
+                                            ),
+                                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                            Text("Activité",style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                            SizedBox(height:MediaQuery.of(context).size.height*0.01),
+                                            Container(
+                                                width:MediaQuery.of(context).size.width*0.7,
+                                                child:DropdownButton<String>(
+                                                    isExpanded: true,
+                                                    value:  _activite.text.isEmpty
+                                                            ? industry[0]
+                                                            :  _activite.text,
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 12,
+                                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                    onChanged: (String? value) {
+                                                        // This is called when the user selects an item.
+                                                        setState(() {
+                                                            _activite.text = value ?? '';
+                                                        });
+                                                    },
+                                                    items: industry.map<DropdownMenuItem<String>>((String value) {
+                                                        return DropdownMenuItem<String>(
+                                                            value: value,
+                                                            child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                        );
+                                                    }).toList(),
+                                                ), 
+                                            ),
+                                            SizedBox(height:MediaQuery.of(context).size.height*0.1),
+                                        ],
+                                        widget.isSell ? Text("Date de vente",style: TextStyle(color: Color(int.parse(colors['text1'])))):Text("Date d'achat",style: TextStyle(color: Color(int.parse(colors['text1'])))),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.02),
                                         ElevatedButton(
                                             onPressed: () async {
@@ -525,9 +614,9 @@ class _BourseFormState extends State<BourseForm>{
                                         ),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.05),
                                         SizedBox(
-                                            width:MediaQuery.of(context).size.width/2,
+                                            width:MediaQuery.of(context).size.width*0.7,
                                             child:TextFormField( 
-                                                decoration: InputDecoration(labelText: "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
+                                                decoration: InputDecoration(labelText:widget.isSell ? "Nombre vendu": "Nombre acheté",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
                                                 controller : _nombre,
                                                 style : TextStyle(color: Color(int.parse(colors['text2']))),
                                                 keyboardType: TextInputType.number, 
@@ -544,7 +633,7 @@ class _BourseFormState extends State<BourseForm>{
                                         ),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.05),
                                         SizedBox(
-                                            width:MediaQuery.of(context).size.width/2,
+                                            width:MediaQuery.of(context).size.width*0.7,
                                             child:TextFormField( 
                                                 decoration: InputDecoration(labelText: "Prix Unitaire",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
                                                 controller :_prixUnit,
@@ -564,28 +653,32 @@ class _BourseFormState extends State<BourseForm>{
                                         SizedBox(height:MediaQuery.of(context).size.height*0.1),
                                         Text("Compte",style: TextStyle(color: Color(int.parse(colors['text1'])))),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.01),
-                                        DropdownButton<String>(
-                                            value: _typeCompte.text.isEmpty
-                                                    ? listAccountStock[0]
-                                                    :   _typeCompte.text,
-                                            icon: const Icon(Icons.arrow_downward),
-                                            elevation: 16,
-                                            style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                            onChanged: (String? value) {
-                                                setState(() {
-                                                    _typeCompte.text = value ??'';
-                                                });
-                                            },
-                                            items: listAccountStock.map<DropdownMenuItem<String>>((String value) {
-                                                return DropdownMenuItem<String>(
-                                                    value: value,
-                                                    child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
-                                                );
-                                            }).toList(),
-                                        ), 
+                                        Container(
+                                            width:MediaQuery.of(context).size.width*0.7,
+                                            child:DropdownButton<String>(
+                                                isExpanded: true,
+                                                value: _typeCompte.text.isEmpty
+                                                        ? listAccountStock[0]
+                                                        :   _typeCompte.text,
+                                                icon: const Icon(Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                onChanged: (String? value) {
+                                                    setState(() {
+                                                        _typeCompte.text = value ??'';
+                                                    });
+                                                },
+                                                items: listAccountStock.map<DropdownMenuItem<String>>((String value) {
+                                                    return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value, style: TextStyle(color: Color(int.parse(colors['text1'])))),
+                                                    );
+                                                }).toList(),
+                                            ), 
+                                        ),
                                         SizedBox(height:MediaQuery.of(context).size.height*0.05),
                                         SizedBox(
-                                            width:MediaQuery.of(context).size.width/2,
+                                            width:MediaQuery.of(context).size.width*0.7,
                                             child:TextFormField( 
                                                 decoration: InputDecoration(labelText: "Plateforme",labelStyle:TextStyle(color: Color(int.parse(colors['text1'])))), 
                                                 controller :_plateforme,
@@ -596,35 +689,39 @@ class _BourseFormState extends State<BourseForm>{
                                         if (listAccountdebit.length>0)...[
                                             Text("Compte à débiter",style: TextStyle(color: Color(int.parse(colors['text1'])))),
                                             SizedBox(height:MediaQuery.of(context).size.height*0.02),
-                                            DropdownButton<Map<String, dynamic>>(
-                                                value: _compteDebiteAccount.text.isEmpty
-                                                    ? {}
-                                                    : listAccountdebit?.firstWhere(
-                                                        (account) =>
-                                                            '${account['bank']} / ${account['account']}' == _compteDebiteAccount.text,
-                                                        orElse: () => {},
-                                                        ),
-                                                icon: const Icon(Icons.arrow_downward),
-                                                elevation: 16,
-                                                style: TextStyle(color:Color(int.parse(colors['interactive3']))),
-                                                onChanged: (Map<String, dynamic>? value) {
-                                                    setState(() {
-                                                        if (value != null) {
-                                                            _compteDebiteAccount.text = value['account']?.toString() ?? '';
-                                                            _compteDebiteBank.text = value['bank']?.toString() ?? '';
-                                                        }
-                                                    });
-                                                },
-                                                items: listAccountdebit.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> account) {
-                                                    return DropdownMenuItem<Map<String, dynamic>>(
-                                                        value: account,
-                                                        child: Text(
-                                                        '${account['bank']} / ${account['account']}',
-                                                        style: TextStyle(color: Color(int.parse(colors['text1']))),
-                                                        ),
-                                                    );
-                                                }).toList(),
-                                            ), 
+                                            Container(
+                                                width:MediaQuery.of(context).size.width*0.7,
+                                                child:DropdownButton<Map<String, dynamic>>(
+                                                    isExpanded: true,
+                                                    value: _compteDebiteAccount.text.isEmpty
+                                                        ? {}
+                                                        : listAccountdebit?.firstWhere(
+                                                            (account) =>
+                                                                '${account['bank']} / ${account['account']}' == _compteDebiteAccount.text,
+                                                            orElse: () => {},
+                                                            ),
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 16,
+                                                    style: TextStyle(color:Color(int.parse(colors['interactive3']))),
+                                                    onChanged: (Map<String, dynamic>? value) {
+                                                        setState(() {
+                                                            if (value != null) {
+                                                                _compteDebiteAccount.text = value['account']?.toString() ?? '';
+                                                                _compteDebiteBank.text = value['bank']?.toString() ?? '';
+                                                            }
+                                                        });
+                                                    },
+                                                    items: listAccountdebit.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> account) {
+                                                        return DropdownMenuItem<Map<String, dynamic>>(
+                                                            value: account,
+                                                            child: Text(
+                                                            '${account['bank']} / ${account['account']}',
+                                                            style: TextStyle(color: Color(int.parse(colors['text1']))),
+                                                            ),
+                                                        );
+                                                    }).toList(),
+                                                ), 
+                                            ),
                                         ],
                                     ],
                                     ),
@@ -666,12 +763,6 @@ class _BourseFormState extends State<BourseForm>{
                         ],
                     ),
                     Center(
-                    /*Positioned(
-                        top: 2.5, // Position sous la barre de recherche (ajustez selon votre besoin)
-                        left:MediaQuery.of(context).size.width < 550
-                            ? ((MediaQuery.of(context).size.width- MediaQuery.of(context).size.width*1.08) / 2)
-                            : ((MediaQuery.of(context).size.width) / 2)- MediaQuery.of(context).size.width * 0.5,
-                        right: 0,*/
                         child: Column(
                             children: [
                                 Text("Séléctionner un actif",style: TextStyle(color: Color(int.parse(colors['text1'])))),
@@ -679,7 +770,17 @@ class _BourseFormState extends State<BourseForm>{
                                 SearchBar.SearchBar(colors:colors, categorie:'bourse',onClick:(Map<String, dynamic> returnValue){
                                     setState(() {
                                     _name.text = returnValue?['company'] ?? ''; // Ajout de la gestion de nullité
-                                    _ticker.text = returnValue?['ticker'] ?? ''; // Ajout de la gestion de nullité
+                                    _ticker.text = returnValue?['ticker'] ?? '';
+                                    if(returnValue?['type'] == 'ETF') _categorie.text = 'ETF';
+                                    //gère l'auto remplissage des lists 
+                                    _localisation.text = '';
+                                    _activite.text = ''; 
+                                    industry = <String>['Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold',''];
+                                    country = <String>['Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie',''];
+                                    if(country.contains(returnValue?['country'])) country.remove(returnValue?['country']);
+                                    if(returnValue?['country']!=null) country.insert(0, returnValue?['country']);
+                                    if(industry.contains(returnValue?['sector'])) industry.remove(returnValue?['sector']);
+                                    if(returnValue?['country']!=null) industry.insert(0, returnValue?['sector']);
                                     });
                                 }),
                             ],
@@ -689,4 +790,4 @@ class _BourseFormState extends State<BourseForm>{
             ),
         );    
     }
-}//- MediaQuery.of(context).size.width * 0.7     - MediaQuery.of(context).size.width * 0.3
+}

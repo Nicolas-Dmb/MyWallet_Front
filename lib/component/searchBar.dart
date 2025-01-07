@@ -58,11 +58,22 @@ class _SearchBarState extends State<SearchBar>{
     Future<void> findList() async {
         printListU.clear();
         printListG.clear();
+        assetsGPT.clear();
+        String keyword1='';
+        String keyword2='';
     
         printListU = assetsUser.where((assetU) {
-            String ticker = assetU['ticker'].toLowerCase();
-            String company = assetU['company'].toLowerCase();
-            return ticker.contains(_input.text.toLowerCase()) || company.contains(_input.text.toLowerCase());
+            if (assetU['categorie'] == 'immo'){
+                keyword1 = assetU['adresse'].toLowerCase();
+                keyword2 = assetU['type'].toLowerCase();
+            }else if(assetU['categorie'] == 'cash'){
+                keyword1 = assetU['bank'].toLowerCase();
+                keyword2 = assetU['account'].toLowerCase();
+            }else if(assetU['categorie'] == 'crypto' || assetU['categorie'] == 'bourse'){
+                keyword1 = assetU['ticker'].toLowerCase();
+                keyword2 = assetU['company'].toLowerCase();
+            }
+            return keyword1.contains(_input.text.toLowerCase()) || keyword2.contains(_input.text.toLowerCase());
         }).toList();
 
         printListG = assetsGeneral.where((assetG) {
@@ -97,6 +108,7 @@ class _SearchBarState extends State<SearchBar>{
         checkAccessToken(context).then((_) {
             if (_accessToken != null) {
                 getAssetsG();
+                print("widget.categorie : ${widget.categorie}");
                 if(widget.categorie=='all'){
                     getAssetsU('crypto');
                     getAssetsU('bourse');
@@ -135,7 +147,6 @@ class _SearchBarState extends State<SearchBar>{
     }
     //Get assetGeneral
     Future<void> getAssetsG() async {
-        print("on récupère les assets generaux");
         onLoad = true;
         final url = Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/asset/");
         try{
@@ -153,7 +164,6 @@ class _SearchBarState extends State<SearchBar>{
                 setState(() {
                     assetsGeneral = List<Map<String, dynamic>>.from(responseData);
                 });
-                print("list d'assetGeneral : ${assetsGeneral}");
             }else{
                 final responseData = json.decode(response.body);
                 setState((){
@@ -186,6 +196,8 @@ class _SearchBarState extends State<SearchBar>{
                 },
             );
             print("réponse d'assetU : ${response.statusCode}");
+            final responseData = json.decode(response.body);
+            print("message d'erreur : ${ responseData}");
             if(response.statusCode == 200){
                 final responseData = json.decode(response.body);
                 setState(() {
@@ -211,7 +223,6 @@ class _SearchBarState extends State<SearchBar>{
 
     //find ticker and send new assetG
     Future<void> searchTicker() async {
-        print("passage dans searchTicker");
         setState((){
             onLoad = true;
             search = true;
@@ -226,13 +237,11 @@ class _SearchBarState extends State<SearchBar>{
                     'Authorization': 'Bearer ${_accessToken}',
                 },
             );
-            print("réponse de searchTicker : ${response.statusCode}");
             if(response.statusCode == 200){
                 final responseData = json.decode(response.body);
                 setState(() {
                     assetsGPT.addAll(List<Map<String, dynamic>>.from(responseData));
                 });
-                print("list assetsGPT : ${assetsGPT}");
             }else{
                 final responseData = json.decode(response.body);
                 setState((){
@@ -251,7 +260,6 @@ class _SearchBarState extends State<SearchBar>{
     }
 
     Future<void> registerNewAssets(String ticker) async {
-        print("passage dans registerNewAsset");
         onLoad = true;
         final url = Uri.parse("https://mywalletapi-502906a76c4f.herokuapp.com/api/asset/");
         try{
@@ -264,18 +272,18 @@ class _SearchBarState extends State<SearchBar>{
                 },
                 body:json.encode({'ticker':ticker}),
             );
-            print("réponse de registerNewAssets: ${response.statusCode}");
             if(response.statusCode == 201){
                 getAssetsG();
                 final responseData = json.decode(response.body);
-                print("creation de l'asset : ${responseData}");
                 setState(() {
+                    printListU.clear();
+                    printListG.clear();
+                    assetsGPT.clear();
+                    isSelect=true;
+                    print('returnValue ${responseData}');
                     _input.text = "Entreprise : ${responseData['company']}  / Ticker: ${responseData['ticker']}  /  Prix: ${responseData['last_value']}";
                     returnValue = responseData;
                     widget.onClick(returnValue!);
-                    printListU.clear();
-                    printListG.clear();
-                    isSelect=true;
                 });
                 
             }else{
@@ -340,6 +348,7 @@ Widget build(BuildContext context) {
                         ],
                     ),
                 ),
+                if(isSelect==false)...[
                 Container(
                     width: MediaQuery.of(context).size.width < 550
                         ? MediaQuery.of(context).size.width*0.7
@@ -354,7 +363,6 @@ Widget build(BuildContext context) {
                     ),
                     child : Column(
                         children: [
-                            // Liste des suggestions dans un seul ListView
                             Expanded(
                                 child: ListView.builder(
                                     itemCount: printListU.length +
@@ -362,59 +370,68 @@ Widget build(BuildContext context) {
                                         assetsGPT.length +
                                         (_input.text.length > 0 && search == false ? 1 : 0),
                                     itemBuilder: (context, index) {
-                                        if (index < printListU.length) {
+                                        if (index < printListU.length && isSelect==false) {
                                             var item = printListU[index];
                                             return ListTile(
-                                                title: Text(item['company'] ?? 'No company'),
+                                                title: Text(item['company'] ?? 'No company', style: TextStyle( color: Color(int.parse(widget.colors['text2'])), fontWeight: FontWeight.bold,),),
                                                 subtitle: Text(
                                                     "Ticker: ${item['ticker']}  /  Prix: ${item['actual_price']}",
+                                                    style: TextStyle( color: Color(int.parse(widget.colors['text1']))),
                                                 ),
                                                 onTap: () {
-                                                    _input.text =
-                                                        "Entreprise : ${item['company']}  / Ticker: ${item['ticker']}  /  Prix: ${item['actual_price']}";
-                                                    returnValue = item;
-                                                    widget.onClick(returnValue!);
-                                                    printListU.clear();
-                                                    printListG.clear();
-                                                    isSelect=true;
+                                                    setState(() {
+                                                        printListU.clear();
+                                                        printListG.clear();
+                                                        assetsGPT.clear();
+                                                        isSelect=true;
+                                                        print('returnValue ${item}');
+                                                        _input.text = "Entreprise : ${item['company']}  / Ticker: ${item['ticker']}  /  Prix: ${item['actual_price']}";
+                                                        returnValue = item;
+                                                        widget.onClick(returnValue!);
+                                                    });
                                                 },
                                             );
-                                        } else if (index < printListU.length + printListG.length && isSelect==false) {
+                                        }else if (index < printListU.length + printListG.length && isSelect==false) {
                                             var item = printListG[index - printListU.length];
                                             return ListTile(
-                                                title: Text(item['company'] ?? 'No company'),
+                                                title: Text(item['company'] ?? 'No company', style: TextStyle( color: Color(int.parse(widget.colors['text2'])), fontWeight: FontWeight.bold,),),
                                                 subtitle: Text(
                                                     "Ticker: ${item['ticker']}  /  Prix: ${item['last_value']}",
+                                                    style: TextStyle( color: Color(int.parse(widget.colors['text1']))),
                                                 ),
                                                 onTap: () {
-                                                    _input.text =
-                                                        "Entreprise : ${item['company']}  / Ticker: ${item['ticker']}  /  Prix: ${item['last_value']}";
-                                                    returnValue = item;
-                                                    widget.onClick(returnValue!);
-                                                    printListU.clear();
-                                                    printListG.clear();
-                                                    isSelect=true;
+                                                    setState(() {
+                                                        isSelect=true;
+                                                        printListU.clear();
+                                                        printListG.clear();
+                                                        assetsGPT.clear();
+                                                        print('returnValue ${item}');
+                                                        _input.text ="Entreprise : ${item['company']}  / Ticker: ${item['ticker']}  /  Prix: ${item['last_value']}";
+                                                        returnValue = item;
+                                                        widget.onClick(returnValue!);
+                                                    });
                                                 },
                                             );
                                         } else if (index < printListU.length + printListG.length + assetsGPT.length && isSelect==false) {
                                             var item = assetsGPT[index - printListU.length - printListG.length];
                                             return ListTile(
-                                                title: Text(item['company'] ?? 'Not find'),
+                                                title: Text(item['company'] ?? 'Not find', style: TextStyle( color: Color(int.parse(widget.colors['text2'])), fontWeight: FontWeight.bold,),),
                                                 subtitle: Text(
                                                     "Type: ${item['type'] ?? 'Not find'}  /  Ticker: ${item['ticker']}  /  Pays: ${item['country'] ?? 'Not find'}",
+                                                    style: TextStyle( color: Color(int.parse(widget.colors['text1']))),
                                                 ),
                                                 onTap: () {
                                                     if (item.containsKey('error')) {
-                                                        _input.text = "Ticker: ${item['ticker']}";
-                                                        returnValue = item;
-
-                                                        if (returnValue != null) {
+                                                        setState((){
+                                                            printListU.clear();
+                                                            printListG.clear();
+                                                            assetsGPT.clear();
+                                                            isSelect=true;
+                                                            print('returnValue ${item}');
+                                                            _input.text = "Ticker: ${item['ticker']}";
+                                                            returnValue = item;
                                                             widget.onClick(returnValue!);
-                                                        }
-
-                                                        printListU.clear();
-                                                        printListG.clear();
-                                                        isSelect=true;
+                                                        });
                                                     } else {
                                                         registerNewAssets(item['ticker']);
                                                     }
@@ -441,6 +458,7 @@ Widget build(BuildContext context) {
                             ],
                         ),
                     ),
+                ],
                 ],
             ),
         );
