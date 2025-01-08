@@ -88,7 +88,7 @@ class _HoverViewState extends State<HoverView> {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width * 0.1,
-                  height: MediaQuery.of(context).size.height * 0.1,
+                  height: MediaQuery.of(context).size.width * 0.1,
                   child: CircularProgressIndicator(),
                 ),
               ],
@@ -96,20 +96,22 @@ class _HoverViewState extends State<HoverView> {
           )
         :
         Scaffold(
-            backgroundColor: Color(int.parse(colors['background1'])),
-            body: Column(
-                children: [
-                    Header(isConnect: true),
-                    Expanded(
-                        child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // children: [
-                        // LineChart()
-                        // ],
-                        ),
-                    ),
-                ],
+          backgroundColor: Color(int.parse(colors['background1'])),
+          body: SafeArea(
+            child: Column(
+              children: [
+                Header(isConnect: true),
+                Expanded(
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // children: [
+                  // LineChart()
+                  // ],
+                  ),
+                ),
+              ],
             ),
+          ),
         );
     }
 }

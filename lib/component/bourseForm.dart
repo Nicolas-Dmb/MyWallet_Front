@@ -848,6 +848,8 @@ class _BourseFormState extends State<BourseForm>{
                                     //gère l'auto remplissage des lists 
                                     _localisation.text = '';
                                     _activite.text = ''; 
+                                    country = <String>['Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie',''];
+                                    industry = <String>['Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold',''];
                                     industry = <String>['','Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold'];
                                     country = <String>['','Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie'];
                                     /*
@@ -856,19 +858,20 @@ class _BourseFormState extends State<BourseForm>{
                                     if(industry.contains(returnValue?['sector'])) industry.remove(returnValue?['sector']);
                                     if(returnValue?['sector']!=null) industry.insert(0, returnValue?['sector'][0]);*/
                                     if(country.contains(returnValue?['country'])){
-                                        country = <String>['Europe','Amérique du Nord','Amérique du sud','Afrique','Asie','Moyen-Orient','Océanie',''];
                                         country.remove(returnValue?['country']);
                                     }
                                     if(returnValue?['country']!=null){
                                         country.insert(0, returnValue?['country']);
+                                        country.remove('');
+                                        country.add('');
                                     }
                                     if(industry.contains(returnValue?['sector'])){
-                                        industry = <String>['Technologie', 'Santé', 'Finance', 'Énergie', 'Matériaux de base', 'Industrie', 'Consommation cyclique', 'Consommation non cyclique','Télécommunications', 'Immobilier','Services publics','Commodities', 'Gold',''];
                                         industry.remove(returnValue?['sector']);
-                                        industry.insert(0, returnValue?['sector']);
                                     }
                                     if(returnValue?['sector']!=null){
                                         industry.insert(0, returnValue?['sector']);
+                                        industry.remove('');
+                                        industry.add('');
                                     }
                                     });
                                 }),

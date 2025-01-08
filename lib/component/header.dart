@@ -231,7 +231,7 @@ class _HeaderState extends State<Header> {
                             colors: colors,
                             categorie: 'all',
                             onClick: (Map<String, dynamic> returnValue) {
-                              navigateTo(context, '/asset/${returnValue?['ticker'] ?? ''}');
+                              navigateTo(context, '/main');
                             },
                           ),
                         //],
@@ -259,7 +259,8 @@ class _HeaderState extends State<Header> {
                             colors: colors,
                             categorie: 'all',
                             onClick: (Map<String, dynamic> returnValue) {
-                              navigateTo(context, '/asset/${returnValue?['ticker'] ?? ''}');
+                              //navigateTo(context, '/asset/${returnValue?['ticker'] ?? ''}');
+                              navigateTo(context, '/main');
                             },
                           ),
                         //],

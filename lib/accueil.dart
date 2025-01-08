@@ -10,15 +10,17 @@ class Accueil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Header(isConnect: false),
-          Expanded(
-            child: Center(
-              child: BodyAccueil(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Header(isConnect: false),
+            Expanded(
+              child: Center(
+                child: BodyAccueil(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -17,19 +17,20 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: Column(
-        children: [
-          Header(isConnect: false),
-          Expanded(
-            child: SingleChildScrollView(
-                child: Center(
-                    child: LoginForm(),
+        body: SafeArea(
+            child:Column(
+                children: [
+                Header(isConnect: false),
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Center(
+                            child: LoginForm(),
+                        ),
+                    ),
                 ),
+                ],
             ),
-          ),
-        ],
-      ),
+        ),
     );
   }
 }

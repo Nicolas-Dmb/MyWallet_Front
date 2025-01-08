@@ -1,15 +1,104 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 import 'accueil.dart';
 import 'login.dart';
 import 'hoverView.dart';
 import 'compte.dart';
 import 'achat_vente.dart';
+import 'component/getSetting.dart';
 
 void main() {
   runApp(const MyApp());
 }
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GetSettingAccount settings = GetSettingAccount();
+  bool isReady = false;
+  late Map<String, dynamic> colors;  
+
+  @override
+  void initState() {
+    super.initState();
+    loadColors();
+  }
+  
+  // Future qui récupère les données de SharedPreferences
+  Future<void> loadColors() async {
+    await settings.initialize();
+    final prefs = await SharedPreferences.getInstance();
+    String? colorsString = prefs.getString('colors');
+    if (colorsString != null && colorsString.isNotEmpty) {
+        setState((){
+            colors = jsonDecode(colorsString);
+            isReady = true; // Retourner les couleurs
+        });
+    } else {
+        setState((){
+            colors = {
+            'background1':'0xFF181111',
+            'background2':'0xFF1F1513',
+            'interactive1':'0xFF391714',
+            'interactive2':'0xFF4E1511',
+            'interactive3':'0xFF5E1C16',
+            'border1':'0xFF6E2920',
+            'border2':'0xFF853A2D',
+            'border3':'0xFFAC4D39',
+            'button1':'0xFFE54D2E',
+            'button2':'0xFFEC6142',
+            'text1':'0xFFFF977D',
+            'text2':'0xFFFBD3CB',
+            };
+            prefs.setString('colors', jsonEncode(colors));
+            isReady = true;
+        });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isReady) {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: Color(0xFF181111),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              height: MediaQuery.of(context).size.width * 0.1,
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+    }
+    return MaterialApp(
+      theme: ThemeData(
+        scaffoldBackgroundColor: Color(int.parse(colors['background1'])),
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MediaQuery.of(context).size.width < 1367 ?Login() :Accueil(), 
+        '/login': (context) => Login(),
+        '/main': (context) => HoverView(),
+        '/compte': (context) => SettingPage(),
+        '/achat_vente': (context) => AchatVente(),
+      },
+    );
+  }
+}
+/*
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   // This widget is the root of your application.
@@ -118,3 +207,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/

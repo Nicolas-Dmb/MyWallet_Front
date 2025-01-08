@@ -246,6 +246,10 @@ class GetSettingAccount{
                 getSetting();
             }
         });
+        if (_accessToken == null){
+            String nightColorsJson = jsonEncode(nightcolors['Red']);
+            await prefs.setString('colors', nightColorsJson?? 'error');
+        }
     }
     //Vérifier que le token est présent
     Future<void> checkAccessToken() async {
