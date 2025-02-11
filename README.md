@@ -1,5 +1,7 @@
 # wallet_front
 
+[![codecov](https://codecov.io/gh/Nicolas-Dmb/MyWallet_Front/graph/badge.svg?token=ZLJO63QUU8)](https://codecov.io/gh/Nicolas-Dmb/MyWallet_Front)
+
 A new Flutter project.
 
 ## Getting Started
