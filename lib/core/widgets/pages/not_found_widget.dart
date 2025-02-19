@@ -29,12 +29,13 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background1,
-      appBar: CustomAppBar(title: '404 Not Found', isLeading: false),
+      appBar: CustomAppBar(title: '', isLeading: false),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
+              Text("404 Not Found", style: AppTextStyles.title3),
               Spacer(),
               Text("Page en cours de création.", style: AppTextStyles.text),
               SizedBox(height: 10),
