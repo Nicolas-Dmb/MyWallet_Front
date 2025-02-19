@@ -24,8 +24,9 @@ class AppRouter {
         },
       ),
     ],
-    errorBuilder:
-        (context, state) => NotFoundScreen(previousRoute: lastKnownRoute),
+    errorBuilder: (context, state) {
+      return NotFoundScreen(previousRoute: lastKnownRoute);
+    },
   );
 }
 

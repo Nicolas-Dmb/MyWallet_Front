@@ -16,16 +16,6 @@ class NotFoundScreen extends StatefulWidget {
 
 class _NotFoundScreenState extends State<NotFoundScreen> {
   @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        context.go(widget.previousRoute);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background1,
@@ -44,13 +34,35 @@ class _NotFoundScreenState extends State<NotFoundScreen> {
                 width: MediaQuery.of(context).size.width * 0.50,
               ),
               Spacer(),
-              Text("Vous allez être redirigé...", style: AppTextStyles.text),
-              CircularProgressIndicator(color: AppColors.interactive3),
+              _GoBackButton(
+                key: const Key("go_back_button"),
+                previousRoute: widget.previousRoute,
+              ),
               SizedBox(height: 40),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _GoBackButton extends StatelessWidget {
+  final String previousRoute;
+  const _GoBackButton({super.key, required this.previousRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(AppColors.border1),
+        foregroundColor: WidgetStateProperty.all(AppColors.interactive3),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        ),
+      ),
+      onPressed: () => context.go(previousRoute),
+      child: Text('Page précédante', style: AppTextStyles.text),
     );
   }
 }
