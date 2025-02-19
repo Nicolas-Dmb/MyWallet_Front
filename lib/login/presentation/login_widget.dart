@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
-import 'package:mywallet_mobile/core/widgets/custom_app_bar.dart';
+import 'package:mywallet_mobile/core/widgets/components/custom_app_bar.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});

@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mywallet_mobile/core/widgets/custom_app_bar.dart';
+import 'package:mywallet_mobile/core/widgets/components/custom_app_bar.dart';
 import 'package:mywallet_mobile/welcome/service/navigation_service.dart';
 
 class Welcome extends StatelessWidget {
@@ -63,7 +63,7 @@ class _WelcomeBody extends StatelessWidget {
 }
 
 class _ContinuerButton extends StatelessWidget {
-  _ContinuerButton({required this.title, required this.onPressed});
+  const _ContinuerButton({required this.title, required this.onPressed});
   final VoidCallback onPressed;
   final String title;
   @override
