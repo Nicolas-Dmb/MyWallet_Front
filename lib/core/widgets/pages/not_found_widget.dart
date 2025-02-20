@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mywallet_mobile/core/di.dart';
+import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 import 'package:mywallet_mobile/core/theme/app_fonts.dart';
 import 'package:mywallet_mobile/core/widgets/components/custom_app_bar.dart';
 
 class NotFoundScreen extends StatefulWidget {
   final String previousRoute;
-
-  const NotFoundScreen({super.key, required this.previousRoute});
+  final GoRouterState state;
+  const NotFoundScreen({
+    super.key,
+    required this.previousRoute,
+    required this.state,
+  });
 
   @override
   State<NotFoundScreen> createState() => _NotFoundScreenState();
 }
 
 class _NotFoundScreenState extends State<NotFoundScreen> {
+  void iniState() {
+    final logger = locator<AppLogger>();
+    logger.error('404 Not Found', widget.state.uri);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
