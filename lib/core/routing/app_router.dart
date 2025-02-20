@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/core/widgets/pages/not_found_widget.dart';
 import 'package:mywallet_mobile/login/presentation/login_widget.dart';
@@ -26,7 +27,8 @@ class AppRouter {
       ),
     ],
     errorBuilder: (context, state) {
-      AppLogger.error('404 Not Found', state.uri);
+      final logger = locator<AppLogger>();
+      logger.error('404 Not Found', state.uri);
       return NotFoundScreen(previousRoute: lastKnownRoute);
     },
   );
