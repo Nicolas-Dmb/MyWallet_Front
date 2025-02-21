@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mywallet_mobile/core/widgets/pages/not_found_widget.dart';
-import 'package:mywallet_mobile/login/presentation/login_widget.dart';
+import 'package:mywallet_mobile/authentification/presentation/login_widget.dart';
 import 'package:mywallet_mobile/welcome/presentation/welcome_widget.dart';
 
 class AppRouter {
