@@ -38,7 +38,7 @@ class AppTextStyles {
     color: AppColors.text2,
   );
   static const TextStyle error = TextStyle(
-    fontSize: 8,
+    fontSize: 10,
     fontFamily: 'Montserrat_Italic',
     color: AppColors.text1,
   );
