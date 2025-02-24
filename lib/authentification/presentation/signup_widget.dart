@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mywallet_mobile/authentification/domain/service/navigation_service.dart';
+import 'package:mywallet_mobile/authentification/domain/service/auth_navigation_service.dart';
 import 'package:mywallet_mobile/authentification/presentation/controller/navigation_controller.dart';
 import 'package:mywallet_mobile/authentification/presentation/controller/signup_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
