@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mywallet_mobile/core/widgets/pages/not_found_widget.dart';
-import 'package:mywallet_mobile/login/presentation/login_widget.dart';
+import 'package:mywallet_mobile/authentification/auth_barrel.dart';
 import 'package:mywallet_mobile/welcome/presentation/welcome_widget.dart';
 
 class AppRouter {
@@ -23,9 +23,16 @@ class AppRouter {
           return Transition.getAnimation(state, context, Login());
         },
       ),
+      GoRoute(
+        path: '/signup',
+        pageBuilder: (context, state) {
+          lastKnownRoute = '/signup';
+          return Transition.getAnimation(state, context, Signup());
+        },
+      ),
     ],
     errorBuilder: (context, state) {
-      return NotFoundScreen(previousRoute: lastKnownRoute);
+      return NotFoundScreen(previousRoute: lastKnownRoute, state: state);
     },
   );
 }
