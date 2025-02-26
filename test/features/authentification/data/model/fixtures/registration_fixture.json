@@ -1,0 +1,18 @@
+{
+    "username": "PyTestAll", 
+    "email": "n.all@epitech.eu", 
+    "first_name": "PyAll", 
+    "last_name": "TestAll", 
+    "phone": "11111111", 
+    "country": "france", 
+    "job": "student", 
+    "income":"0", 
+    "birthday": "2000-12-20",
+     "setting": 
+    {
+        "currency": "Euro", 
+        "nightMode":"True",
+        "color": "Red", 
+        "user": "UUID('39559884-256a-472d-b2c2-3c3c57406e69')"
+    }
+}

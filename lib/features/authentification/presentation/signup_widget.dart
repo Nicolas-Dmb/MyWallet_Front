@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mywallet_mobile/authentification/domain/service/auth_navigation_service.dart';
-import 'package:mywallet_mobile/authentification/presentation/controller/navigation_controller.dart';
-import 'package:mywallet_mobile/authentification/presentation/controller/signup_controller.dart';
+import 'package:mywallet_mobile/features/authentification/domain/service/auth_navigation_service.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/controller/navigation_controller.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/controller/signup_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:provider/provider.dart';

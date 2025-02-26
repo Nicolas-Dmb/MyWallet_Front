@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mywallet_mobile/authentification/presentation/controller/signup_validators.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/controller/signup_validators.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 
 abstract class SubmitState {}

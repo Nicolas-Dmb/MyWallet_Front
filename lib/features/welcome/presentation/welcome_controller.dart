@@ -1,4 +1,4 @@
-import 'package:mywallet_mobile/welcome/service/navigation_service.dart';
+import 'package:mywallet_mobile/features/welcome/service/navigation_service.dart';
 
 class NavigationController {
   NavigationController(this._navigationService);

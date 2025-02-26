@@ -1,4 +1,4 @@
-import '../../../core/custom_barrel.dart' show UserException;
+import '../../../../core/custom_barrel.dart' show UserException;
 
 class ValidatorSignup {
   static UserException? validatorEmail(String? value) {

@@ -18,10 +18,10 @@ class ServerException implements Failure {
 }
 
 ///Faillure for local dependancies error
-class StorageException implements Failure {
+class CacheException implements Failure {
   @override
   final String message;
-  const StorageException(this.message);
+  const CacheException(this.message);
 }
 
 ///Faillure for remote request error
@@ -29,4 +29,10 @@ class RequestException implements Failure {
   @override
   final String message;
   const RequestException(this.message);
+}
+
+///Faillure for Network error
+class NetworkException implements Failure {
+  @override
+  final String message = "Erreur: Veuillez vérifier votre connexion internet";
 }

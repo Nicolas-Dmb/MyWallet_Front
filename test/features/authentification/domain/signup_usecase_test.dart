@@ -2,9 +2,9 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mywallet_mobile/authentification/domain/contract/auth_repository_contract.dart';
-import 'package:mywallet_mobile/authentification/domain/entities/user_signup.dart';
-import 'package:mywallet_mobile/authentification/domain/usecases/signup_usecase.dart';
+import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart';
+import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart';
+import 'package:mywallet_mobile/features/authentification/domain/usecases/signup_usecase.dart';
 import 'package:mywallet_mobile/core/error/app_error.dart';
 
 import 'signup_usecase_test.mocks.dart';

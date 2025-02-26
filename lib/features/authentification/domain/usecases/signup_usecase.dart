@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mywallet_mobile/authentification/domain/contract/auth_repository_contract.dart';
-import 'package:mywallet_mobile/authentification/domain/entities/user_signup.dart';
+import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart';
+import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 
 class SignupUseCase extends UseCase<bool, Params> {

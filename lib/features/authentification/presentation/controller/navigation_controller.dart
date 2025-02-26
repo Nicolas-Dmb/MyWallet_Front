@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mywallet_mobile/authentification/domain/service/auth_navigation_service.dart';
+import 'package:mywallet_mobile/features/authentification/domain/service/auth_navigation_service.dart';
 
 class NavigationController {
   final NavigationService _navigationService;

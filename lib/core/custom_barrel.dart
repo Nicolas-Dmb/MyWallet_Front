@@ -8,8 +8,9 @@ export 'error/app_error.dart'
         Failure,
         UserException,
         ServerException,
-        StorageException,
+        CacheException,
         RequestException;
 export 'usecases/usecase.dart' show UseCase;
 export 'logger/app_logger.dart' show AppLogger;
 export 'routing/app_router.dart' show AppRouter;
+export 'application/newtwork_info.dart' show NetworkInfo;
