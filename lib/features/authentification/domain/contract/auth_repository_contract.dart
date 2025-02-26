@@ -5,7 +5,7 @@ import 'package:mywallet_mobile/core/custom_barrel.dart';
 
 abstract class AuthRepositoryContract {
   Future<Either<Failure, bool>> signup(UserSignup userData);
-  Future<Either<Failure, bool>> login(UserLogin userData);
+  /* Future<Either<Failure, bool>> login(UserLogin userData);
   Future<Either<Failure, bool>> refreshToken();
-  Future<Either<Failure, bool>> logout();
+  Future<Either<Failure, bool>> logout();*/
 }

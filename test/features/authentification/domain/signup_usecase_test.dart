@@ -40,9 +40,7 @@ void main() {
 
     verifyNoMoreInteractions(mockAuthRepositoryContract);
   });
-  final RequestException failure = RequestException(
-    'Une erreur 400 est survenue',
-  );
+  final RequestFailure failure = RequestFailure('Une erreur 400 est survenue');
   test('should get failure for the user signup repository', () async {
     when(
       mockAuthRepositoryContract.signup(any),

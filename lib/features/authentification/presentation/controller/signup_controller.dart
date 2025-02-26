@@ -18,16 +18,16 @@ class Error extends SubmitState {
 class SignupController extends Cubit<SubmitState> {
   SignupController() : super(Initial());
 
-  UserException? _isValidData(
+  UserFailure? _isValidData(
     String? email,
     String? username,
     String? password,
     String? confirmPassword,
   ) {
-    UserException? errorEmail = ValidatorSignup.validatorEmail(email);
-    UserException? errorUsername = ValidatorSignup.validatorUsername(username);
-    UserException? errorPassword = ValidatorSignup.validatorPassword(password);
-    UserException? errorConfirmPassword =
+    UserFailure? errorEmail = ValidatorSignup.validatorEmail(email);
+    UserFailure? errorUsername = ValidatorSignup.validatorUsername(username);
+    UserFailure? errorPassword = ValidatorSignup.validatorPassword(password);
+    UserFailure? errorConfirmPassword =
         ValidatorSignup.validatorConfirmPassword(password, confirmPassword);
     if (errorEmail != null) {
       return errorEmail;
@@ -47,7 +47,7 @@ class SignupController extends Cubit<SubmitState> {
     String? password,
     String? confirmPassword,
   ) async {
-    UserException? response = _isValidData(
+    UserFailure? response = _isValidData(
       email,
       username,
       password,

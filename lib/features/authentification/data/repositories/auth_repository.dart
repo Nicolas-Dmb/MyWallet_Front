@@ -6,22 +6,36 @@ import 'package:mywallet_mobile/features/authentification/domain/entities/user_l
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 
-class AuthRepository implements AuthRepositoryContract{
-  const AuthRepository({ required this.remoteDataSource,
-      required this.localDataSource,
-      required this.networkInfo,});
-  
+class AuthRepository implements AuthRepositoryContract {
+  const AuthRepository({
+    required this.remoteDataSource,
+    required this.localDataSource,
+    required this.networkInfo,
+  });
+
   final AuthLocalDataSource localDataSource;
   final AuthRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
   @override
-  Future<Either<Failure, bool>> signup(UserSignup userData){
-    networkInfo.isConnected;
-    final remoteSignup = await remoteDataSource.signup(userData);
-    localDataSource.cacheUser(remoteSignup);
-    bool response = true;
-    return Right(response);
-  };
+  Future<Either<Failure, bool>> signup(UserSignup userData) async {
+    final bool isConnected = await networkInfo.isConnected;
+    if (!isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteSignup = await remoteDataSource.signup(userData);
+      await localDataSource.cacheUser(remoteSignup);
+    } on ServerFailure catch (e) {
+      return Left(ServerFailure(e.message));
+    } on RequestFailure catch (e) {
+      return Left(RequestFailure(e.message));
+    } on CacheFailure catch (e) {
+      return Left(CacheFailure(e.message));
+    } catch (e) {
+      return Left(UnknownFailure("Erreur inconnue : $e"));
+    }
+    return Right(true);
+  } /*
   @override
   Future<Either<Failure, bool>> login(UserLogin userData){
     //TODO : implement
@@ -36,7 +50,5 @@ class AuthRepository implements AuthRepositoryContract{
   Future<Either<Failure, bool>> logout(){
     //TODO : implement
     return null
-  };
+  };*/
 }
-
-

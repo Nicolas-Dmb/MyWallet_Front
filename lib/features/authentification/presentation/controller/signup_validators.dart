@@ -1,27 +1,27 @@
-import '../../../../core/custom_barrel.dart' show UserException;
+import '../../../../core/custom_barrel.dart' show UserFailure;
 
 class ValidatorSignup {
-  static UserException? validatorEmail(String? value) {
+  static UserFailure? validatorEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return UserException("L'email est requis");
+      return UserFailure("L'email est requis");
     }
     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return UserException("Email invalide");
+      return UserFailure("Email invalide");
     }
     return null;
   }
 
-  static UserException? validatorUsername(String? value) {
+  static UserFailure? validatorUsername(String? value) {
     if (value == null || value.isEmpty) {
-      return UserException("Un username est requis");
+      return UserFailure("Un username est requis");
     }
     if (value.contains(' ')) {
-      return UserException("Les espaces ne sont pas autorisés");
+      return UserFailure("Les espaces ne sont pas autorisés");
     }
     return null;
   }
 
-  static UserException errorMP = UserException(
+  static UserFailure errorMP = UserFailure(
     "Le mot de passe doit contenir :\n"
     "- Au moins 8 caractères,\n"
     "- Au moins une majuscule,\n"
@@ -30,9 +30,9 @@ class ValidatorSignup {
     "- Au moins un caractère spécial (!@#\$%^&*(),.?\":{}|<>).",
   );
 
-  static UserException? validatorPassword(String? value) {
+  static UserFailure? validatorPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return UserException("Un mot de passe est requis");
+      return UserFailure("Un mot de passe est requis");
     }
     final regex = RegExp(
       r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*(),.?":{}|<>]).{8,}$',
@@ -43,12 +43,12 @@ class ValidatorSignup {
     return null;
   }
 
-  static UserException? validatorConfirmPassword(
+  static UserFailure? validatorConfirmPassword(
     String? password,
     String? confirmPassword,
   ) {
     if (password != confirmPassword) {
-      return UserException("mot de passe de confirmation incorrect");
+      return UserFailure("mot de passe de confirmation incorrect");
     }
     return null;
   }

@@ -1,38 +1,43 @@
-abstract class Failure {
+import 'package:equatable/equatable.dart';
+
+abstract class Failure extends Equatable {
   final String message;
   const Failure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+
+  @override
+  bool get stringify => true;
 }
 
 ///Faillure for invalid input
-class UserException implements Failure {
-  @override
-  final String message;
-  const UserException(this.message);
+class UserFailure extends Failure {
+  const UserFailure(super.message);
 }
 
 ///Faillure for remote dependancies error
-class ServerException implements Failure {
-  @override
-  final String message;
-  const ServerException(this.message);
+class ServerFailure extends Failure {
+  const ServerFailure(super.message);
 }
 
 ///Faillure for local dependancies error
-class CacheException implements Failure {
-  @override
-  final String message;
-  const CacheException(this.message);
+class CacheFailure extends Failure {
+  const CacheFailure(super.message);
 }
 
 ///Faillure for remote request error
-class RequestException implements Failure {
-  @override
-  final String message;
-  const RequestException(this.message);
+class RequestFailure extends Failure {
+  const RequestFailure(super.message);
 }
 
 ///Faillure for Network error
-class NetworkException implements Failure {
-  @override
-  final String message = "Erreur: Veuillez vérifier votre connexion internet";
+class NetworkFailure extends Failure {
+  const NetworkFailure([
+    super.message = "Erreur: Veuillez vérifier votre connexion internet",
+  ]);
+}
+
+class UnknownFailure extends Failure {
+  const UnknownFailure(super.message);
 }
