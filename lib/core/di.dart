@@ -9,7 +9,6 @@ final GetIt locator = GetIt.instance;
 
 void setupLocator() {
   locator.registerLazySingleton<GoRouter>(() => AppRouter.router);
-  locator.registerLazySingleton<AppLogger>(() => AppLogger());
   locator.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker.createInstance(),
   );

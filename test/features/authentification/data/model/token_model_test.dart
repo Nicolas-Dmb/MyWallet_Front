@@ -4,9 +4,7 @@ import 'package:mywallet_mobile/features/authentification/data/model/token_model
 import 'dart:io';
 
 String fixture(String name) =>
-    File(
-      'test/features/authentification/data/model/fixtures/$name',
-    ).readAsStringSync();
+    File('test/features/authentification/fixtures/$name').readAsStringSync();
 void main() {
   final token = TokenModel(
     tokenRefresh:

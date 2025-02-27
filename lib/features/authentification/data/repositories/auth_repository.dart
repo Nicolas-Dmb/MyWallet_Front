@@ -26,12 +26,16 @@ class AuthRepository implements AuthRepositoryContract {
       final remoteSignup = await remoteDataSource.signup(userData);
       await localDataSource.cacheUser(remoteSignup);
     } on ServerFailure catch (e) {
+      AppLogger.error('ServerFailure: ${e.message}', '');
       return Left(ServerFailure(e.message));
     } on RequestFailure catch (e) {
+      AppLogger.error('RequestFailure: ${e.message}', '');
       return Left(RequestFailure(e.message));
     } on CacheFailure catch (e) {
+      AppLogger.error('CacheFailure: ${e.message}', '');
       return Left(CacheFailure(e.message));
     } catch (e) {
+      AppLogger.error('UnknownFailure: Erreur inconnue : $e', '');
       return Left(UnknownFailure("Erreur inconnue : $e"));
     }
     return Right(true);
