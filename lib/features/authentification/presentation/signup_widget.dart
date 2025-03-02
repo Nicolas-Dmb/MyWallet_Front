@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mywallet_mobile/features/authentification/domain/service/auth_navigation_service.dart';
+import 'package:mywallet_mobile/features/authentification/domain/usecases/signup_usecase.dart';
 import 'package:mywallet_mobile/features/authentification/presentation/controller/navigation_controller.dart';
 import 'package:mywallet_mobile/features/authentification/presentation/controller/signup_controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:provider/provider.dart';
+import 'package:mywallet_mobile/features/authentification/auth_di.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -14,7 +16,7 @@ class Signup extends StatelessWidget {
     return Provider(
       create: (context) => NavigationController(NavigationService(context)),
       child: BlocProvider(
-        create: (_) => SignupController(),
+        create: (_) => SignupController(locator<SignupUseCase>()),
         child: Scaffold(
           appBar: CustomAppBar(title: 'Inscription', isLeading: true),
           body: Padding(
@@ -118,9 +120,10 @@ class _InputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigationController = context.read<NavigationController>();
     return BlocBuilder<SignupController, SubmitState>(
       builder: (context, state) {
-        if (state is Initial || state is Error || state is Succes) {
+        if (state is Initial || state is Error) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -153,6 +156,9 @@ class _InputWidget extends StatelessWidget {
               ),
             ],
           );
+        } else if (state is Succes) {
+          navigationController.goToLogin(context);
+          return SizedBox.shrink();
         } else {
           return SizedBox(
             height: 50,

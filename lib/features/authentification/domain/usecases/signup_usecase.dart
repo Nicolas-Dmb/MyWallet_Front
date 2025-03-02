@@ -18,7 +18,7 @@ class SignupUseCase extends UseCase<bool, Params> {
 class Params extends Equatable {
   final UserSignup userData;
 
-  const Params({required this.userData}) : super();
+  const Params(this.userData) : super();
 
   @override
   List<Object?> get props => [userData];

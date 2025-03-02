@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
@@ -18,7 +20,9 @@ class UserFailure extends Failure {
 
 ///Faillure for remote dependancies error
 class ServerFailure extends Failure {
-  const ServerFailure(super.message);
+  const ServerFailure([
+    super.message = "Erreur Serveur: Veuillez réssayer plus tard",
+  ]);
 }
 
 ///Faillure for local dependancies error
@@ -29,6 +33,11 @@ class CacheFailure extends Failure {
 ///Faillure for remote request error
 class RequestFailure extends Failure {
   const RequestFailure(super.message);
+
+  factory RequestFailure.getMessage(String responseBody, int statusCode) {
+    String response = handleErrorResponse(responseBody);
+    return RequestFailure("Erreur client : $statusCode = $response");
+  }
 }
 
 ///Faillure for Network error
@@ -40,4 +49,22 @@ class NetworkFailure extends Failure {
 
 class UnknownFailure extends Failure {
   const UnknownFailure(super.message);
+}
+
+String handleErrorResponse(String responseBody) {
+  try {
+    final Map<String, dynamic> errorData = json.decode(responseBody);
+
+    String formattedErrors = errorData.entries
+        .map((entry) {
+          String field = entry.key;
+          List<dynamic> messages = entry.value;
+          return "$field: ${messages.join(', ')}";
+        })
+        .join("\n");
+
+    return formattedErrors;
+  } catch (e) {
+    return "Erreur inconnue lors de l'analyse des erreurs.";
+  }
 }

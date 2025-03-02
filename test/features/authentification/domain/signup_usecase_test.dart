@@ -32,7 +32,7 @@ void main() {
       mockAuthRepositoryContract.signup(any),
     ).thenAnswer((_) async => Right(assertResponse));
 
-    final result = await usecase.call(Params(userData: userSignupData));
+    final result = await usecase.call(Params(userSignupData));
 
     expect(result, Right(assertResponse));
 
@@ -46,7 +46,7 @@ void main() {
       mockAuthRepositoryContract.signup(any),
     ).thenAnswer((_) async => Left(failure));
 
-    final result = await usecase.call(Params(userData: userSignupData));
+    final result = await usecase.call(Params(userSignupData));
 
     expect(result, Left(failure));
 

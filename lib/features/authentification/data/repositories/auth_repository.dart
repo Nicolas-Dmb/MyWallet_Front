@@ -7,15 +7,12 @@ import 'package:mywallet_mobile/features/authentification/domain/entities/user_s
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 
 class AuthRepository implements AuthRepositoryContract {
-  const AuthRepository({
-    required this.remoteDataSource,
-    required this.localDataSource,
-    required this.networkInfo,
-  });
+  AuthRepository(this.remoteDataSource, this.localDataSource, this.networkInfo);
 
   final AuthLocalDataSource localDataSource;
   final AuthRemoteDataSource remoteDataSource;
   final NetworkInfo networkInfo;
+
   @override
   Future<Either<Failure, bool>> signup(UserSignup userData) async {
     final bool isConnected = await networkInfo.isConnected;
@@ -27,7 +24,7 @@ class AuthRepository implements AuthRepositoryContract {
       await localDataSource.cacheUser(remoteSignup);
     } on ServerFailure catch (e) {
       AppLogger.error('ServerFailure: ${e.message}', '');
-      return Left(ServerFailure(e.message));
+      return Left(ServerFailure());
     } on RequestFailure catch (e) {
       AppLogger.error('RequestFailure: ${e.message}', '');
       return Left(RequestFailure(e.message));
@@ -39,7 +36,9 @@ class AuthRepository implements AuthRepositoryContract {
       return Left(UnknownFailure("Erreur inconnue : $e"));
     }
     return Right(true);
-  } /*
+  }
+
+  /*
   @override
   Future<Either<Failure, bool>> login(UserLogin userData){
     //TODO : implement

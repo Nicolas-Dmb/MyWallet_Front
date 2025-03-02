@@ -18,12 +18,12 @@ class UserModel extends Equatable {
     return UserModel(username: json['username']);
   }
 
-  static Map<String, dynamic> toJson(UserSignup user) {
+  static Map<String, String> toJson(UserSignup user) {
     return {
       'email': user.email,
       'username': user.username,
       'password': user.password,
-      'confirmPassword': user.confirmPassword,
+      'confirm_password': user.confirmPassword,
     };
   }
 

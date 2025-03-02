@@ -16,6 +16,10 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
   final FlutterSecureStorage flutterSecureStorage;
 
   const IAuthLocalDataSource(this.flutterSecureStorage);
+  static AndroidOptions _getAndroidOptions() =>
+      const AndroidOptions(encryptedSharedPreferences: true);
+
+  static IOSOptions _getIOSOptions() => const IOSOptions();
 
   @override
   Future<void> cacheToken(TokenModel tokens) async {
@@ -23,10 +27,14 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
       await flutterSecureStorage.write(
         key: 'access',
         value: tokens.tokenAccess,
+        aOptions: _getAndroidOptions(),
+        iOptions: _getIOSOptions(),
       );
       await flutterSecureStorage.write(
         key: 'refresh',
         value: tokens.tokenRefresh,
+        aOptions: _getAndroidOptions(),
+        iOptions: _getIOSOptions(),
       );
     } catch (e) {
       throw CacheFailure(
@@ -57,7 +65,11 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
 
   Future<String> _getCache(String value) async {
     try {
-      String? response = await flutterSecureStorage.read(key: value);
+      String? response = await flutterSecureStorage.read(
+        key: value,
+        aOptions: _getAndroidOptions(),
+        iOptions: _getIOSOptions(),
+      );
       if (response == null) {
         throw CacheFailure(
           "Error: Aucune valeur en mémoire pour l'élément $value",
@@ -77,6 +89,8 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
       await flutterSecureStorage.write(
         key: 'username',
         value: userData.username,
+        aOptions: _getAndroidOptions(),
+        iOptions: _getIOSOptions(),
       );
     } catch (e) {
       throw CacheFailure(
