@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:mywallet_mobile/features/authentification/domain/entities/user_login.dart';
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart';
 
 class UserModel extends Equatable {
@@ -25,6 +26,10 @@ class UserModel extends Equatable {
       'password': user.password,
       'confirm_password': user.confirmPassword,
     };
+  }
+
+  static Map<String, String> toJsonLogin(UserLogin user) {
+    return {'email': user.email, 'password': user.password};
   }
 
   @override
