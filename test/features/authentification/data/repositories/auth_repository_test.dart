@@ -93,7 +93,14 @@ void main() {
 
           verify(mockAuthRemoteDataSource.signup(userSignupData));
           verifyZeroInteractions(mockAuthLocalDataSource);
-          expect(result, equals(Left(ServerFailure("erreur server"))));
+          expect(
+            result,
+            equals(
+              Left(
+                ServerFailure("Erreur Serveur: Veuillez réssayer plus tard"),
+              ),
+            ),
+          );
         },
       );
       test(

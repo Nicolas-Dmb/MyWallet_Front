@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -33,14 +34,15 @@ void main() {
     test(
       'should perform a post request on a URL whith header and body and return succes',
       () async {
+        final jsonBody = jsonEncode(UserModel.toJson(userData));
         when(
           mockHttpClient.post(
             any,
             headers: anyNamed('headers'),
-            body: UserModel.toJson(userData),
+            body: jsonBody,
           ),
         ).thenAnswer(
-          (_) async => http.Response(fixture('registration_fixture.json'), 200),
+          (_) async => http.Response(fixture('registration_fixture.json'), 201),
         );
 
         final result = await authRemoteDataSource.signup(userData);
@@ -49,7 +51,7 @@ void main() {
           mockHttpClient.post(
             any,
             headers: anyNamed('headers'),
-            body: UserModel.toJson(userData),
+            body: jsonBody,
           ),
         );
         final UserModel expectResult = UserModel(username: "PyTestAll");
@@ -59,11 +61,13 @@ void main() {
     test(
       'should perform a post request on a URL whith header and body and return RequestFailure',
       () async {
+        final jsonBody = jsonEncode(UserModel.toJson(userData));
+
         when(
           mockHttpClient.post(
             any,
             headers: anyNamed('headers'),
-            body: UserModel.toJson(userData),
+            body: jsonBody,
           ),
         ).thenAnswer(
           (_) async =>
@@ -81,7 +85,7 @@ void main() {
           mockHttpClient.post(
             any,
             headers: anyNamed('headers'),
-            body: UserModel.toJson(userData),
+            body: jsonBody,
           ),
         );
       },

@@ -61,6 +61,7 @@ class SignupController extends Cubit<SubmitState> {
     emit(Logging());
     if (response != null) {
       emit(Error(response));
+      return;
     }
     final userData = UserSignup(
       email: email!,
@@ -70,5 +71,6 @@ class SignupController extends Cubit<SubmitState> {
     );
     final result = await _signupUseCase.call(Params(userData));
     result.fold((failure) => emit(Error(failure)), (value) => emit(Succes()));
+    return;
   }
 }
