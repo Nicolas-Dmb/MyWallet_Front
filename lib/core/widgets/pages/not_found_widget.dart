@@ -22,8 +22,7 @@ class NotFoundScreen extends StatefulWidget {
 
 class _NotFoundScreenState extends State<NotFoundScreen> {
   void iniState() {
-    final logger = locator<AppLogger>();
-    logger.error('404 Not Found', widget.state.uri);
+    AppLogger.error('404 Not Found', widget.state.uri);
   }
 
   @override

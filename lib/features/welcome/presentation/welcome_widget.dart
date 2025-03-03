@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mywallet_mobile/welcome/presentation/welcome_controller.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_fonts.dart';
+import 'package:mywallet_mobile/core/custom_barrel.dart';
+import 'package:mywallet_mobile/features/welcome/presentation/welcome_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mywallet_mobile/core/widgets/components/custom_app_bar.dart';
-import 'package:mywallet_mobile/welcome/service/navigation_service.dart';
+import 'package:mywallet_mobile/features/welcome/service/navigation_service.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -34,7 +32,7 @@ class _WelcomeBody extends StatelessWidget {
         children: [
           const Spacer(),
           SvgPicture.asset(
-            'lib/welcome/presentation/assets/images/wallet.svg',
+            'lib/features/welcome/presentation/assets/images/wallet.svg',
             width: MediaQuery.of(context).size.width * 0.80,
           ),
           const Spacer(),
@@ -70,17 +68,7 @@ class _ContinuerButton extends StatelessWidget {
   Widget build(BuildContext contex) {
     return SizedBox(
       width: 120,
-      child: TextButton(
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(AppColors.border1),
-          foregroundColor: WidgetStateProperty.all(AppColors.interactive3),
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          ),
-        ),
-        onPressed: onPressed,
-        child: Text(title, style: AppTextStyles.text),
-      ),
+      child: CustomTextButton(onPressed: onPressed, text: title),
     );
   }
 }

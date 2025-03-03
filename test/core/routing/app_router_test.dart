@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mywallet_mobile/core/routing/app_router.dart';
-import 'package:mywallet_mobile/login/presentation/login_widget.dart';
-import 'package:mywallet_mobile/welcome/presentation/welcome_widget.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/login_widget.dart';
+import 'package:mywallet_mobile/features/welcome/presentation/welcome_widget.dart';
 import 'package:mywallet_mobile/core/widgets/pages/not_found_widget.dart';
 
 void main() {

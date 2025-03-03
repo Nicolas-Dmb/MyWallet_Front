@@ -1,0 +1,17 @@
+{
+    "username": [
+        "A user with that username already exists."
+    ],
+    "email": [
+        "user with this email already exists."
+    ],
+    "password": [
+        "This field may not be blank."
+    ],
+    "confirm_password": [
+        "This field may not be blank."
+    ],
+    "non_field_errors": [
+        "Passwords do not match."
+    ]
+}
