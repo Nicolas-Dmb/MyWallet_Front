@@ -21,27 +21,27 @@ class LoginController extends Cubit<LoginState> {
   final LoginUseCase _loginUseCase;
   LoginController(this._loginUseCase) : super(Initial());
 
-  UserFailure? _validator(email, password) {
+  UserFailure? _validator(String? email, String? password) {
     UserFailure? errorEmail = ValidatorSignup.validatorEmail(email);
     UserFailure? errorPassword = ValidatorSignup.validatorPassword(password);
     if (errorEmail != null) {
       return errorEmail;
     } else if (errorPassword != null) {
       return errorPassword;
-    } else {
-      return null;
     }
+    return null;
   }
 
-  Future<void> login(email, password) async {
+  Future<void> login(String? email, String? password) async {
     emit(Logging());
     final validatorResult = _validator(email, password);
     if (validatorResult != null) {
       emit(Error(validatorResult));
       return;
     }
-    final userLogin = UserLogin(email, password);
+    final userLogin = UserLogin(email!, password!);
     final result = await _loginUseCase.call(Params(userLogin));
     result.fold((failure) => emit(Error(failure)), (r) => emit(Succes()));
+    return;
   }
 }
