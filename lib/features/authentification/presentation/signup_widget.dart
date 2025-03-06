@@ -150,14 +150,15 @@ class _InputWidget extends StatelessWidget {
                   ),
                 ),
                 onPressed:
-                    () =>
-                        context.read<NavigationController>().goToLogin(context),
+                    () => context.read<NavigationController>().goToLogin(),
                 child: Text('Connexion', style: AppTextStyles.text),
               ),
             ],
           );
         } else if (state is Succes) {
-          navigationController.goToLogin(context);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            navigationController.goToDashboard();
+          });
           return SizedBox.shrink();
         } else {
           return SizedBox(

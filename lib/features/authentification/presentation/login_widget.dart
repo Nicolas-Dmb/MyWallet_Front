@@ -122,7 +122,7 @@ class _InputWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    context.read<NavigationController>().goToSignup(context);
+                    context.read<NavigationController>().goToSignup();
                   }
                 },
                 child: Text('Créer un compte', style: AppTextStyles.text),
@@ -139,7 +139,9 @@ class _InputWidget extends StatelessWidget {
             ],
           );
         } else if (state is Succes) {
-          navigationController.goToDashboard(context);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            navigationController.goToDashboard();
+          });
           return SizedBox.shrink();
         } else {
           return SizedBox(

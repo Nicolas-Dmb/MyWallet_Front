@@ -5,7 +5,7 @@ class NavigationService {
   final BuildContext _context;
   const NavigationService(this._context);
 
-  void goDashboard() => _context.push('/welcome');
+  void goDashboard() => _context.pop('/dashboard');
   void goLogin() => _context.push('/login');
   void goSignup() => _context.push('/signup');
 }
