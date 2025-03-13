@@ -9,7 +9,7 @@ import 'package:mywallet_mobile/core/widgets/components/custom_text_form.dart';
 import 'package:mywallet_mobile/features/authentification/domain/service/auth_navigation_service.dart';
 import 'package:mywallet_mobile/features/authentification/domain/usecases/login_usecase.dart';
 import 'package:mywallet_mobile/features/authentification/presentation/controller/login_controller.dart';
-import 'package:mywallet_mobile/features/authentification/presentation/controller/navigation_controller.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/controller/auth_navigation_controller.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
@@ -17,7 +17,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (context) => NavigationController(NavigationService(context)),
+      create: (context) => AuthNavigationController(NavigationService(context)),
       child: BlocProvider(
         create: (_) => LoginController(locator<LoginUseCase>()),
         child: Scaffold(
@@ -105,7 +105,7 @@ class _InputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigationController = context.read<NavigationController>();
+    final navigationController = context.read<AuthNavigationController>();
     return BlocBuilder<LoginController, LoginState>(
       builder: (context, state) {
         if (state is Initial || state is Error) {
@@ -122,7 +122,7 @@ class _InputWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    context.read<NavigationController>().goToSignup();
+                    context.read<AuthNavigationController>().goToSignup();
                   }
                 },
                 child: Text('Créer un compte', style: AppTextStyles.text),

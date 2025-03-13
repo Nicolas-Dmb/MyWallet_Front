@@ -10,6 +10,8 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mywallet_mobile/core/custom_barrel.dart' as _i5;
 import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart'
     as _i3;
+import 'package:mywallet_mobile/features/authentification/domain/entities/user_login.dart'
+    as _i7;
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart'
     as _i6;
 
@@ -53,4 +55,17 @@ class MockAuthRepositoryContract extends _i1.Mock
             ),
           )
           as _i4.Future<_i2.Either<_i5.Failure, bool>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> login(_i7.UserLogin? userData) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userData]),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
+                this,
+                Invocation.method(#login, [userData]),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
 }
