@@ -133,16 +133,12 @@ class _InputWidget extends StatelessWidget {
                     () => context.read<LoginController>().login(
                       emailController.text,
                       passwordController.text,
+                      navigationController,
                     ),
                 text: 'Connexion',
               ),
             ],
           );
-        } else if (state is Succes) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            navigationController.goToDashboard();
-          });
-          return SizedBox.shrink();
         } else {
           return SizedBox(
             height: 50,

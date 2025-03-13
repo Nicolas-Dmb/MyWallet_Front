@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mywallet_mobile/core/error/app_error.dart';
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_login.dart';
 import 'package:mywallet_mobile/features/authentification/domain/usecases/login_usecase.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/controller/navigation_controller.dart';
 import 'package:mywallet_mobile/features/authentification/presentation/controller/signup_validators.dart';
 
 abstract class LoginState {}
@@ -32,7 +33,11 @@ class LoginController extends Cubit<LoginState> {
     return null;
   }
 
-  Future<void> login(String? email, String? password) async {
+  Future<void> login(
+    String? email,
+    String? password,
+    NavigationController navigationController,
+  ) async {
     emit(Logging());
     final validatorResult = _validator(email, password);
     if (validatorResult != null) {
@@ -41,7 +46,10 @@ class LoginController extends Cubit<LoginState> {
     }
     final userLogin = UserLogin(email!, password!);
     final result = await _loginUseCase.call(Params(userLogin));
-    result.fold((failure) => emit(Error(failure)), (r) => emit(Succes()));
+    result.fold((failure) => emit(Error(failure)), (r) {
+      navigationController.goToDashboard();
+      emit(Succes());
+    });
     return;
   }
 }
