@@ -11,6 +11,14 @@ class TokenModel extends Equatable {
       tokenRefresh: json['refresh'],
     );
   }
+  TokenModel refreshFromJson(Map<String, dynamic> json) {
+    final newAccessToken = json['access'] as String;
+    return TokenModel(
+      tokenAccess: newAccessToken,
+      tokenRefresh: this.tokenRefresh,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {"refresh": tokenRefresh};
   }

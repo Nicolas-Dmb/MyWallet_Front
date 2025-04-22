@@ -67,15 +67,58 @@ class AuthRepository implements AuthRepositoryContract {
     return Right(null);
   }
 
-  /*
   @override
-  Future<Either<Failure, bool>> refreshToken(){
-    //TODO : implement
-    return null;
-  };
+  Future<Either<Failure, void>> refreshToken() async {
+    try {
+      final tokens = await _localDataSource.getToken();
+      final newTokens = await _remoteDataSource.refreshToken(tokens);
+      await _localDataSource.cacheToken(newTokens);
+      return Right(null);
+    } on CacheFailure catch (e) {
+      AppLogger.error('CacheFailure: ${e.message}', '');
+      return Left(CacheFailure(e.message));
+    } on ServerFailure catch (e) {
+      AppLogger.error('ServerFailure: ${e.message}', '');
+      return Left(ServerFailure(e.message));
+    } on RequestFailure catch (e) {
+      AppLogger.error('RequestFailure: ${e.message}', '');
+      return Left(RequestFailure(e.message));
+    } catch (e) {
+      AppLogger.error('UnknownFailure: Erreur inconnue : $e', '');
+      return Left(UnknownFailure("Erreur inconnue : $e"));
+    }
+  }
+
   @override
-  Future<Either<Failure, bool>> logout(){
-    //TODO : implement
-    return null
-  };*/
+  Future<Either<Failure, String>> getAccessToken() async {
+    try {
+      final tokens = await _localDataSource.getToken();
+      return Right(tokens.tokenAccess);
+    } on CacheFailure catch (e) {
+      AppLogger.error('CacheFailure: ${e.message}', '');
+      return Left(CacheFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> getUsername() async {
+    try {
+      final user = await _localDataSource.getCacheUser();
+      return Right(user.username);
+    } on CacheFailure catch (e) {
+      AppLogger.error('CacheFailure: ${e.message}', '');
+      return Left(CacheFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await _localDataSource.clearAll();
+      return Right(null);
+    } on CacheFailure catch (e) {
+      AppLogger.error('CacheFailure: ${e.message}', '');
+      return Left(CacheFailure(e.message));
+    }
+  }
 }

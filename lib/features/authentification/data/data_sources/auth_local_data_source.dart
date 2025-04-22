@@ -5,11 +5,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class AuthLocalDataSource {
   Future<void> cacheToken(TokenModel token);
-  Future<String> getAccessToken();
-  Future<String> getRefreshToken();
+  Future<TokenModel> getToken();
 
   Future<void> cacheUser(UserModel userData);
   Future<UserModel> getCacheUser();
+  Future<void> clearAll();
 }
 
 class IAuthLocalDataSource implements AuthLocalDataSource {
@@ -44,20 +44,11 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
   }
 
   @override
-  Future<String> getAccessToken() async {
+  Future<TokenModel> getToken() async {
     try {
-      String value = await _getCache('access');
-      return value;
-    } on CacheFailure catch (e) {
-      throw CacheFailure(e.message);
-    }
-  }
-
-  @override
-  Future<String> getRefreshToken() async {
-    try {
-      String value = await _getCache('refresh');
-      return value;
+      String access = await _getCache('access');
+      String refresh = await _getCache('refresh');
+      return TokenModel(tokenAccess: access, tokenRefresh: refresh);
     } on CacheFailure catch (e) {
       throw CacheFailure(e.message);
     }
@@ -106,6 +97,20 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
       return UserModel(username: value);
     } on CacheFailure catch (e) {
       throw CacheFailure(e.message);
+    }
+  }
+
+  @override
+  Future<void> clearAll() async {
+    try {
+      await flutterSecureStorage.deleteAll(
+        aOptions: _getAndroidOptions(),
+        iOptions: _getIOSOptions(),
+      );
+    } catch (e) {
+      throw CacheFailure(
+        "Error: impossible de supprimer les données en mémoire $e",
+      );
     }
   }
 }
