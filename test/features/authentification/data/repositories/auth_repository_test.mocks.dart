@@ -6,20 +6,19 @@
 import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:mywallet_mobile/core/custom_barrel.dart' as _i4;
 import 'package:mywallet_mobile/features/authentification/data/data_sources/auth_local_data_source.dart'
     as _i6;
 import 'package:mywallet_mobile/features/authentification/data/data_sources/auth_remote_data_source.dart'
-    as _i8;
+    as _i7;
 import 'package:mywallet_mobile/features/authentification/data/model/token_model.dart'
-    as _i3;
-import 'package:mywallet_mobile/features/authentification/data/model/user_model.dart'
     as _i2;
+import 'package:mywallet_mobile/features/authentification/data/model/user_model.dart'
+    as _i3;
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_login.dart'
-    as _i10;
-import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart'
     as _i9;
+import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart'
+    as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -35,13 +34,13 @@ import 'package:mywallet_mobile/features/authentification/domain/entities/user_s
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeUserModel_0 extends _i1.SmartFake implements _i2.UserModel {
-  _FakeUserModel_0(Object parent, Invocation parentInvocation)
+class _FakeTokenModel_0 extends _i1.SmartFake implements _i2.TokenModel {
+  _FakeTokenModel_0(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeTokenModel_1 extends _i1.SmartFake implements _i3.TokenModel {
-  _FakeTokenModel_1(Object parent, Invocation parentInvocation)
+class _FakeUserModel_1 extends _i1.SmartFake implements _i3.UserModel {
+  _FakeUserModel_1(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -72,7 +71,7 @@ class MockAuthLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i5.Future<void> cacheToken(_i3.TokenModel? token) =>
+  _i5.Future<void> cacheToken(_i2.TokenModel? token) =>
       (super.noSuchMethod(
             Invocation.method(#cacheToken, [token]),
             returnValue: _i5.Future<void>.value(),
@@ -81,33 +80,17 @@ class MockAuthLocalDataSource extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<String> getAccessToken() =>
+  _i5.Future<_i2.TokenModel> getToken() =>
       (super.noSuchMethod(
-            Invocation.method(#getAccessToken, []),
-            returnValue: _i5.Future<String>.value(
-              _i7.dummyValue<String>(
-                this,
-                Invocation.method(#getAccessToken, []),
-              ),
+            Invocation.method(#getToken, []),
+            returnValue: _i5.Future<_i2.TokenModel>.value(
+              _FakeTokenModel_0(this, Invocation.method(#getToken, [])),
             ),
           )
-          as _i5.Future<String>);
+          as _i5.Future<_i2.TokenModel>);
 
   @override
-  _i5.Future<String> getRefreshToken() =>
-      (super.noSuchMethod(
-            Invocation.method(#getRefreshToken, []),
-            returnValue: _i5.Future<String>.value(
-              _i7.dummyValue<String>(
-                this,
-                Invocation.method(#getRefreshToken, []),
-              ),
-            ),
-          )
-          as _i5.Future<String>);
-
-  @override
-  _i5.Future<void> cacheUser(_i2.UserModel? userData) =>
+  _i5.Future<void> cacheUser(_i3.UserModel? userData) =>
       (super.noSuchMethod(
             Invocation.method(#cacheUser, [userData]),
             returnValue: _i5.Future<void>.value(),
@@ -116,42 +99,64 @@ class MockAuthLocalDataSource extends _i1.Mock
           as _i5.Future<void>);
 
   @override
-  _i5.Future<_i2.UserModel> getCacheUser() =>
+  _i5.Future<_i3.UserModel> getCacheUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCacheUser, []),
-            returnValue: _i5.Future<_i2.UserModel>.value(
-              _FakeUserModel_0(this, Invocation.method(#getCacheUser, [])),
+            returnValue: _i5.Future<_i3.UserModel>.value(
+              _FakeUserModel_1(this, Invocation.method(#getCacheUser, [])),
             ),
           )
-          as _i5.Future<_i2.UserModel>);
+          as _i5.Future<_i3.UserModel>);
+
+  @override
+  _i5.Future<void> clearAll() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearAll, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }
 
 /// A class which mocks [AuthRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRemoteDataSource extends _i1.Mock
-    implements _i8.AuthRemoteDataSource {
+    implements _i7.AuthRemoteDataSource {
   MockAuthRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i2.UserModel> signup(_i9.UserSignup? userData) =>
+  _i5.Future<_i3.UserModel> signup(_i8.UserSignup? userData) =>
       (super.noSuchMethod(
             Invocation.method(#signup, [userData]),
-            returnValue: _i5.Future<_i2.UserModel>.value(
-              _FakeUserModel_0(this, Invocation.method(#signup, [userData])),
+            returnValue: _i5.Future<_i3.UserModel>.value(
+              _FakeUserModel_1(this, Invocation.method(#signup, [userData])),
             ),
           )
-          as _i5.Future<_i2.UserModel>);
+          as _i5.Future<_i3.UserModel>);
 
   @override
-  _i5.Future<_i3.TokenModel> login(_i10.UserLogin? userData) =>
+  _i5.Future<_i2.TokenModel> login(_i9.UserLogin? userData) =>
       (super.noSuchMethod(
             Invocation.method(#login, [userData]),
-            returnValue: _i5.Future<_i3.TokenModel>.value(
-              _FakeTokenModel_1(this, Invocation.method(#login, [userData])),
+            returnValue: _i5.Future<_i2.TokenModel>.value(
+              _FakeTokenModel_0(this, Invocation.method(#login, [userData])),
             ),
           )
-          as _i5.Future<_i3.TokenModel>);
+          as _i5.Future<_i2.TokenModel>);
+
+  @override
+  _i5.Future<_i2.TokenModel> refreshToken(_i2.TokenModel? tokens) =>
+      (super.noSuchMethod(
+            Invocation.method(#refreshToken, [tokens]),
+            returnValue: _i5.Future<_i2.TokenModel>.value(
+              _FakeTokenModel_0(
+                this,
+                Invocation.method(#refreshToken, [tokens]),
+              ),
+            ),
+          )
+          as _i5.Future<_i2.TokenModel>);
 }

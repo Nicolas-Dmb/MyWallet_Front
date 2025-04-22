@@ -14,7 +14,7 @@ class AuthSessionService {
     _loopRefresh();
   }
 
-  void stop() {
+  void _stop() {
     _isActive = false;
   }
 
@@ -26,7 +26,7 @@ class AuthSessionService {
       final result = await _authRepository.refreshToken();
 
       result.fold((failure) {
-        stop();
+        _stop();
         AppLogger.error('erreur lors du refreshToken', failure);
       }, (value) => null);
     }
@@ -35,7 +35,7 @@ class AuthSessionService {
   Future<String?> getToken() async {
     final result = await _authRepository.getAccessToken();
     return result.fold((failure) {
-      stop();
+      _stop();
       AppLogger.error('erreur lors du getToken', failure);
       return null;
     }, (value) => value);
@@ -44,7 +44,7 @@ class AuthSessionService {
   Future<String?> getUsername() async {
     final result = await _authRepository.getUsername();
     return result.fold((failure) {
-      stop();
+      _stop();
       AppLogger.error('erreur lors du getUsername', failure);
       return null;
     }, (value) => value);
@@ -52,7 +52,7 @@ class AuthSessionService {
 
   Future<void> logout() async {
     final result = await _authRepository.logout();
-    stop();
+    _stop();
     return result.fold((failure) {
       AppLogger.error('erreur lors du logout', failure);
       return null;

@@ -3,22 +3,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:mywallet_mobile/core/service/auth_session_service.dart';
 import 'package:mywallet_mobile/features/authentification/domain/usecases/login_usecase.dart';
 import 'package:mywallet_mobile/features/authentification/presentation/controller/login_controller.dart';
 import 'package:mywallet_mobile/features/authentification/presentation/controller/auth_navigation_controller.dart';
+
 import 'login_controller_test.mocks.dart';
 
 @GenerateMocks([LoginUseCase])
 @GenerateMocks([AuthNavigationController])
+@GenerateMocks([AuthSessionService])
 main() {
   late LoginController loginController;
   late MockLoginUseCase mockloginUseCase;
   late MockAuthNavigationController mockAuthNavigationController;
+  late MockAuthSessionService mockAuthSessionService;
 
   setUp(() {
     mockAuthNavigationController = MockAuthNavigationController();
     mockloginUseCase = MockLoginUseCase();
-    loginController = LoginController(mockloginUseCase);
+    mockAuthSessionService = MockAuthSessionService();
+    loginController = LoginController(mockloginUseCase, mockAuthSessionService);
   });
   group("login methode", () {
     blocTest<LoginController, LoginState>(

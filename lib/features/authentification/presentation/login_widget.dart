@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 import 'package:mywallet_mobile/core/theme/app_fonts.dart';
@@ -19,7 +20,11 @@ class Login extends StatelessWidget {
     return Provider(
       create: (context) => AuthNavigationController(NavigationService(context)),
       child: BlocProvider(
-        create: (_) => LoginController(locator<LoginUseCase>()),
+        create:
+            (_) => LoginController(
+              locator<LoginUseCase>(),
+              locator<AuthSessionService>(),
+            ),
         child: Scaffold(
           backgroundColor: AppColors.background1,
           appBar: CustomAppBar(title: 'Connexion', isLeading: true),

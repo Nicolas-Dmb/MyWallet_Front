@@ -7,6 +7,7 @@ import 'dart:async' as _i5;
 
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mywallet_mobile/core/custom_barrel.dart' as _i8;
 import 'package:mywallet_mobile/core/error/app_error.dart' as _i6;
 import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart'
     as _i2;
@@ -99,4 +100,45 @@ class MockAuthNavigationController extends _i1.Mock
     Invocation.method(#goToDashboard, []),
     returnValueForMissingStub: null,
   );
+}
+
+/// A class which mocks [AuthSessionService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAuthSessionService extends _i1.Mock
+    implements _i8.AuthSessionService {
+  MockAuthSessionService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void start() => super.noSuchMethod(
+    Invocation.method(#start, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i5.Future<String?> getToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#getToken, []),
+            returnValue: _i5.Future<String?>.value(),
+          )
+          as _i5.Future<String?>);
+
+  @override
+  _i5.Future<String?> getUsername() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUsername, []),
+            returnValue: _i5.Future<String?>.value(),
+          )
+          as _i5.Future<String?>);
+
+  @override
+  _i5.Future<void> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }
