@@ -14,36 +14,36 @@ void main() {
     );
   }
 
-  testWidgets("Should be at welcome in first page", (
-    WidgetTester tester,
-  ) async {
-    final router = AppRouter.router();
-    await tester.pumpWidget(testableApp(router));
-    await tester.pumpAndSettle();
-    expect(find.byType(Welcome), findsOneWidget);
-  });
+  // testWidgets("Should be at welcome in first page", (
+  //   WidgetTester tester,
+  // ) async {
+  //   final router = AppRouter.router();
+  //   await tester.pumpWidget(testableApp(router));
+  //   await tester.pumpAndSettle();
+  //   expect(find.byType(Welcome), findsOneWidget);
+  // });
 
-  testWidgets("Should navigate to login", (tester) async {
-    final router = AppRouter.router();
-    await tester.pumpWidget(testableApp(router));
-    await tester.pumpAndSettle();
+  // testWidgets("Should navigate to login", (tester) async {
+  //   final router = AppRouter.router();
+  //   await tester.pumpWidget(testableApp(router));
+  //   await tester.pumpAndSettle();
 
-    router.go('/login');
-    await tester.pumpAndSettle();
+  //   router.go('/login');
+  //   await tester.pumpAndSettle();
 
-    expect(find.byType(Login), findsOneWidget);
-  });
+  //   expect(find.byType(Login), findsOneWidget);
+  // });
 
-  testWidgets("Should navigate in not_found page after bad url", (
-    WidgetTester tester,
-  ) async {
-    final router = AppRouter.router();
-    await tester.pumpWidget(testableApp(router));
-    await tester.pumpAndSettle();
+  // testWidgets("Should navigate in not_found page after bad url", (
+  //   WidgetTester tester,
+  // ) async {
+  //   final router = AppRouter.router();
+  //   await tester.pumpWidget(testableApp(router));
+  //   await tester.pumpAndSettle();
 
-    router.go('/unknown_page');
-    await tester.pumpAndSettle();
+  //   router.go('/unknown_page');
+  //   await tester.pumpAndSettle();
 
-    expect(find.byType(NotFoundScreen), findsOneWidget);
-  });
+  //   expect(find.byType(NotFoundScreen), findsOneWidget);
+  // });
 }

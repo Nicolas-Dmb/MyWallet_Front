@@ -8,6 +8,5 @@ abstract class AuthRepositoryContract {
   Future<Either<Failure, void>> login(UserLogin userData);
   Future<Either<Failure, void>> refreshToken();
   Future<Either<Failure, String>> getAccessToken();
-  Future<Either<Failure, String>> getUsername();
   Future<Either<Failure, void>> logout();
 }

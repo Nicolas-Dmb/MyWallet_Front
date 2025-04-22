@@ -41,15 +41,6 @@ class AuthSessionService {
     }, (value) => value);
   }
 
-  Future<String?> getUsername() async {
-    final result = await _authRepository.getUsername();
-    return result.fold((failure) {
-      _stop();
-      AppLogger.error('erreur lors du getUsername', failure);
-      return null;
-    }, (value) => value);
-  }
-
   Future<void> logout() async {
     final result = await _authRepository.logout();
     _stop();

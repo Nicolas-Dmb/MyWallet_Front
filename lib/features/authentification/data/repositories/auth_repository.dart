@@ -24,8 +24,7 @@ class AuthRepository implements AuthRepositoryContract {
       return Left(NetworkFailure());
     }
     try {
-      final remoteSignup = await _remoteDataSource.signup(userData);
-      await _localDataSource.cacheUser(remoteSignup);
+      await _remoteDataSource.signup(userData);
     } on ServerFailure catch (e) {
       AppLogger.error('ServerFailure: ${e.message}', '');
       return Left(ServerFailure());
@@ -69,6 +68,10 @@ class AuthRepository implements AuthRepositoryContract {
 
   @override
   Future<Either<Failure, void>> refreshToken() async {
+    final bool isConnected = await _networkInfo.isConnected;
+    if (!isConnected) {
+      return Left(NetworkFailure());
+    }
     try {
       final tokens = await _localDataSource.getToken();
       final newTokens = await _remoteDataSource.refreshToken(tokens);
@@ -94,17 +97,6 @@ class AuthRepository implements AuthRepositoryContract {
     try {
       final tokens = await _localDataSource.getToken();
       return Right(tokens.tokenAccess);
-    } on CacheFailure catch (e) {
-      AppLogger.error('CacheFailure: ${e.message}', '');
-      return Left(CacheFailure(e.message));
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> getUsername() async {
-    try {
-      final user = await _localDataSource.getCacheUser();
-      return Right(user.username);
     } on CacheFailure catch (e) {
       AppLogger.error('CacheFailure: ${e.message}', '');
       return Left(CacheFailure(e.message));

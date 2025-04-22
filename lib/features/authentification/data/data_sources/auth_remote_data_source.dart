@@ -14,7 +14,6 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> signup(UserSignup userData);
   Future<TokenModel> login(UserLogin userData);
   Future<TokenModel> refreshToken(TokenModel tokens);
-  //Future<bool> logout(String accessToken);
 }
 
 class IAuthRemoteDataSource implements AuthRemoteDataSource {
@@ -52,7 +51,7 @@ class IAuthRemoteDataSource implements AuthRemoteDataSource {
       headers: <String, String>{'Content-Type': 'application/json'},
       body: jsonEncode(UserModel.toJsonLogin(userData)),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return TokenModel.fromJson(jsonDecode(response.body));
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
       throw RequestFailure.getMessage(response.body, response.statusCode);
@@ -93,6 +92,4 @@ class IAuthRemoteDataSource implements AuthRemoteDataSource {
       );
     }
   }
-
-  //Future<bool> logout(String accessToken);
 }
