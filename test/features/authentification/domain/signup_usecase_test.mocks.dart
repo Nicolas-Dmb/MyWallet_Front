@@ -44,17 +44,17 @@ class MockAuthRepositoryContract extends _i1.Mock
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, bool>> signup(_i6.UserSignup? userData) =>
+  _i4.Future<_i2.Either<_i5.Failure, void>> signup(_i6.UserSignup? userData) =>
       (super.noSuchMethod(
             Invocation.method(#signup, [userData]),
-            returnValue: _i4.Future<_i2.Either<_i5.Failure, bool>>.value(
-              _FakeEither_0<_i5.Failure, bool>(
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
                 this,
                 Invocation.method(#signup, [userData]),
               ),
             ),
           )
-          as _i4.Future<_i2.Either<_i5.Failure, bool>>);
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
 
   @override
   _i4.Future<_i2.Either<_i5.Failure, void>> login(_i7.UserLogin? userData) =>
@@ -90,19 +90,6 @@ class MockAuthRepositoryContract extends _i1.Mock
               _FakeEither_0<_i5.Failure, String>(
                 this,
                 Invocation.method(#getAccessToken, []),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.Either<_i5.Failure, String>>);
-
-  @override
-  _i4.Future<_i2.Either<_i5.Failure, String>> getUsername() =>
-      (super.noSuchMethod(
-            Invocation.method(#getUsername, []),
-            returnValue: _i4.Future<_i2.Either<_i5.Failure, String>>.value(
-              _FakeEither_0<_i5.Failure, String>(
-                this,
-                Invocation.method(#getUsername, []),
               ),
             ),
           )

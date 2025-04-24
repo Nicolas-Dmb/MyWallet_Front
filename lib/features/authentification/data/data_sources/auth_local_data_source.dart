@@ -112,5 +112,6 @@ class IAuthLocalDataSource implements AuthLocalDataSource {
         "Error: impossible de supprimer les données en mémoire $e",
       );
     }
+    return;
   }
 }

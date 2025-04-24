@@ -58,15 +58,15 @@ class MockSignupUseCase extends _i1.Mock implements _i4.SignupUseCase {
           as _i2.AuthRepositoryContract);
 
   @override
-  _i5.Future<_i3.Either<_i6.Failure, bool>> call(_i4.Params? params) =>
+  _i5.Future<_i3.Either<_i6.Failure, void>> call(_i4.Params? params) =>
       (super.noSuchMethod(
             Invocation.method(#call, [params]),
-            returnValue: _i5.Future<_i3.Either<_i6.Failure, bool>>.value(
-              _FakeEither_1<_i6.Failure, bool>(
+            returnValue: _i5.Future<_i3.Either<_i6.Failure, void>>.value(
+              _FakeEither_1<_i6.Failure, void>(
                 this,
                 Invocation.method(#call, [params]),
               ),
             ),
           )
-          as _i5.Future<_i3.Either<_i6.Failure, bool>>);
+          as _i5.Future<_i3.Either<_i6.Failure, void>>);
 }

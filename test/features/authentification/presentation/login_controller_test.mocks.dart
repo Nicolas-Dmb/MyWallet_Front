@@ -126,14 +126,6 @@ class MockAuthSessionService extends _i1.Mock
           as _i5.Future<String?>);
 
   @override
-  _i5.Future<String?> getUsername() =>
-      (super.noSuchMethod(
-            Invocation.method(#getUsername, []),
-            returnValue: _i5.Future<String?>.value(),
-          )
-          as _i5.Future<String?>);
-
-  @override
   _i5.Future<void> logout() =>
       (super.noSuchMethod(
             Invocation.method(#logout, []),

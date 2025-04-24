@@ -41,6 +41,10 @@ void main() {
       confirmPassword: 'Wallet2025!',
     );
     final userModel = UserModel(username: 'wallet');
+    final tokenResult = TokenModel(
+      tokenAccess: 'jzehjb',
+      tokenRefresh: 'defrez',
+    );
 
     test('should check if the device is online', () {
       when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
@@ -57,32 +61,33 @@ void main() {
       setUp(() {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       });
-
       test(
-        'Should return remote data when the call to remote data source is successful',
+        'Should cache the data locally when the call to remote data source is successful',
         () async {
+          when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
           when(
             mockAuthRemoteDataSource.signup(userSignupData),
           ).thenAnswer((_) async => userModel);
-
-          final result = await repository.signup(userSignupData);
-
-          verify(mockAuthRemoteDataSource.signup(userSignupData));
-          expect(result, equals(Right(true)));
-        },
-      );
-      test(
-        'Should cache the data locally when the call to remote data source is succesful',
-        () async {
           when(
-            mockAuthRemoteDataSource.signup(userSignupData),
-          ).thenAnswer((_) async => userModel);
+            mockAuthRemoteDataSource.login(
+              argThat(
+                isA<UserLogin>()
+                    .having((u) => u.email, 'email', userSignupData.email)
+                    .having(
+                      (u) => u.password,
+                      'password',
+                      userSignupData.password,
+                    ),
+              ),
+            ),
+          ).thenAnswer((_) async => tokenResult);
+          when(
+            mockAuthLocalDataSource.cacheToken(tokenResult),
+          ).thenAnswer((_) async {});
 
           final result = await repository.signup(userSignupData);
 
-          verify(mockAuthRemoteDataSource.signup(userSignupData)).called(1);
-          verify(mockAuthLocalDataSource.cacheUser(userModel)).called(1);
-          expect(result.isRight(), true);
+          expect(result, equals(const Right(null)));
         },
       );
       test(
@@ -141,21 +146,6 @@ void main() {
               ),
             ),
           );
-        },
-      );
-      test(
-        'Should return Cache Failure when cache user is unsuccesful',
-        () async {
-          when(
-            mockAuthRemoteDataSource.signup(userSignupData),
-          ).thenAnswer((_) async => userModel);
-          when(
-            mockAuthLocalDataSource.cacheUser(userModel),
-          ).thenThrow(CacheFailure("Error cache Failure"));
-
-          final result = await repository.signup(userSignupData);
-
-          expect(result, equals(Left(CacheFailure("Error cache Failure"))));
         },
       );
     });
@@ -281,5 +271,43 @@ void main() {
         verifyZeroInteractions(mockAuthRemoteDataSource);
       },
     );
+  });
+  group('getAccessToken', () {
+    const tokenModel = TokenModel(
+      tokenAccess: '123JKdbehnjkdz',
+      tokenRefresh: '1234jicz8!',
+    );
+    test('Should return Right value', () async {
+      when(
+        mockAuthLocalDataSource.getToken(),
+      ).thenAnswer((_) async => tokenModel);
+
+      final result = await repository.getAccessToken();
+      expect(result, equals(Right(tokenModel.tokenAccess)));
+    });
+    test('Should return Left value', () async {
+      when(
+        mockAuthLocalDataSource.getToken(),
+      ).thenThrow(CacheFailure('erreur'));
+
+      final result = await repository.getAccessToken();
+      expect(result, equals(Left(CacheFailure('erreur'))));
+    });
+  });
+  group('logout', () {
+    test('Should return Right', () async {
+      when(mockAuthLocalDataSource.clearAll()).thenAnswer((_) async {});
+
+      final result = await repository.logout();
+      expect(result, equals(Right(null)));
+    });
+    test('Should return Left', () async {
+      when(
+        mockAuthLocalDataSource.clearAll(),
+      ).thenThrow(CacheFailure('erreur'));
+
+      final result = await repository.logout();
+      expect(result, equals(Left(CacheFailure('erreur'))));
+    });
   });
 }

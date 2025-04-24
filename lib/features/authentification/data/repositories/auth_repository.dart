@@ -18,13 +18,17 @@ class AuthRepository implements AuthRepositoryContract {
   final NetworkInfo _networkInfo;
 
   @override
-  Future<Either<Failure, bool>> signup(UserSignup userData) async {
+  Future<Either<Failure, void>> signup(UserSignup userData) async {
     final bool isConnected = await _networkInfo.isConnected;
     if (!isConnected) {
       return Left(NetworkFailure());
     }
     try {
       await _remoteDataSource.signup(userData);
+      final result = await _remoteDataSource.login(
+        UserLogin(userData.email, userData.password),
+      );
+      await _localDataSource.cacheToken(result);
     } on ServerFailure catch (e) {
       AppLogger.error('ServerFailure: ${e.message}', '');
       return Left(ServerFailure());
@@ -38,7 +42,7 @@ class AuthRepository implements AuthRepositoryContract {
       AppLogger.error('UnknownFailure: Erreur inconnue : $e', '');
       return Left(UnknownFailure("Erreur inconnue : $e"));
     }
-    return Right(true);
+    return Right(null);
   }
 
   @override

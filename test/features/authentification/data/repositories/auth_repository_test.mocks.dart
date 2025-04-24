@@ -3,22 +3,25 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
+import 'package:dartz/dartz.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mywallet_mobile/core/custom_barrel.dart' as _i4;
+import 'package:mywallet_mobile/core/custom_barrel.dart' as _i5;
 import 'package:mywallet_mobile/features/authentification/data/data_sources/auth_local_data_source.dart'
-    as _i6;
-import 'package:mywallet_mobile/features/authentification/data/data_sources/auth_remote_data_source.dart'
     as _i7;
+import 'package:mywallet_mobile/features/authentification/data/data_sources/auth_remote_data_source.dart'
+    as _i8;
 import 'package:mywallet_mobile/features/authentification/data/model/token_model.dart'
     as _i2;
 import 'package:mywallet_mobile/features/authentification/data/model/user_model.dart'
     as _i3;
+import 'package:mywallet_mobile/features/authentification/data/repositories/auth_repository.dart'
+    as _i11;
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_login.dart'
-    as _i9;
+    as _i10;
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart'
-    as _i8;
+    as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -44,119 +47,198 @@ class _FakeUserModel_1 extends _i1.SmartFake implements _i3.UserModel {
     : super(parent, parentInvocation);
 }
 
+class _FakeEither_2<L, R> extends _i1.SmartFake implements _i4.Either<L, R> {
+  _FakeEither_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [NetworkInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNetworkInfo extends _i1.Mock implements _i4.NetworkInfo {
+class MockNetworkInfo extends _i1.Mock implements _i5.NetworkInfo {
   MockNetworkInfo() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<bool> get isConnected =>
+  _i6.Future<bool> get isConnected =>
       (super.noSuchMethod(
             Invocation.getter(#isConnected),
-            returnValue: _i5.Future<bool>.value(false),
+            returnValue: _i6.Future<bool>.value(false),
           )
-          as _i5.Future<bool>);
+          as _i6.Future<bool>);
 }
 
 /// A class which mocks [AuthLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthLocalDataSource extends _i1.Mock
-    implements _i6.AuthLocalDataSource {
+    implements _i7.AuthLocalDataSource {
   MockAuthLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<void> cacheToken(_i2.TokenModel? token) =>
+  _i6.Future<void> cacheToken(_i2.TokenModel? token) =>
       (super.noSuchMethod(
             Invocation.method(#cacheToken, [token]),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i6.Future<void>);
 
   @override
-  _i5.Future<_i2.TokenModel> getToken() =>
+  _i6.Future<_i2.TokenModel> getToken() =>
       (super.noSuchMethod(
             Invocation.method(#getToken, []),
-            returnValue: _i5.Future<_i2.TokenModel>.value(
+            returnValue: _i6.Future<_i2.TokenModel>.value(
               _FakeTokenModel_0(this, Invocation.method(#getToken, [])),
             ),
           )
-          as _i5.Future<_i2.TokenModel>);
+          as _i6.Future<_i2.TokenModel>);
 
   @override
-  _i5.Future<void> cacheUser(_i3.UserModel? userData) =>
+  _i6.Future<void> cacheUser(_i3.UserModel? userData) =>
       (super.noSuchMethod(
             Invocation.method(#cacheUser, [userData]),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i6.Future<void>);
 
   @override
-  _i5.Future<_i3.UserModel> getCacheUser() =>
+  _i6.Future<_i3.UserModel> getCacheUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCacheUser, []),
-            returnValue: _i5.Future<_i3.UserModel>.value(
+            returnValue: _i6.Future<_i3.UserModel>.value(
               _FakeUserModel_1(this, Invocation.method(#getCacheUser, [])),
             ),
           )
-          as _i5.Future<_i3.UserModel>);
+          as _i6.Future<_i3.UserModel>);
 
   @override
-  _i5.Future<void> clearAll() =>
+  _i6.Future<void> clearAll() =>
       (super.noSuchMethod(
             Invocation.method(#clearAll, []),
-            returnValue: _i5.Future<void>.value(),
-            returnValueForMissingStub: _i5.Future<void>.value(),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
           )
-          as _i5.Future<void>);
+          as _i6.Future<void>);
 }
 
 /// A class which mocks [AuthRemoteDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthRemoteDataSource extends _i1.Mock
-    implements _i7.AuthRemoteDataSource {
+    implements _i8.AuthRemoteDataSource {
   MockAuthRemoteDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i3.UserModel> signup(_i8.UserSignup? userData) =>
+  _i6.Future<_i3.UserModel> signup(_i9.UserSignup? userData) =>
       (super.noSuchMethod(
             Invocation.method(#signup, [userData]),
-            returnValue: _i5.Future<_i3.UserModel>.value(
+            returnValue: _i6.Future<_i3.UserModel>.value(
               _FakeUserModel_1(this, Invocation.method(#signup, [userData])),
             ),
           )
-          as _i5.Future<_i3.UserModel>);
+          as _i6.Future<_i3.UserModel>);
 
   @override
-  _i5.Future<_i2.TokenModel> login(_i9.UserLogin? userData) =>
+  _i6.Future<_i2.TokenModel> login(_i10.UserLogin? userData) =>
       (super.noSuchMethod(
             Invocation.method(#login, [userData]),
-            returnValue: _i5.Future<_i2.TokenModel>.value(
+            returnValue: _i6.Future<_i2.TokenModel>.value(
               _FakeTokenModel_0(this, Invocation.method(#login, [userData])),
             ),
           )
-          as _i5.Future<_i2.TokenModel>);
+          as _i6.Future<_i2.TokenModel>);
 
   @override
-  _i5.Future<_i2.TokenModel> refreshToken(_i2.TokenModel? tokens) =>
+  _i6.Future<_i2.TokenModel> refreshToken(_i2.TokenModel? tokens) =>
       (super.noSuchMethod(
             Invocation.method(#refreshToken, [tokens]),
-            returnValue: _i5.Future<_i2.TokenModel>.value(
+            returnValue: _i6.Future<_i2.TokenModel>.value(
               _FakeTokenModel_0(
                 this,
                 Invocation.method(#refreshToken, [tokens]),
               ),
             ),
           )
-          as _i5.Future<_i2.TokenModel>);
+          as _i6.Future<_i2.TokenModel>);
+}
+
+/// A class which mocks [AuthRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAuthRepository extends _i1.Mock implements _i11.AuthRepository {
+  MockAuthRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<_i4.Either<_i5.Failure, void>> signup(_i9.UserSignup? userData) =>
+      (super.noSuchMethod(
+            Invocation.method(#signup, [userData]),
+            returnValue: _i6.Future<_i4.Either<_i5.Failure, void>>.value(
+              _FakeEither_2<_i5.Failure, void>(
+                this,
+                Invocation.method(#signup, [userData]),
+              ),
+            ),
+          )
+          as _i6.Future<_i4.Either<_i5.Failure, void>>);
+
+  @override
+  _i6.Future<_i4.Either<_i5.Failure, void>> login(_i10.UserLogin? userData) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userData]),
+            returnValue: _i6.Future<_i4.Either<_i5.Failure, void>>.value(
+              _FakeEither_2<_i5.Failure, void>(
+                this,
+                Invocation.method(#login, [userData]),
+              ),
+            ),
+          )
+          as _i6.Future<_i4.Either<_i5.Failure, void>>);
+
+  @override
+  _i6.Future<_i4.Either<_i5.Failure, void>> refreshToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#refreshToken, []),
+            returnValue: _i6.Future<_i4.Either<_i5.Failure, void>>.value(
+              _FakeEither_2<_i5.Failure, void>(
+                this,
+                Invocation.method(#refreshToken, []),
+              ),
+            ),
+          )
+          as _i6.Future<_i4.Either<_i5.Failure, void>>);
+
+  @override
+  _i6.Future<_i4.Either<_i5.Failure, String>> getAccessToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAccessToken, []),
+            returnValue: _i6.Future<_i4.Either<_i5.Failure, String>>.value(
+              _FakeEither_2<_i5.Failure, String>(
+                this,
+                Invocation.method(#getAccessToken, []),
+              ),
+            ),
+          )
+          as _i6.Future<_i4.Either<_i5.Failure, String>>);
+
+  @override
+  _i6.Future<_i4.Either<_i5.Failure, void>> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i6.Future<_i4.Either<_i5.Failure, void>>.value(
+              _FakeEither_2<_i5.Failure, void>(
+                this,
+                Invocation.method(#logout, []),
+              ),
+            ),
+          )
+          as _i6.Future<_i4.Either<_i5.Failure, void>>);
 }
