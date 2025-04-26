@@ -42,5 +42,20 @@ main() {
         verifyNever(mockloginUseCase.call(any));
       },
     );
+    blocTest<LoginController, LoginState>(
+      'Should return Succes when User send valid data',
+      build: () => loginController,
+      act: (controller) async {
+        when(mockloginUseCase.call(any)).thenAnswer((_) async => Right(null));
+        when(mockAuthSessionService.start()).thenAnswer((_) {});
+        when(mockAuthNavigationController.goToDashboard()).thenAnswer((_) {});
+        await controller.login(
+          'TestWallet01@gmail.com',
+          'TestWallet01!',
+          mockAuthNavigationController,
+        );
+      },
+      expect: () => [isA<Logging>(), isA<Succes>()],
+    );
   });
 }

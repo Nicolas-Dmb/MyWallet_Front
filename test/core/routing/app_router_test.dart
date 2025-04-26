@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
-import 'package:mywallet_mobile/core/routing/app_router.dart';
-import 'package:mywallet_mobile/features/authentification/presentation/login_widget.dart';
-import 'package:mywallet_mobile/features/welcome/presentation/welcome_widget.dart';
-import 'package:mywallet_mobile/core/widgets/pages/not_found_widget.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:go_router/go_router.dart';
+// import 'package:mywallet_mobile/core/routing/app_router.dart';
+// import 'package:mywallet_mobile/features/authentification/presentation/login_widget.dart';
+// import 'package:mywallet_mobile/features/welcome/presentation/welcome_widget.dart';
+// import 'package:mywallet_mobile/core/widgets/pages/not_found_widget.dart';
 
 void main() {
-  Widget testableApp(GoRouter router) {
-    return MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp.router(routerConfig: router),
-    );
-  }
+  // Widget testableApp(GoRouter router) {
+  //   return MediaQuery(
+  //     data: const MediaQueryData(),
+  //     child: MaterialApp.router(routerConfig: router),
+  //   );
+  // }
 
   // testWidgets("Should be at welcome in first page", (
   //   WidgetTester tester,
