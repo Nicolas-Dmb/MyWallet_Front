@@ -6,10 +6,15 @@ export 'theme/app_fonts.dart' show AppTextStyles;
 export 'error/app_error.dart'
     show
         Failure,
-        UserException,
-        ServerException,
-        StorageException,
-        RequestException;
+        UserFailure,
+        ServerFailure,
+        CacheFailure,
+        RequestFailure,
+        UnknownFailure,
+        NetworkFailure;
 export 'usecases/usecase.dart' show UseCase;
 export 'logger/app_logger.dart' show AppLogger;
 export 'routing/app_router.dart' show AppRouter;
+export 'application/newtwork_info.dart' show NetworkInfo;
+export 'service/auth_session_service.dart' show AuthSessionService;
+export 'service/timer_service.dart' show TimerService;

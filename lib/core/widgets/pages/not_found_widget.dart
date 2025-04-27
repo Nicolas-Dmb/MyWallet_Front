@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 import 'package:mywallet_mobile/core/theme/app_fonts.dart';
@@ -22,8 +21,7 @@ class NotFoundScreen extends StatefulWidget {
 
 class _NotFoundScreenState extends State<NotFoundScreen> {
   void iniState() {
-    final logger = locator<AppLogger>();
-    logger.error('404 Not Found', widget.state.uri);
+    AppLogger.error('404 Not Found', widget.state.uri);
   }
 
   @override
