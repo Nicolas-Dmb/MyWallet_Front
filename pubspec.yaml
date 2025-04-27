@@ -76,6 +76,7 @@ flutter:
   assets:
     - lib/features/welcome/presentation/assets/images/wallet.svg
     - lib/core/widgets/pages/assets/builder-svgrepo-com.svg
+    - lib/core/widgets/navigation_bar/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
