@@ -58,8 +58,8 @@ String handleErrorResponse(String responseBody) {
     String formattedErrors = errorData.entries
         .map((entry) {
           String field = entry.key;
-          List<dynamic> messages = entry.value;
-          return "$field: ${messages.join(', ')}";
+          dynamic messages = entry.value;
+          return "$field: ${messages is List<dynamic> ? messages.join(', ') : messages}";
         })
         .join("\n");
 

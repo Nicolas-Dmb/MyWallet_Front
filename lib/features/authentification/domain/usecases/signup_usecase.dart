@@ -4,13 +4,13 @@ import 'package:mywallet_mobile/features/authentification/domain/contract/auth_r
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 
-class SignupUseCase extends UseCase<bool, Params> {
+class SignupUseCase extends UseCase<void, Params> {
   final AuthRepositoryContract repository;
 
   SignupUseCase(this.repository);
 
   @override
-  Future<Either<Failure, bool>> call(Params params) async {
+  Future<Either<Failure, void>> call(Params params) async {
     return await repository.signup(params.userData);
   }
 }

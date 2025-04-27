@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Wallet',
-      routerConfig: AppRouter.router,
+      routerConfig: AppRouter.router(),
       theme: ThemeData(scaffoldBackgroundColor: AppColors.background1),
     );
   }

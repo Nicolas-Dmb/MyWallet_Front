@@ -10,6 +10,8 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mywallet_mobile/core/custom_barrel.dart' as _i5;
 import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart'
     as _i3;
+import 'package:mywallet_mobile/features/authentification/domain/entities/user_login.dart'
+    as _i7;
 import 'package:mywallet_mobile/features/authentification/domain/entities/user_signup.dart'
     as _i6;
 
@@ -42,15 +44,67 @@ class MockAuthRepositoryContract extends _i1.Mock
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, bool>> signup(_i6.UserSignup? userData) =>
+  _i4.Future<_i2.Either<_i5.Failure, void>> signup(_i6.UserSignup? userData) =>
       (super.noSuchMethod(
             Invocation.method(#signup, [userData]),
-            returnValue: _i4.Future<_i2.Either<_i5.Failure, bool>>.value(
-              _FakeEither_0<_i5.Failure, bool>(
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
                 this,
                 Invocation.method(#signup, [userData]),
               ),
             ),
           )
-          as _i4.Future<_i2.Either<_i5.Failure, bool>>);
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> login(_i7.UserLogin? userData) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userData]),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
+                this,
+                Invocation.method(#login, [userData]),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> refreshToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#refreshToken, []),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
+                this,
+                Invocation.method(#refreshToken, []),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, String>> getAccessToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAccessToken, []),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, String>>.value(
+              _FakeEither_0<_i5.Failure, String>(
+                this,
+                Invocation.method(#getAccessToken, []),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, String>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
+                this,
+                Invocation.method(#logout, []),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
 }

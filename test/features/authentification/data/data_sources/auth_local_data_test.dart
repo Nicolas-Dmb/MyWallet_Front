@@ -59,40 +59,36 @@ void main() {
         throwsA(isA<CacheFailure>()),
       );
     });
-    test(
-      'Should return token acces when token is receive successfully',
-      () async {
-        when(
-          mockFlutterSecureStorage.read(
-            key: 'access',
-            iOptions: anyNamed('iOptions'),
-            aOptions: anyNamed('aOptions'),
-            lOptions: anyNamed('lOptions'),
+    test('Should return token when token is receive successfully', () async {
+      when(
+        mockFlutterSecureStorage.read(
+          key: 'access',
+          iOptions: anyNamed('iOptions'),
+          aOptions: anyNamed('aOptions'),
+          lOptions: anyNamed('lOptions'),
+        ),
+      ).thenAnswer((_) async => 'bjzzbkezjb83883');
+      when(
+        mockFlutterSecureStorage.read(
+          key: 'refresh',
+          iOptions: anyNamed('iOptions'),
+          aOptions: anyNamed('aOptions'),
+          lOptions: anyNamed('lOptions'),
+        ),
+      ).thenAnswer((_) async => 'bjzzbkezjb83883');
+
+      final result = await localDataSource.getToken();
+
+      expect(
+        result,
+        equals(
+          TokenModel(
+            tokenAccess: 'bjzzbkezjb83883',
+            tokenRefresh: 'bjzzbkezjb83883',
           ),
-        ).thenAnswer((_) async => 'bjzzbkezjb83883');
-
-        final result = await localDataSource.getAccessToken();
-
-        expect(result, equals('bjzzbkezjb83883'));
-      },
-    );
-    test(
-      'Should return token refresh when token is receive successfully',
-      () async {
-        when(
-          mockFlutterSecureStorage.read(
-            key: 'refresh',
-            iOptions: anyNamed('iOptions'),
-            aOptions: anyNamed('aOptions'),
-            lOptions: anyNamed('lOptions'),
-          ),
-        ).thenAnswer((_) async => 'bjzzbkezjb83883');
-
-        final result = await localDataSource.getRefreshToken();
-
-        expect(result, equals('bjzzbkezjb83883'));
-      },
-    );
+        ),
+      );
+    });
     test(
       'Should return CacheFailure when token is read unsuccessfully',
       () async {
@@ -104,11 +100,16 @@ void main() {
             lOptions: anyNamed('lOptions'),
           ),
         ).thenThrow(Exception("Storage Error"));
+        when(
+          mockFlutterSecureStorage.read(
+            key: 'refresh',
+            iOptions: anyNamed('iOptions'),
+            aOptions: anyNamed('aOptions'),
+            lOptions: anyNamed('lOptions'),
+          ),
+        ).thenAnswer((_) async => 'bjzzbkezjb83883');
 
-        expect(
-          () => localDataSource.getAccessToken(),
-          throwsA(isA<CacheFailure>()),
-        );
+        expect(() => localDataSource.getToken(), throwsA(isA<CacheFailure>()));
       },
     );
   });
