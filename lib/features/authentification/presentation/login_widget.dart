@@ -20,11 +20,7 @@ class Login extends StatelessWidget {
     return Provider(
       create: (context) => AuthNavigationController(NavigationService(context)),
       child: BlocProvider(
-        create:
-            (_) => LoginController(
-              locator<LoginUseCase>(),
-              locator<AuthSessionService>(),
-            ),
+        create: (_) => LoginController(di<LoginUseCase>(), di<AuthService>()),
         child: Scaffold(
           backgroundColor: AppColors.background1,
           appBar: CustomAppBar(title: 'Connexion', isLeading: true),

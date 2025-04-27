@@ -105,8 +105,7 @@ class MockAuthNavigationController extends _i1.Mock
 /// A class which mocks [AuthSessionService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthSessionService extends _i1.Mock
-    implements _i8.AuthSessionService {
+class MockAuthSessionService extends _i1.Mock implements _i8.AuthService {
   MockAuthSessionService() {
     _i1.throwOnMissingStub(this);
   }

@@ -8,24 +8,22 @@ import 'package:mywallet_mobile/core/service/timer_service.dart';
 import 'package:mywallet_mobile/features/authentification/auth_di.dart';
 import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart';
 
-final GetIt locator = GetIt.instance;
+final GetIt di = GetIt.instance;
 
 void setupLocator() {
-  locator.registerLazySingleton(() => FlutterSecureStorage());
+  di.registerLazySingleton(() => FlutterSecureStorage());
 
-  locator.registerLazySingleton(() => http.Client());
+  di.registerLazySingleton(() => http.Client());
 
-  locator.registerLazySingleton<InternetConnectionChecker>(
+  di.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker.createInstance(),
   );
-  locator.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(locator<InternetConnectionChecker>()),
+  di.registerLazySingleton<NetworkInfo>(
+    () => NetworkInfoImpl(di<InternetConnectionChecker>()),
   );
-  locator.registerLazySingleton<AuthSessionService>(
-    () => AuthSessionService(
-      locator<TimerService>(),
-      locator<AuthRepositoryContract>(),
-    ),
+  di.registerFactory<DefaultTimerService>(() => DefaultTimerService());
+  di.registerLazySingleton<AuthService>(
+    () => AuthService(di<DefaultTimerService>(), di<AuthRepositoryContract>()),
   );
   setupAuthLocator();
 }

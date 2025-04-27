@@ -1,10 +1,11 @@
 import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/features/authentification/auth_barrel.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'timer_service.dart';
 
-class AuthSessionService {
-  AuthSessionService(this._timerService, this._authRepository);
+class AuthService {
+  AuthService(this._timerService, this._authRepository);
   final TimerService _timerService;
   final AuthRepositoryContract _authRepository;
   bool _isActive = false;
@@ -48,5 +49,19 @@ class AuthSessionService {
       AppLogger.error('erreur lors du logout', failure);
       return null;
     }, (value) => null);
+  }
+
+  Future<bool> isLoggedIn() async {
+    try {
+      final accessToken = await getToken();
+
+      if (accessToken == null) {
+        return false;
+      }
+      bool isExpired = JwtDecoder.isExpired(accessToken);
+      return !isExpired;
+    } catch (e) {
+      return false;
+    }
   }
 }

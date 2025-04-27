@@ -21,7 +21,7 @@ class Error extends LoginState {
 
 class LoginController extends Cubit<LoginState> {
   final LoginUseCase _loginUseCase;
-  final AuthSessionService _authSessionService;
+  final AuthService _authSessionService;
   LoginController(this._loginUseCase, this._authSessionService)
     : super(Initial());
 

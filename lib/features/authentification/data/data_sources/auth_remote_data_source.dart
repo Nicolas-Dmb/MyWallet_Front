@@ -51,10 +51,13 @@ class IAuthRemoteDataSource implements AuthRemoteDataSource {
       headers: <String, String>{'Content-Type': 'application/json'},
       body: jsonEncode(UserModel.toJsonLogin(userData)),
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return TokenModel.fromJson(jsonDecode(response.body));
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw RequestFailure.getMessage(response.body, response.statusCode);
+      throw RequestFailure.getMessage(
+        'email ou mot de passe invalid',
+        response.statusCode,
+      );
     } else if (response.statusCode >= 500) {
       throw ServerFailure(
         "Erreur serveur : ${response.statusCode} = ${response.body}",

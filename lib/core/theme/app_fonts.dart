@@ -4,42 +4,42 @@ import 'app_colors.dart';
 class AppTextStyles {
   static const TextStyle title1 = TextStyle(
     fontSize: 40,
-    fontFamily: 'TANNIMBUS',
+    fontFamily: 'Shrikhand',
     color: AppColors.text2,
   );
   static const TextStyle title2 = TextStyle(
     fontSize: 30,
-    fontFamily: 'TANNIMBUS',
+    fontFamily: 'Shrikhand',
     color: AppColors.text2,
   );
   static const TextStyle title3 = TextStyle(
     fontSize: 24,
-    fontFamily: 'Montserrat_Title',
+    fontFamily: 'Rubik',
     color: AppColors.text2,
   );
   static const TextStyle text = TextStyle(
     fontSize: 16,
-    fontFamily: 'Montserrat',
+    fontFamily: 'Rubik',
     color: AppColors.text2,
   );
   static const TextStyle bold = TextStyle(
     fontSize: 16,
-    fontFamily: 'Montserrat_Bold',
+    fontFamily: 'Rubik',
     color: AppColors.text2,
   );
   static const TextStyle italic = TextStyle(
     fontSize: 16,
-    fontFamily: 'Montserrat_Italic',
+    fontFamily: 'Rubik_Italic',
     color: AppColors.text2,
   );
   static const TextStyle small = TextStyle(
     fontSize: 10,
-    fontFamily: 'Montserrat_Italic',
+    fontFamily: 'Rubik_Italic',
     color: AppColors.text2,
   );
   static const TextStyle error = TextStyle(
     fontSize: 10,
-    fontFamily: 'Montserrat_Italic',
+    fontFamily: 'Rubik_Italic',
     color: AppColors.text1,
   );
 }

@@ -12,7 +12,7 @@ import 'login_controller_test.mocks.dart';
 
 @GenerateMocks([LoginUseCase])
 @GenerateMocks([AuthNavigationController])
-@GenerateMocks([AuthSessionService])
+@GenerateMocks([AuthService])
 main() {
   late LoginController loginController;
   late MockLoginUseCase mockloginUseCase;
