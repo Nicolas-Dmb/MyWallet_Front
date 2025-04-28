@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 
 class CustomTextForm extends StatefulWidget {
@@ -64,6 +65,50 @@ class _CustomTextFormState extends State<CustomTextForm> {
                 )
                 : null,
       ),
+    );
+  }
+}
+
+class CustomIntForm extends StatefulWidget {
+  final ValueChanged<String>? onChangedValue;
+  final TextEditingController? controller;
+  final String? labelText;
+  const CustomIntForm({
+    super.key,
+    this.onChangedValue,
+    this.controller,
+    this.labelText,
+  });
+
+  @override
+  State<CustomTextForm> createState() => _CustomIntFormState();
+}
+
+class _CustomIntFormState extends State<CustomTextForm> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+        labelText: widget.labelText,
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.interactive1, width: 3),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.border3, width: 3),
+        ),
+        fillColor: Colors.transparent,
+        focusColor: Colors.transparent,
+      ),
+      onChanged: widget.onChangedValue,
+      cursorColor: AppColors.border3,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+      ],
     );
   }
 }

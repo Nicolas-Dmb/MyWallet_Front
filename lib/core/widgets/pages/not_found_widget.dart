@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 import 'package:mywallet_mobile/core/theme/app_fonts.dart';
-import 'package:mywallet_mobile/core/widgets/components/custom_app_bar.dart';
+import 'package:mywallet_mobile/features/authentification/presentation/custom_app_bar.dart';
 
 class NotFoundScreen extends StatefulWidget {
   final String previousRoute;

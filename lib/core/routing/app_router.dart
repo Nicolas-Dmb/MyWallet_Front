@@ -9,6 +9,8 @@ import 'package:mywallet_mobile/features/authentification/auth_barrel.dart';
 import 'package:mywallet_mobile/features/dashboard/dashboard_screen.dart';
 import 'package:mywallet_mobile/features/documentation/documentation_screen.dart';
 import 'package:mywallet_mobile/features/settings/Settings_screen.dart';
+import 'package:mywallet_mobile/features/trading/presentation/trading_quizz_widget.dart';
+import 'package:mywallet_mobile/features/trading/presentation/trading_widget.dart';
 import 'package:mywallet_mobile/features/welcome/presentation/welcome_widget.dart';
 
 class AppRouter {
@@ -68,6 +70,43 @@ class AppRouter {
                   DashboardScreen(),
                 );
               },
+            ),
+            GoRoute(
+              path: '/dashboard',
+              pageBuilder: (context, state) {
+                lastKnownRoute = '/dashboard';
+                return Transition.getAnimation(
+                  state,
+                  context,
+                  DashboardScreen(),
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: '/trading',
+                  pageBuilder: (context, state) {
+                    lastKnownRoute = '/dashboard/trading';
+                    return Transition.getAnimation(
+                      state,
+                      context,
+                      TradingWidget(),
+                    );
+                  },
+                  routes: [
+                    GoRoute(
+                      path: '/quizz',
+                      pageBuilder: (context, state) {
+                        lastKnownRoute = '/dashboard/trading/quizz';
+                        return Transition.getAnimation(
+                          state,
+                          context,
+                          TradingQuizzWidget(isBuy: state.extra! as bool),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
             GoRoute(
               path: '/settings',

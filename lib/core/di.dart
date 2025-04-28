@@ -7,6 +7,7 @@ import 'package:mywallet_mobile/core/service/auth_session_service.dart';
 import 'package:mywallet_mobile/core/service/timer_service.dart';
 import 'package:mywallet_mobile/features/authentification/auth_di.dart';
 import 'package:mywallet_mobile/features/authentification/domain/contract/auth_repository_contract.dart';
+import 'package:mywallet_mobile/features/trading/trading_di.dart';
 
 final GetIt di = GetIt.instance;
 
@@ -26,4 +27,5 @@ void setupLocator() {
     () => AuthService(di<DefaultTimerService>(), di<AuthRepositoryContract>()),
   );
   setupAuthLocator();
+  setupTradingLocator();
 }

@@ -1,0 +1,160 @@
+{
+    "Stock":[
+        {
+            "question":"Nom de l'actif :",
+            "type":"search",
+            "required":true,
+            "default_value":"LVMH",
+            "answer":[]
+        },
+        {
+            "question":"Nombre de part :",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Prix de vente (coût total):",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Device de vente :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "EUR",
+                "USD",
+                "GBP",
+                "JPY"
+            ]
+        },
+        {
+            "question":"Date de vente :",
+            "type":"date",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Avec quelle banque as-tu vendue :",
+            "type":"text",
+            "required":false,
+            "default_value":"CIC",
+            "answer":[]
+
+        },
+        {
+            "question":"Type de livret",
+            "type":"choice",
+            "required":false,
+            "default_value":"",
+            "answer":[
+                "Livret A",
+                "CTO",
+                "Assurance-vie",
+                "PER",
+                "autre"
+            ]
+        }
+    ],
+    "Crypto":[
+        {
+            "question":"Nom de l'actif :",
+            "type":"search",
+            "required":true,
+            "default_value":"LVMH",
+            "answer":[]
+        },
+        {
+            "question":"Nombre de part :",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Prix de vente (coût total):",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Date de vente :",
+            "type":"date",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Avec quelle plateforme as-tu vendu :",
+            "type":"text",
+            "required":false,
+            "default_value":"CIC",
+            "answer":[]
+
+        },
+        {
+            "question":"Device de vente :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "EUR",
+                "USD",
+                "GBP",
+                "JPY"
+            ]
+        }
+    ],
+    "Cash":[
+        {
+            "question":"Dans quelle banque as-tu retiré ton argent :",
+            "type":"text",
+            "required":true,
+            "default_value":"CIC",
+            "answer":[]
+        },
+        {
+            "question":"Type de compte :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "PEA",
+                "CTO",
+                "Ass_Vie",
+                "CSL_LEP",
+                "CC",
+                "Livret_A",
+                "autre"
+            ]   
+        },
+        {
+            "question":"Combien as-tu retiré (en euro):",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        }
+    ],
+    "RealEstate":[
+        {
+            "question":"Prix de vente :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Date de vente :",
+            "type":"date",
+            "default_value":"",
+            "answer":[]
+        }
+    ]
+}

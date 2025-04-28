@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/core/service/auth_session_service.dart';
+import 'package:mywallet_mobile/core/theme/app_colors.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
@@ -15,6 +16,8 @@ class SplashScreen extends StatelessWidget {
       }
     });
 
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator(color: AppColors.border1)),
+    );
   }
 }

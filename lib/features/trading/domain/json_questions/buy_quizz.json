@@ -1,0 +1,274 @@
+{
+    "Stock":[
+        {
+            "question":"Nom de l'actif :",
+            "type":"search",
+            "required":true,
+            "default_value":"LVMH",
+            "answer":[]
+        },
+        {
+            "question":"Nombre de part :",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Prix d'achat (coût total):",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Device d'achat :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "EUR",
+                "USD",
+                "GBP",
+                "JPY"
+            ]
+        },
+        {
+            "question":"Date d'achat :",
+            "type":"date",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Avec quelle banque as-tu achetée :",
+            "type":"text",
+            "required":false,
+            "default_value":"CIC",
+            "answer":[]
+
+        },
+        {
+            "question":"Catégorie :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "Action",
+                "ETF",
+                "Forex",
+                "Matieres_Premieres"
+            ]
+        },
+        {
+            "question":"Type de livret",
+            "type":"choice",
+            "required":false,
+            "default_value":"",
+            "answer":[
+                "Livret A",
+                "CTO",
+                "Assurance-vie",
+                "PER",
+                "autre"
+            ]
+        },
+        {
+            "question":"Secteur d'activité",
+            "type":"choice",
+            "required":false,
+            "default_value":"",
+            "answer":[
+                "Technologie",
+                "Santé",
+                "Finance",
+                "Énergie",
+                "Matériaux de base",
+                "Industrie",
+                "Consommation cyclique",
+                "Consommation non cyclique",
+                "Télécommunications",
+                "Immobilier",
+                "Services publics",
+                "Commodities",
+                "Gold"
+            ]
+        }
+    ],
+    "Crypto":[
+        {
+            "question":"Nom de l'actif :",
+            "type":"search",
+            "required":true,
+            "default_value":"LVMH",
+            "answer":[]
+        },
+        {
+            "question":"Nombre de part :",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Prix d'achat (coût total):",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Date d'achat :",
+            "type":"date",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Avec quelle plateforme as-tu acheté :",
+            "type":"text",
+            "required":false,
+            "default_value":"CIC",
+            "answer":[]
+
+        },
+        {
+            "question":"Device d'achat :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "EUR",
+                "USD",
+                "GBP",
+                "JPY"
+            ]
+        },
+        {
+            "question":"Catégorie :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "BTC",
+                "ETH",
+                "Stablecoins",
+                "Altcoins",
+                "NFT"
+            ]
+        }
+    ],
+    "Cash":[
+        {
+            "question":"Dans quelle banque as-tu déposé ton argent :",
+            "type":"text",
+            "required":true,
+            "default_value":"CIC",
+            "answer":[]
+        },
+        {
+            "question":"Type de compte :",
+            "type":"choice",
+            "required":true,
+            "default_value":"",
+            "answer":[
+                "PEA",
+                "CTO",
+                "Ass_Vie",
+                "CSL_LEP",
+                "CC",
+                "Livret_A",
+                "autre"
+            ]   
+        },
+        {
+            "question":"Combien as-tu investi (en euro):",
+            "type":"integer",
+            "required":true,
+            "default_value":"",
+            "answer":[]
+        }
+    ],
+    "RealEstate":[
+        {
+            "question":"Adresse du logement :",
+            "type":"text",
+            "default_value":"1 Rue de la Paix, 75000 Paris ",
+            "answer":[]
+        },
+        {
+            "question":"Type de bien :",
+            "type":"choice",
+            "default_value":"",
+            "answer":[
+                "Appartement",
+                "Maison",
+                "Garage",
+                "Commerce",
+                "Bureau",
+                "Immeuble",
+                "Agricole",
+                "Autre"
+            ]
+        },
+        {
+            "question":"Date d'achat :",
+            "type":"date",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Prix d'achat :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"frais d'acquisition (notaire, agence...) :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Coût des travaux :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Destination :",
+            "type":"choice",
+            "default_value":"",
+            "answer":[
+                "RP",
+                "RS",
+                "Location"
+            ]
+        },
+        {
+            "question":"Montant du finance par apport :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Montant du finance par emprunt :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[]
+        },
+        {
+            "question":"Forme de détention :",
+            "type":"integer",
+            "default_value":"",
+            "answer":[
+                "Indivision",
+                "SCI",
+                "Societe",
+                "Propre",
+                "Autre"
+            ]
+        }
+
+    ]
+}

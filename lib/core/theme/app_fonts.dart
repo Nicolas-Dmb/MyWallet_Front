@@ -8,7 +8,7 @@ class AppTextStyles {
     color: AppColors.text2,
   );
   static const TextStyle title2 = TextStyle(
-    fontSize: 30,
+    fontSize: 20,
     fontFamily: 'Shrikhand',
     color: AppColors.text2,
   );
@@ -40,6 +40,11 @@ class AppTextStyles {
   static const TextStyle error = TextStyle(
     fontSize: 10,
     fontFamily: 'Rubik_Italic',
+    color: AppColors.text1,
+  );
+  static const TextStyle button = TextStyle(
+    fontSize: 15,
+    fontFamily: 'Shrikhand',
     color: AppColors.text1,
   );
 }

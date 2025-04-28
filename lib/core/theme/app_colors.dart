@@ -10,7 +10,7 @@ class AppColors {
   static const Color border2 = Color(0xFF853A2D);
   static const Color border3 = Color(0xFFAC4D39);
   static const Color button1 = Color(0xFFE54D2E);
-  static const Color button2 = Color(0xFFEC6142);
+  static const Color transparentButton = Color.fromARGB(120, 229, 77, 46);
   static const Color text1 = Color(0xFFFF977D);
   static const Color text2 = Color(0xFFFBD3CB);
 }
