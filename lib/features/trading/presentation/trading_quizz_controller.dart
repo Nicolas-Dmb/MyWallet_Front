@@ -75,7 +75,9 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
       );
     }
     final onGoingState = state as OnGoingQuizz;
-    if (answer == null && onGoingState.isRequired()) {
+    if (answer == null &&
+        onGoingState.isRequired() &&
+        onGoingState.questions[onGoingState.currentQuestion].answer == null) {
       emit(Error('Réponse à la question nécessaire', onGoingState));
       return;
     }

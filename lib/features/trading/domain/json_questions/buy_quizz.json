@@ -4,7 +4,7 @@
             "question":"Nom de l'actif :",
             "type":"search",
             "required":true,
-            "default_value":"LVMH",
+            "default_value":"",
             "answer":[]
         },
         {
@@ -44,7 +44,7 @@
             "question":"Avec quelle banque as-tu achetée :",
             "type":"text",
             "required":false,
-            "default_value":"CIC",
+            "default_value":"",
             "answer":[]
 
         },

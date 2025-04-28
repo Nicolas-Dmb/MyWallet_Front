@@ -87,6 +87,7 @@ class _StringQuestionState extends State<_StringQuestion> {
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
           CustomTextForm(
+            focus: true,
             onChangedValue: (newValue) {
               setState(() {
                 value = newValue;
@@ -127,6 +128,16 @@ class _IntQuestionState extends State<_IntQuestion> {
   }
 
   @override
+  void didUpdateWidget(covariant _IntQuestion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.question != widget.question) {
+      setState(() {
+        _controller = TextEditingController(text: widget.question.answer ?? '');
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -140,6 +151,7 @@ class _IntQuestionState extends State<_IntQuestion> {
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
           CustomIntForm(
+            focus: true,
             controller: _controller,
             labelText: widget.question.defaultValue,
             onChangedValue: (newValue) {
@@ -148,11 +160,7 @@ class _IntQuestionState extends State<_IntQuestion> {
           ),
           Spacer(flex: 2),
           CustomTextButton(
-            onPressed:
-                () async => {
-                  widget.setAnswer(_controller.text),
-                  _controller.text = '',
-                },
+            onPressed: () async => widget.setAnswer(_controller.text),
             text: 'Continuer',
             disable: _controller.text.isEmpty ? true : false,
           ),
@@ -239,8 +247,38 @@ class _ChoiceQuestion extends StatefulWidget {
 }
 
 class _ChoiceQuestionState extends State<_ChoiceQuestion> {
-  String? value;
-  int? indexSelected;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.question.answer ?? '');
+  }
+
+  @override
+  void didUpdateWidget(covariant _ChoiceQuestion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.question != widget.question) {
+      setState(() {
+        for (var answer in widget.question.answers) {
+          if (answer == widget.question.answer) {
+            _controller = TextEditingController(
+              text: widget.question.answer ?? '',
+            );
+            return;
+          }
+        }
+        _controller = TextEditingController();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -248,27 +286,33 @@ class _ChoiceQuestionState extends State<_ChoiceQuestion> {
         children: [
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
-          ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: widget.question.answers.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _SelectedQuizzButton(
-                text: widget.question.answers[index],
-                onTap: (newValue) {
-                  setState(() {
-                    value = newValue;
-                    indexSelected = index;
-                  });
-                },
-                isSelected: indexSelected == index,
-              );
-            },
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 20),
+              itemCount: widget.question.answers.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: _SelectedQuizzButton(
+                    text: widget.question.answers[index],
+                    onTap: (newValue) {
+                      setState(() {
+                        _controller.text = widget.question.answers[index];
+                      });
+                    },
+                    isSelected:
+                        _controller.text == widget.question.answers[index],
+                  ),
+                );
+              },
+            ),
           ),
-          Spacer(flex: 2),
+          Spacer(),
           CustomTextButton(
-            onPressed: () => widget.setAnswer(value),
+            onPressed: () => widget.setAnswer(_controller.text),
             text: 'Continuer',
-            disable: value == null ? true : false,
+            disable: _controller.text.isEmpty ? true : false,
           ),
           Spacer(),
         ],
@@ -288,7 +332,59 @@ class _DateQuestion extends StatefulWidget {
 }
 
 class _DateQuestionState extends State<_DateQuestion> {
-  DateTime? value;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.question.answer ?? '');
+  }
+
+  @override
+  void didUpdateWidget(covariant _DateQuestion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.question != widget.question) {
+      setState(() {
+        _controller = TextEditingController(text: widget.question.answer ?? '');
+      });
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.transparentButton,
+              onPrimary: AppColors.text2,
+              onSurface: AppColors.text1,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(textStyle: AppTextStyles.text),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) {
+      setState(() {
+        _controller.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -296,23 +392,31 @@ class _DateQuestionState extends State<_DateQuestion> {
         children: [
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
-          InputDatePickerFormField(
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2000, 1, 1),
-            lastDate: DateTime.now(),
-            onDateSubmitted: (newValue) {
-              setState(() {
-                value = newValue;
-              });
-            },
-            keyboardType: TextInputType.number,
-            autofocus: true,
+          TextField(
+            controller: _controller,
+            readOnly: true,
+            style: AppTextStyles.text,
+            onTap: () => _selectDate(context),
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+              filled: true,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: AppColors.interactive1, width: 3),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: AppColors.border3, width: 3),
+              ),
+              fillColor: Colors.transparent,
+              focusColor: Colors.transparent,
+            ),
           ),
           Spacer(flex: 2),
           CustomTextButton(
-            onPressed: () => widget.setAnswer(value),
+            onPressed: () => widget.setAnswer(_controller.text),
             text: 'Continuer',
-            disable: value == null ? true : false,
+            disable: _controller.text.isEmpty ? true : false,
           ),
           Spacer(),
         ],

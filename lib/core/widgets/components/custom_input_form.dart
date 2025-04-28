@@ -7,12 +7,14 @@ class CustomTextForm extends StatefulWidget {
   final bool isObscure;
   final TextEditingController? controller;
   final String? labelText;
+  final bool focus;
   const CustomTextForm({
     super.key,
     this.onChangedValue,
     this.isObscure = false,
     this.controller,
     this.labelText,
+    this.focus = false,
   });
 
   @override
@@ -30,6 +32,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofocus: widget.focus,
       style: AppTextStyles.text,
       onChanged: widget.onChangedValue,
       obscureText: _isObscure,
@@ -38,6 +41,7 @@ class _CustomTextFormState extends State<CustomTextForm> {
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         labelText: widget.labelText,
+        labelStyle: AppTextStyles.text,
         filled: true,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -73,12 +77,14 @@ class CustomIntForm extends StatefulWidget {
   final ValueChanged<String>? onChangedValue;
   final TextEditingController? controller;
   final String? labelText;
+  final bool focus;
 
   const CustomIntForm({
     super.key,
     this.onChangedValue,
     this.controller,
     this.labelText,
+    this.focus = false,
   });
 
   @override
@@ -114,11 +120,13 @@ class _CustomIntFormState extends State<CustomIntForm> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: widget.focus,
       controller: _controller,
       style: AppTextStyles.text,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         labelText: widget.labelText,
+        labelStyle: AppTextStyles.text,
         filled: true,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),

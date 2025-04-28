@@ -20,7 +20,10 @@ class TradingQuizzWidget extends StatelessWidget {
       create: (context) => TradingQuizzController(di<TradingQuizzService>()),
       child: Scaffold(
         appBar: _AppBar(text: isBuy ? 'Achat' : 'Vente'),
-        body: _QuizzManager(isBuy),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: _QuizzManager(isBuy),
+        ),
       ),
     );
   }
