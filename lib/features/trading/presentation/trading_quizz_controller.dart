@@ -57,13 +57,13 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
 
   Future<void> setAnswerAndContinue(dynamic answer) async {
     if (state is Initial || state is Success || state is Loading) {
-      emit(Error("Réponse à la question nécessaire", null));
+      emit(Error('Réponse à la question nécessaire', null));
       return;
     }
     if (state is Error) {
       final errorState = state as Error;
       if (errorState.lastState == null) {
-        emit(Error("Réponse à la question nécessaire", null));
+        emit(Error('Réponse à la question nécessaire', null));
         return;
       }
       emit(
@@ -76,7 +76,7 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
     }
     final onGoingState = state as OnGoingQuizz;
     if (answer == null && onGoingState.isRequired()) {
-      emit(Error('Vous devez répondre à cette question', onGoingState));
+      emit(Error('Réponse à la question nécessaire', onGoingState));
       return;
     }
     onGoingState.setAnswer(answer);

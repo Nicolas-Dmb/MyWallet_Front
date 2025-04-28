@@ -45,27 +45,25 @@ class QuestionManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (question.type == 'text') {
-      return _StringQuestion(question: question, setAnswer: setAnswer);
+    switch (question.type) {
+      case 'text':
+        return _StringQuestion(question: question, setAnswer: setAnswer);
+      case 'integer':
+        return _IntQuestion(question: question, setAnswer: setAnswer);
+      case 'date':
+        return _DateQuestion(question: question, setAnswer: setAnswer);
+      case 'choice':
+        return _ChoiceQuestion(question: question, setAnswer: setAnswer);
+      case 'search':
+        return _SearchQuestion(question: question, setAnswer: setAnswer);
+      default:
+        return Center(
+          child: Text(
+            "Erreur lors du chargement de la question : \n${question.question}",
+            style: AppTextStyles.title2,
+          ),
+        );
     }
-    if (question.type == 'integer') {
-      return _IntQuestion(question: question, setAnswer: setAnswer);
-    }
-    if (question.type == 'date') {
-      return _DateQuestion(question: question, setAnswer: setAnswer);
-    }
-    if (question.type == 'choice') {
-      return _ChoiceQuestion(question: question, setAnswer: setAnswer);
-    }
-    if (question.type == 'search') {
-      return _SearchQuestion(question: question, setAnswer: setAnswer);
-    }
-    return Center(
-      child: Text(
-        "Erreur lors du chargement de la question : \n${question.question}",
-        style: AppTextStyles.title2,
-      ),
-    );
   }
 }
 
@@ -102,6 +100,7 @@ class _StringQuestionState extends State<_StringQuestion> {
             text: 'Continuer',
             disable: value == null ? true : false,
           ),
+          Spacer(),
         ],
       ),
     );
@@ -119,7 +118,20 @@ class _IntQuestion extends StatefulWidget {
 }
 
 class _IntQuestionState extends State<_IntQuestion> {
-  String? value;
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.question.answer ?? '');
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -128,18 +140,21 @@ class _IntQuestionState extends State<_IntQuestion> {
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
           CustomIntForm(
+            controller: _controller,
             labelText: widget.question.defaultValue,
             onChangedValue: (newValue) {
-              setState(() {
-                value = newValue;
-              });
+              setState(() {});
             },
           ),
           Spacer(flex: 2),
           CustomTextButton(
-            onPressed: () => widget.setAnswer(value),
+            onPressed:
+                () async => {
+                  widget.setAnswer(_controller.text),
+                  _controller.text = '',
+                },
             text: 'Continuer',
-            disable: value == null ? true : false,
+            disable: _controller.text.isEmpty ? true : false,
           ),
           Spacer(),
         ],
@@ -206,6 +221,7 @@ class _SearchQuestionState extends State<_SearchQuestion> {
             text: 'Continuer',
             disable: value == null ? true : false,
           ),
+          Spacer(),
         ],
       ),
     );
@@ -254,6 +270,7 @@ class _ChoiceQuestionState extends State<_ChoiceQuestion> {
             text: 'Continuer',
             disable: value == null ? true : false,
           ),
+          Spacer(),
         ],
       ),
     );
@@ -297,6 +314,7 @@ class _DateQuestionState extends State<_DateQuestion> {
             text: 'Continuer',
             disable: value == null ? true : false,
           ),
+          Spacer(),
         ],
       ),
     );

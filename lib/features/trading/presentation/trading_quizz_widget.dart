@@ -19,16 +19,7 @@ class TradingQuizzWidget extends StatelessWidget {
     return BlocProvider(
       create: (context) => TradingQuizzController(di<TradingQuizzService>()),
       child: Scaffold(
-        appBar: _AppBar(
-          text: isBuy ? 'Achat' : 'Vente',
-          back: () => {context.read<TradingQuizzController>().goBack(context)},
-          next:
-              () => {
-                context.read<TradingQuizzController>().setAnswerAndContinue(
-                  null,
-                ),
-              },
-        ),
+        appBar: _AppBar(text: isBuy ? 'Achat' : 'Vente'),
         body: _QuizzManager(isBuy),
       ),
     );
@@ -53,7 +44,7 @@ class _QuizzManager extends StatelessWidget {
           );
         }
         if (state is Error) {
-          walletSnackBar(context, '🚨 Erreur', state.message);
+          _showSnackBar(context, '🚨 Erreur', state.message);
           return state.lastState == null
               ? TradingQuestionWidget(
                 onTap:
@@ -74,7 +65,7 @@ class _QuizzManager extends StatelessWidget {
               );
         }
         if (state is Success) {
-          walletSnackBar(
+          _showSnackBar(
             context,
             '✅ Sauvegarde',
             'transaction sauvegardée avec succès !',
@@ -100,12 +91,10 @@ class _QuizzManager extends StatelessWidget {
 }
 
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({required this.text, required this.back, required this.next});
-
-  final VoidCallback back;
-  final VoidCallback next;
+  const _AppBar({required this.text});
 
   final String text;
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -122,8 +111,18 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _AppBarButton(text: 'retour', onTap: back),
-            _AppBarButton(text: 'passer', onTap: next),
+            _AppBarButton(
+              text: 'retour',
+              onTap:
+                  () => context.read<TradingQuizzController>().goBack(context),
+            ),
+            _AppBarButton(
+              text: 'passer',
+              onTap:
+                  () => context
+                      .read<TradingQuizzController>()
+                      .setAnswerAndContinue(null),
+            ),
           ],
         ),
       ),
@@ -158,4 +157,12 @@ class _AppBarButton extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _showSnackBar(
+  BuildContext context,
+  String title,
+  String text,
+) async {
+  await walletSnackBar(context, title, text);
 }

@@ -73,6 +73,7 @@ class CustomIntForm extends StatefulWidget {
   final ValueChanged<String>? onChangedValue;
   final TextEditingController? controller;
   final String? labelText;
+
   const CustomIntForm({
     super.key,
     this.onChangedValue,
@@ -81,15 +82,42 @@ class CustomIntForm extends StatefulWidget {
   });
 
   @override
-  State<CustomTextForm> createState() => _CustomIntFormState();
+  State<CustomIntForm> createState() => _CustomIntFormState();
 }
 
-class _CustomIntFormState extends State<CustomTextForm> {
+class _CustomIntFormState extends State<CustomIntForm> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomIntForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? TextEditingController();
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: _controller,
+      style: AppTextStyles.text,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         labelText: widget.labelText,
         filled: true,
         enabledBorder: OutlineInputBorder(
