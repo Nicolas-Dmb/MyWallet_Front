@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
 import 'package:mywallet_mobile/features/trading/domain/entities/question_model.dart';
 
@@ -28,4 +27,6 @@ class TradingQuizzService {
     }
     return jsonString;
   }
+
+  static void inject() {}
 }
