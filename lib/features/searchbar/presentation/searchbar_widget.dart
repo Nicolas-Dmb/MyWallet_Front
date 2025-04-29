@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 
+enum FilterType { bourse, crypto, immo, cash, all }
+
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({super.key, required this.onPress});
+  const SearchBarWidget({
+    super.key,
+    required this.onPress,
+    required this.filter,
+  });
 
   final Function onPress;
+  final FilterType filter;
   @override
   Widget build(BuildContext build) {
     return SearchAnchor(

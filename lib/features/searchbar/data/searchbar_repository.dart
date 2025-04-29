@@ -3,11 +3,15 @@ import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/features/searchbar/data/searchbar_remote_data_source.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
+import 'package:mywallet_mobile/features/searchbar/searchbar_barrel.dart';
 
 abstract class SearchbarRepository {
-  Future<Either<List<AssetsModel>, Failure>> getAssets();
-  Future<Either<List<AssetsModel>, Failure>> retrieve(String input);
-  Future<Either<List<AssetsModel>, Failure>> selfAssets(String type);
+  Future<Either<Failure, List<AssetModel>>> getGeneralAssets(FilterType type);
+  Future<Either<Failure, List<AssetModel>>> retrieve(
+    String input,
+    FilterType type,
+  );
+  Future<Either<Failure, List<AssetModel>>> ownAssets(FilterType type);
 }
 
 class ISearchbarRepository extends SearchbarRepository {
@@ -20,44 +24,49 @@ class ISearchbarRepository extends SearchbarRepository {
   final SearchBarRemoteDataSource datasource;
 
   @override
-  Future<Either<List<AssetsModel>, Failure>> getAssets() async {
+  Future<Either<Failure, List<AssetModel>>> getGeneralAssets(
+    FilterType type,
+  ) async {
     try {
       final accessToken = await authService.getToken();
       if (accessToken == null) {
-        return Right(CacheFailure("Erreur d'authentification"));
+        return Left(CacheFailure("Erreur d'authentification"));
       }
-      final assets = await datasource.getAssets(accessToken);
-      return Left(assets);
+      final assets = await datasource.getGeneralAssets(accessToken, type);
+      return Right(assets);
     } on Failure catch (e) {
-      return Right(e);
+      return Left(e);
     }
   }
 
   @override
-  Future<Either<List<AssetsModel>, Failure>> retrieve(String input) async {
+  Future<Either<Failure, List<AssetModel>>> retrieve(
+    String input,
+    FilterType type,
+  ) async {
     try {
       final accessToken = await authService.getToken();
       if (accessToken == null) {
-        return Right(CacheFailure("Erreur d'authentification"));
+        return Left(CacheFailure("Erreur d'authentification"));
       }
-      final assets = await datasource.retrieve(accessToken, input);
-      return Left(assets);
+      final assets = await datasource.retrieve(accessToken, input, type);
+      return Right(assets);
     } on Failure catch (e) {
-      return Right(e);
+      return Left(e);
     }
   }
 
   @override
-  Future<Either<List<AssetsModel>, Failure>> selfAssets(String type) async {
+  Future<Either<Failure, List<AssetModel>>> ownAssets(FilterType type) async {
     try {
       final accessToken = await authService.getToken();
       if (accessToken == null) {
-        return Right(CacheFailure("Erreur d'authentification"));
+        return Left(CacheFailure("Erreur d'authentification"));
       }
-      final assets = await datasource.selfAssets(accessToken, type);
-      return Left(assets);
+      final assets = await datasource.ownAssets(accessToken, type);
+      return Right(assets);
     } on Failure catch (e) {
-      return Right(e);
+      return Left(e);
     }
   }
 }

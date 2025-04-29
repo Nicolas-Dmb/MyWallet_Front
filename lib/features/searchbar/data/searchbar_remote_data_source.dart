@@ -5,6 +5,7 @@ import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/core/error/app_error.dart';
 import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
+import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
 
 const url = "https://mywalletapi-502906a76c4f.herokuapp.com";
 
@@ -15,7 +16,10 @@ class SearchBarRemoteDataSource {
 
   final http.Client _client;
 
-  Future<List<AssetsModel>> getAssets(String token) async {
+  Future<List<AssetModel>> getGeneralAssets(
+    String token,
+    FilterType type,
+  ) async {
     try {
       final response = await _client.get(
         Uri.parse('$url/api/asset/'),
@@ -28,14 +32,7 @@ class SearchBarRemoteDataSource {
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as List<dynamic>;
         final assets =
-            data
-                .map(
-                  (asset) => AssetsModel.fromJson(
-                    asset,
-                    'impossible de charger les données',
-                  ),
-                )
-                .toList();
+            data.map((asset) => AssetModel.fromJson(asset, type)).toList();
         return assets;
       } else if (response.statusCode >= 400 && response.statusCode < 500) {
         throw RequestFailure.getMessage(response.body, response.statusCode);
@@ -54,7 +51,11 @@ class SearchBarRemoteDataSource {
     }
   }
 
-  Future<List<AssetsModel>> retrieve(String token, String input) async {
+  Future<List<AssetModel>> retrieve(
+    String token,
+    String input,
+    FilterType type,
+  ) async {
     try {
       final response = await _client.get(
         Uri.parse('$url/api/general/$input/'),
@@ -67,14 +68,7 @@ class SearchBarRemoteDataSource {
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as List<dynamic>;
         final assets =
-            data
-                .map(
-                  (asset) => AssetsModel.fromJson(
-                    asset,
-                    'aucune données disponible, vous devrez les renseigner manuellement',
-                  ),
-                )
-                .toList();
+            data.map((asset) => AssetModel.fromJson(asset, type)).toList();
         return assets;
       } else if (response.statusCode >= 400 && response.statusCode < 500) {
         throw RequestFailure.getMessage(response.body, response.statusCode);
@@ -93,10 +87,10 @@ class SearchBarRemoteDataSource {
     }
   }
 
-  Future<List<AssetsModel>> selfAssets(String token, String type) async {
+  Future<List<AssetModel>> ownAssets(String token, FilterType type) async {
     try {
       final response = await _client.get(
-        Uri.parse('$url/api/wallet/list/${type}/'),
+        Uri.parse('$url/api/wallet/list/${type.name}/'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           "authorization": "Bearer $token",
@@ -106,7 +100,7 @@ class SearchBarRemoteDataSource {
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as List<dynamic>;
         final assets =
-            data.map((asset) => AssetsModel.fromJson(asset, '')).toList();
+            data.map((asset) => AssetModel.fromJson(asset, type)).toList();
         return assets;
       } else if (response.statusCode >= 400 && response.statusCode < 500) {
         throw RequestFailure.getMessage(response.body, response.statusCode);
