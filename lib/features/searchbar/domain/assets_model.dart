@@ -17,7 +17,11 @@ abstract class AssetModel {
   }
 }
 
-class CryptoModel extends AssetModel {
+abstract class MarketModel {
+  String get name;
+}
+
+class CryptoModel extends AssetModel implements MarketModel {
   CryptoModel({
     required this.id,
     required this.ticker,
@@ -28,6 +32,7 @@ class CryptoModel extends AssetModel {
   });
   final String id;
   final String ticker;
+  @override
   final String name;
   final String? subtype;
   final String? country;
@@ -47,7 +52,7 @@ class CryptoModel extends AssetModel {
   }
 }
 
-class StockModel extends AssetModel {
+class StockModel extends AssetModel implements MarketModel {
   StockModel({
     required this.id,
     required this.ticker,
@@ -58,6 +63,7 @@ class StockModel extends AssetModel {
 
   final String id;
   final String ticker;
+  @override
   final String name;
   final String? subtype;
   final String? error;

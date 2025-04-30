@@ -11,7 +11,6 @@ abstract class SearchbarRepository {
     String input,
     FilterType type,
   );
-  Future<Either<Failure, List<AssetModel>>> ownAssets(FilterType type);
 }
 
 class ISearchbarRepository extends SearchbarRepository {
@@ -50,20 +49,6 @@ class ISearchbarRepository extends SearchbarRepository {
         return Left(CacheFailure("Erreur d'authentification"));
       }
       final assets = await datasource.retrieve(accessToken, input, type);
-      return Right(assets);
-    } on Failure catch (e) {
-      return Left(e);
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<AssetModel>>> ownAssets(FilterType type) async {
-    try {
-      final accessToken = await authService.getToken();
-      if (accessToken == null) {
-        return Left(CacheFailure("Erreur d'authentification"));
-      }
-      final assets = await datasource.ownAssets(accessToken, type);
       return Right(assets);
     } on Failure catch (e) {
       return Left(e);

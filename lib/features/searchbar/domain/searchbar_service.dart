@@ -12,26 +12,6 @@ class SearchbarService {
 
   final SearchbarRepository _repository;
 
-  /// Get Assets by type from own wallet
-  Future<Either<Failure, List<AssetModel>>> getOwnAssets(
-    FilterType type,
-  ) async {
-    try {
-      final result = await _repository.ownAssets(type);
-      return result.fold((failure) => Left(failure), (value) => Right(value));
-    } catch (e) {
-      AppLogger.error(
-        'TradingQuizzService.selfAssets() : erreur lors du chargement des données',
-        e,
-      );
-      return Left(
-        UnknownFailure(
-          'Une erreur est survenue lors de la récupération de vos actifs',
-        ),
-      );
-    }
-  }
-
   /// Get Assets from global database then filtered with input user
   Future<Either<Failure, List<AssetModel>>> getGeneralAssets(
     String input,
@@ -72,5 +52,14 @@ class SearchbarService {
         ),
       );
     }
+  }
+
+  //Only available for bourse and crypto
+  Future<List<T>> filterByInput<T extends List<MarketModel>>(
+    String input,
+    FilterType type,
+    List<T> datas,
+  ) async {
+    return datas.where((asset) => asset.name.contains(input)).toList();
   }
 }
