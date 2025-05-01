@@ -5,10 +5,10 @@ import 'package:mywallet_mobile/features/searchbar/data/searchbar_repository.dar
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
 
-class SearchbarService {
-  SearchbarService(this._repository);
+class SearchbarAssetService {
+  SearchbarAssetService(this._repository);
 
-  SearchbarService.inject() : this(di<ISearchbarRepository>());
+  SearchbarAssetService.inject() : this(di<ISearchbarRepository>());
 
   final SearchbarRepository _repository;
 
@@ -19,7 +19,10 @@ class SearchbarService {
   ) async {
     try {
       final result = await _repository.getGeneralAssets(type);
-      return result.fold((failure) => Left(failure), (value) => Right(value));
+      return result.fold(
+        (failure) => Left(failure),
+        (value) => Right(_filter(input, type, value)),
+      );
     } catch (e) {
       AppLogger.error(
         'TradingQuizzService.getAssets() : erreur lors du chargement des données',
@@ -37,10 +40,14 @@ class SearchbarService {
   Future<Either<Failure, List<AssetModel>>> retrieve(
     String input,
     FilterType type,
+    List<AssetModel> assets,
   ) async {
     try {
       final result = await _repository.retrieve(input, type);
-      return result.fold((failure) => Left(failure), (value) => Right(value));
+      return result.fold(
+        (failure) => Left(failure),
+        (value) => Right(_removeDuplicates(value, assets)),
+      );
     } catch (e) {
       AppLogger.error(
         'TradingQuizzService.retrieve() : erreur lors du chargement des données',
@@ -54,12 +61,41 @@ class SearchbarService {
     }
   }
 
-  //Only available for bourse and crypto
-  Future<List<T>> filterByInput<T extends List<MarketModel>>(
+  List<AssetModel> _filter(
     String input,
     FilterType type,
-    List<T> datas,
-  ) async {
-    return datas.where((asset) => asset.name.contains(input)).toList();
+    List<AssetModel> datas,
+  ) {
+    final filterByInput = _filterByInput(input, type, datas);
+    return _filterByType(type, filterByInput);
+  }
+
+  List<AssetModel> _filterByInput(
+    String input,
+    FilterType type,
+    List<AssetModel> datas,
+  ) {
+    return datas
+        .where(
+          (asset) => asset.name.contains(input) || asset.ticker.contains(input),
+        )
+        .toList();
+  }
+
+  List<AssetModel> _filterByType(FilterType type, List<AssetModel> datas) {
+    return datas.where((asset) => asset.remoteType.name == type.name).toList();
+  }
+
+  List<AssetModel> _removeDuplicates(
+    List<AssetModel> newDatas,
+    List<AssetModel> assets,
+  ) {
+    List<AssetModel> newList = assets;
+    for (var newData in newDatas) {
+      if (!assets.contains(newData)) {
+        newList.add(newData);
+      }
+    }
+    return newList;
   }
 }

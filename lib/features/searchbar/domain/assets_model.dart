@@ -1,27 +1,22 @@
 import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
 
+enum RemoteType { bourse, crypto }
+
 abstract class AssetModel {
+  RemoteType get remoteType;
+  String get name;
+  String get ticker;
   static AssetModel fromJson(Map<String, dynamic> json, FilterType type) {
     switch (type) {
       case FilterType.bourse:
         return StockModel.fromJson(json);
       case FilterType.crypto:
         return CryptoModel.fromJson(json);
-      case FilterType.immo:
-        return RealEstateModel.fromJson(json);
-      case FilterType.cash:
-        return CashModel.fromJson(json);
-      default:
-        throw Exception('Type inconnu');
     }
   }
 }
 
-abstract class MarketModel {
-  String get name;
-}
-
-class CryptoModel extends AssetModel implements MarketModel {
+class CryptoModel extends AssetModel {
   CryptoModel({
     required this.id,
     required this.ticker,
@@ -29,16 +24,21 @@ class CryptoModel extends AssetModel implements MarketModel {
     this.subtype,
     this.country,
     this.error,
+    required this.remoteType,
   });
   final String id;
+  @override
   final String ticker;
   @override
   final String name;
   final String? subtype;
   final String? country;
   final String? error;
+  @override
+  final RemoteType remoteType;
 
   static CryptoModel fromJson(Map<String, dynamic> data) {
+    final String category = data['category'] ?? 'Bourse';
     return CryptoModel(
       id: data['id'],
       ticker: data['ticker'],
@@ -48,27 +48,33 @@ class CryptoModel extends AssetModel implements MarketModel {
           data['error'] != null
               ? 'Récupération automatique impossible sur ce type de données'
               : null,
+      remoteType: category == 'Crypto' ? RemoteType.crypto : RemoteType.bourse,
     );
   }
 }
 
-class StockModel extends AssetModel implements MarketModel {
+class StockModel extends AssetModel {
   StockModel({
     required this.id,
     required this.ticker,
     required this.name,
     this.subtype,
     this.error,
+    required this.remoteType,
   });
 
   final String id;
+  @override
   final String ticker;
   @override
   final String name;
   final String? subtype;
   final String? error;
+  @override
+  final RemoteType remoteType;
 
   static StockModel fromJson(Map<String, dynamic> data) {
+    final String category = data['category'] ?? 'Bourse';
     return StockModel(
       id: data['id'],
       ticker: data['ticker'],
@@ -78,11 +84,12 @@ class StockModel extends AssetModel implements MarketModel {
           data['error'] != null
               ? 'Récupération automatique impossible sur ce type de données'
               : null,
+      remoteType: category == 'Crypto' ? RemoteType.crypto : RemoteType.bourse,
     );
   }
 }
 
-class RealEstateModel extends AssetModel {
+class RealEstateModel {
   RealEstateModel({
     required this.id,
     required this.address,
@@ -105,7 +112,7 @@ class RealEstateModel extends AssetModel {
   }
 }
 
-class CashModel extends AssetModel {
+class CashModel {
   CashModel({
     required this.id,
     required this.bank,

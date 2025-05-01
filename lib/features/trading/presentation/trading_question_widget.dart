@@ -74,7 +74,7 @@ class _StringQuestion extends StatefulWidget {
   final Function setAnswer;
 
   @override
-  State<StatefulWidget> createState() => _StringQuestionState();
+  State<_StringQuestion> createState() => _StringQuestionState();
 }
 
 class _StringQuestionState extends State<_StringQuestion> {
@@ -115,7 +115,7 @@ class _IntQuestion extends StatefulWidget {
   final Function setAnswer;
 
   @override
-  State<StatefulWidget> createState() => _IntQuestionState();
+  State<_IntQuestion> createState() => _IntQuestionState();
 }
 
 class _IntQuestionState extends State<_IntQuestion> {
@@ -178,7 +178,7 @@ class _SearchQuestion extends StatefulWidget {
   final Function setAnswer;
 
   @override
-  State<StatefulWidget> createState() => _SearchQuestionState();
+  State<_SearchQuestion> createState() => _SearchQuestionState();
 }
 
 class _SearchQuestionState extends State<_SearchQuestion> {
@@ -211,7 +211,7 @@ class _ChoiceQuestion extends StatefulWidget {
   final Function setAnswer;
 
   @override
-  State<StatefulWidget> createState() => _ChoiceQuestionState();
+  State<_ChoiceQuestion> createState() => _ChoiceQuestionState();
 }
 
 class _ChoiceQuestionState extends State<_ChoiceQuestion> {
@@ -296,7 +296,7 @@ class _DateQuestion extends StatefulWidget {
   final Function setAnswer;
 
   @override
-  State<StatefulWidget> createState() => _DateQuestionState();
+  State<_DateQuestion> createState() => _DateQuestionState();
 }
 
 class _DateQuestionState extends State<_DateQuestion> {
