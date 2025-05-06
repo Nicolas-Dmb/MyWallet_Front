@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
+import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/searchbar_asset_service.dart';
 import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_controller.dart';
 
@@ -99,23 +101,96 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
                   padding: const EdgeInsets.only(bottom: 20),
                   itemCount: state.assets.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _SelectedQuizzButton(
-                      text: widget.question.answers[index],
-                      onTap: (newValue) {
+                    return _AssetElement(
+                      value: state.assets[index],
+                      onPress: () {
+                        widget.onPress;
+                        context.read<SearchbarController>().select(
+                          state.assets[index],
+                        );
                         setState(() {
-                          _controller.text = widget.question.answers[index];
+                          controller.text =
+                              "${state.assets[index].name} - ${state.assets[index].ticker}";
                         });
                       },
-                      isSelected:
-                          _controller.text == widget.question.answers[index],
                     );
                   },
                 );
               }
+              if (state is Loading) {
+                return Center(
+                  child: SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(color: AppColors.border1),
+                  ),
+                );
+              }
+              if (state is Error) {
+                return Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(75, 231, 218, 217),
+                        spreadRadius: 1,
+                        blurRadius: 8,
+                        offset: Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(state.message, style: AppTextStyles.title3),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return SizedBox.shrink();
             },
           ),
         ];
       },
+    );
+  }
+}
+
+class _AssetElement extends StatelessWidget {
+  const _AssetElement({required this.value, required this.onPress});
+
+  final AssetModel value;
+  final Function onPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onPress,
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(75, 231, 218, 217),
+              spreadRadius: 1,
+              blurRadius: 8,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(value.name, style: AppTextStyles.title3),
+                Text(value.ticker, style: AppTextStyles.italic),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

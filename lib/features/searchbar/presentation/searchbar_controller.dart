@@ -22,6 +22,12 @@ class Error extends SearchbarState {
   final String message;
 }
 
+class Selected extends SearchbarState {
+  Selected(this.assetModel, this.assetLoaded);
+  final AssetLoaded assetLoaded;
+  final AssetModel assetModel;
+}
+
 class SearchbarController extends Cubit<SearchbarState> {
   SearchbarController(this._searchbarService) : super(Initial());
 
@@ -89,6 +95,27 @@ class SearchbarController extends Cubit<SearchbarState> {
       (value) {
         return value;
       },
+    );
+  }
+
+  Future<void> select(AssetModel asset) async {
+    if (state is! AssetLoaded) {
+      return;
+    }
+    final currentState = state as AssetLoaded;
+    emit(Selected(asset, currentState));
+  }
+
+  Future<void> unSelect(AssetModel asset) async {
+    if (state is! Selected) {
+      return;
+    }
+    final currentState = state as Selected;
+    emit(
+      AssetLoaded(
+        currentState.assetLoaded.assets,
+        currentState.assetLoaded.page,
+      ),
     );
   }
 }
