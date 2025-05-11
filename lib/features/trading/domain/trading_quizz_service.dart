@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:mywallet_mobile/features/trading/domain/entities/question_model.dart';
+import 'package:mywallet_mobile/features/trading/presentation/trading_quizz_controller.dart';
 
 class TradingQuizzService {
-  Future<List<QuestionModel>> loadQuizz(bool isBuy, String assetType) async {
+  Future<List<QuestionModel>> loadQuizz(bool isBuy, AssetType assetType) async {
     final String jsonString = await _loadJsonFile(isBuy);
     final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    final List<dynamic> jsonQuestions = jsonMap[assetType];
+    final List<dynamic> jsonQuestions = jsonMap[assetType.name];
     final questions =
         jsonQuestions
             .map((jsonQuestion) => QuestionModel.fromJson(jsonQuestion))

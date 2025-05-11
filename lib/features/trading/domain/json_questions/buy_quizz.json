@@ -1,5 +1,5 @@
 {
-    "Stock":[
+    "stock":[
         {
             "question":"Nom de l'actif :",
             "type":"search",
@@ -95,7 +95,7 @@
             ]
         }
     ],
-    "Crypto":[
+    "crypto":[
         {
             "question":"Nom de l'actif :",
             "type":"search",
@@ -158,7 +158,7 @@
             ]
         }
     ],
-    "Cash":[
+    "cash":[
         {
             "question":"Dans quelle banque as-tu déposé ton argent :",
             "type":"text",
@@ -189,7 +189,7 @@
             "answer":[]
         }
     ],
-    "RealEstate":[
+    "realEstate":[
         {
             "question":"Adresse du logement :",
             "type":"text",

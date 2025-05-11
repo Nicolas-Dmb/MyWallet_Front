@@ -12,11 +12,17 @@ class Initial extends TradingQuizzState {}
 class Loading extends TradingQuizzState {}
 
 class OnGoingQuizz extends TradingQuizzState {
-  OnGoingQuizz(this.questions, this.totalQuestion, this.currentQuestion);
+  OnGoingQuizz(
+    this.questions,
+    this.totalQuestion,
+    this.currentQuestion,
+    this.assetType,
+  );
 
   final List<QuestionModel> questions;
   final int totalQuestion;
   final int currentQuestion;
+  final AssetType assetType;
 
   void setAnswer(dynamic answer) {
     questions[currentQuestion] = questions[currentQuestion].setAnswer(answer);
@@ -36,6 +42,8 @@ class Error extends TradingQuizzState {
   final OnGoingQuizz? lastState;
 }
 
+enum AssetType { stock, crypto, cash, realEstate }
+
 class TradingQuizzController extends Cubit<TradingQuizzState> {
   TradingQuizzController(this._tradingQuizzService) : super(Initial());
 
@@ -43,12 +51,12 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
 
   get currentQuestion => null;
 
-  Future<void> loadQuizz(bool isBuy, String assetType) async {
+  Future<void> loadQuizz(bool isBuy, AssetType assetType) async {
     emit(Loading());
     try {
       final questions = await _tradingQuizzService.loadQuizz(isBuy, assetType);
       AppLogger.log(questions.toString());
-      emit(OnGoingQuizz(questions, questions.length, 0));
+      emit(OnGoingQuizz(questions, questions.length, 0, assetType));
     } catch (e) {
       AppLogger.error(e.toString(), e);
     }
@@ -71,6 +79,7 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
           errorState.lastState!.questions,
           errorState.lastState!.totalQuestion,
           errorState.lastState!.currentQuestion,
+          errorState.lastState!.assetType,
         ),
       );
     }
@@ -96,6 +105,7 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
         onGoingState.questions,
         onGoingState.totalQuestion,
         onGoingState.currentQuestion + 1,
+        onGoingState.assetType,
       ),
     );
   }
@@ -121,6 +131,7 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
           errorState.lastState!.questions,
           errorState.lastState!.totalQuestion,
           errorState.lastState!.currentQuestion - 1,
+          errorState.lastState!.assetType,
         ),
       );
       return;
@@ -138,6 +149,7 @@ class TradingQuizzController extends Cubit<TradingQuizzState> {
         onGoingState.questions,
         onGoingState.totalQuestion,
         onGoingState.currentQuestion - 1,
+        onGoingState.assetType,
       ),
     );
   }

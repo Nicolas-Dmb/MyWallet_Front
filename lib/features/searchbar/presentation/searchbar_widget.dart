@@ -28,7 +28,7 @@ class FakeSearchBarWidget extends StatelessWidget {
         EdgeInsets.symmetric(horizontal: 16.0),
       ),
       onTap: () {
-        SearchBarWidget(onPress: onPress, filter: filter);
+        SearchBarProviderWidget(onPress: onPress, filter: filter);
       },
       leading: const Icon(Icons.search, color: AppColors.interactive3),
     );

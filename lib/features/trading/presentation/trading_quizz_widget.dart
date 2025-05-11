@@ -40,10 +40,9 @@ class _QuizzManager extends StatelessWidget {
         if (state is Initial) {
           return TradingQuestionWidget(
             onTap:
-                (value) => context.read<TradingQuizzController>().loadQuizz(
-                  isBuy,
-                  value,
-                ),
+                (AssetType value) => context
+                    .read<TradingQuizzController>()
+                    .loadQuizz(isBuy, value),
           );
         }
         if (state is Error) {
@@ -51,10 +50,9 @@ class _QuizzManager extends StatelessWidget {
           return state.lastState == null
               ? TradingQuestionWidget(
                 onTap:
-                    (value) => context.read<TradingQuizzController>().loadQuizz(
-                      isBuy,
-                      value,
-                    ),
+                    (AssetType value) => context
+                        .read<TradingQuizzController>()
+                        .loadQuizz(isBuy, value),
               )
               : QuestionManager(
                 question:
@@ -65,6 +63,7 @@ class _QuizzManager extends StatelessWidget {
                     (value) => context
                         .read<TradingQuizzController>()
                         .setAnswerAndContinue(value),
+                assetType: state.lastState!.assetType,
               );
         }
         if (state is Success) {
@@ -83,6 +82,7 @@ class _QuizzManager extends StatelessWidget {
                 (value) => context
                     .read<TradingQuizzController>()
                     .setAnswerAndContinue(value),
+            assetType: state.assetType,
           );
         }
         return Center(

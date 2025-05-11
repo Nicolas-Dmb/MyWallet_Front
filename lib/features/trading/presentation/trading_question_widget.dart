@@ -4,7 +4,9 @@ import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 import 'package:mywallet_mobile/core/theme/app_fonts.dart';
 import 'package:mywallet_mobile/core/widgets/components/custom_input_form.dart';
+import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
 import 'package:mywallet_mobile/features/trading/domain/entities/question_model.dart';
+import 'package:mywallet_mobile/features/trading/presentation/trading_quizz_controller.dart';
 
 class TradingQuestionWidget extends StatelessWidget {
   const TradingQuestionWidget({super.key, required this.onTap});
@@ -19,13 +21,19 @@ class TradingQuestionWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _QuizzButton(text: 'Bourse', onTap: () => {onTap('Stock')}),
+            _QuizzButton(text: 'Bourse', onTap: () => {onTap(AssetType.stock)}),
             SizedBox(height: 30),
-            _QuizzButton(text: 'Crypto', onTap: () => {onTap('Crypto')}),
+            _QuizzButton(
+              text: 'Crypto',
+              onTap: () => {onTap(AssetType.crypto)},
+            ),
             SizedBox(height: 30),
-            _QuizzButton(text: 'Cash', onTap: () => {onTap('Cash')}),
+            _QuizzButton(text: 'Cash', onTap: () => {onTap(AssetType.cash)}),
             SizedBox(height: 30),
-            _QuizzButton(text: 'Immo', onTap: () => {onTap('RealEstate')}),
+            _QuizzButton(
+              text: 'Immo',
+              onTap: () => {onTap(AssetType.realEstate)},
+            ),
           ],
         ),
       ),
@@ -38,10 +46,12 @@ class QuestionManager extends StatelessWidget {
     super.key,
     required this.question,
     required this.setAnswer,
+    required this.assetType,
   });
 
   final QuestionModel question;
   final Function setAnswer;
+  final AssetType assetType;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +65,11 @@ class QuestionManager extends StatelessWidget {
       case 'choice':
         return _ChoiceQuestion(question: question, setAnswer: setAnswer);
       case 'search':
-        return _SearchQuestion(question: question, setAnswer: setAnswer);
+        return _SearchQuestion(
+          question: question,
+          setAnswer: setAnswer,
+          assetType: assetType,
+        );
       default:
         return Center(
           child: Text(
@@ -172,10 +186,15 @@ class _IntQuestionState extends State<_IntQuestion> {
 }
 
 class _SearchQuestion extends StatefulWidget {
-  const _SearchQuestion({required this.question, required this.setAnswer});
+  const _SearchQuestion({
+    required this.question,
+    required this.setAnswer,
+    required this.assetType,
+  });
 
   final QuestionModel question;
   final Function setAnswer;
+  final AssetType assetType;
 
   @override
   State<_SearchQuestion> createState() => _SearchQuestionState();
@@ -190,7 +209,13 @@ class _SearchQuestionState extends State<_SearchQuestion> {
         children: [
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
-          //Ajouter le widget
+          FakeSearchBarWidget(
+            onPress: (selectedValue) => {value = selectedValue},
+            filter:
+                widget.assetType == AssetType.stock
+                    ? FilterType.bourse
+                    : FilterType.crypto,
+          ),
           Spacer(flex: 2),
           CustomTextButton(
             onPressed: () => widget.setAnswer(value),
