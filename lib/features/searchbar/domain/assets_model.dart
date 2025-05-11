@@ -6,11 +6,11 @@ abstract class AssetModel {
   RemoteType get remoteType;
   String get name;
   String get ticker;
-  static AssetModel fromJson(Map<String, dynamic> json, FilterType type) {
+  static AssetModel fromJson(Map<String, dynamic> json, AssetFilterType type) {
     switch (type) {
-      case FilterType.bourse:
+      case AssetFilterType.bourse:
         return StockModel.fromJson(json);
-      case FilterType.crypto:
+      case AssetFilterType.crypto:
         return CryptoModel.fromJson(json);
     }
   }
@@ -85,51 +85,6 @@ class StockModel extends AssetModel {
               ? 'Récupération automatique impossible sur ce type de données'
               : null,
       remoteType: category == 'Crypto' ? RemoteType.crypto : RemoteType.bourse,
-    );
-  }
-}
-
-class RealEstateModel {
-  RealEstateModel({
-    required this.id,
-    required this.address,
-    required this.type,
-    required this.purpose,
-  });
-
-  final String id;
-  final String address;
-  final String type;
-  final String purpose;
-
-  static RealEstateModel fromJson(Map<String, dynamic> data) {
-    return RealEstateModel(
-      id: data['id'],
-      address: data['adresse'] ?? '',
-      type: data['type'],
-      purpose: data['destination'],
-    );
-  }
-}
-
-class CashModel {
-  CashModel({
-    required this.id,
-    required this.bank,
-    required this.account,
-    required this.amount,
-  });
-  final String id;
-  final String bank;
-  final String account;
-  final int amount;
-
-  static CashModel fromJson(Map<String, dynamic> data) {
-    return CashModel(
-      id: data['id'] ?? '',
-      bank: data['bank'] ?? '',
-      account: data['account'] ?? '',
-      amount: data['amount'] ?? 0,
     );
   }
 }

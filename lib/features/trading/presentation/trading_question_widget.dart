@@ -213,8 +213,8 @@ class _SearchQuestionState extends State<_SearchQuestion> {
             onPress: (selectedValue) => {value = selectedValue},
             filter:
                 widget.assetType == AssetType.stock
-                    ? FilterType.bourse
-                    : FilterType.crypto,
+                    ? AssetFilterType.bourse
+                    : AssetFilterType.crypto,
           ),
           Spacer(flex: 2),
           CustomTextButton(

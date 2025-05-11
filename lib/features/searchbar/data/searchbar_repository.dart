@@ -6,10 +6,12 @@ import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/searchbar_barrel.dart';
 
 abstract class SearchbarRepository {
-  Future<Either<Failure, List<AssetModel>>> getGeneralAssets(FilterType type);
+  Future<Either<Failure, List<AssetModel>>> getGeneralAssets(
+    AssetFilterType type,
+  );
   Future<Either<Failure, List<AssetModel>>> retrieve(
     String input,
-    FilterType type,
+    AssetFilterType type,
   );
 }
 
@@ -24,7 +26,7 @@ class ISearchbarRepository extends SearchbarRepository {
 
   @override
   Future<Either<Failure, List<AssetModel>>> getGeneralAssets(
-    FilterType type,
+    AssetFilterType type,
   ) async {
     try {
       final accessToken = await authService.getToken();
@@ -41,7 +43,7 @@ class ISearchbarRepository extends SearchbarRepository {
   @override
   Future<Either<Failure, List<AssetModel>>> retrieve(
     String input,
-    FilterType type,
+    AssetFilterType type,
   ) async {
     try {
       final accessToken = await authService.getToken();

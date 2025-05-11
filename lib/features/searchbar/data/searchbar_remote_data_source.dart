@@ -18,7 +18,7 @@ class SearchBarRemoteDataSource {
 
   Future<List<AssetModel>> getGeneralAssets(
     String token,
-    FilterType type,
+    AssetFilterType type,
   ) async {
     try {
       final response = await _client.get(
@@ -54,7 +54,7 @@ class SearchBarRemoteDataSource {
   Future<List<AssetModel>> retrieve(
     String token,
     String input,
-    FilterType type,
+    AssetFilterType type,
   ) async {
     try {
       final response = await _client.get(

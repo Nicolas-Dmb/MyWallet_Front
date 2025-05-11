@@ -33,7 +33,7 @@ class SearchbarController extends Cubit<SearchbarState> {
 
   final SearchbarAssetService _searchbarService;
 
-  Future<void> search(String input, FilterType filter) async {
+  Future<void> search(String input, AssetFilterType filter) async {
     emit(Loading());
     final ownResult = await _getGeneralAssets(input, filter);
     if (ownResult == null) {
@@ -53,7 +53,7 @@ class SearchbarController extends Cubit<SearchbarState> {
 
   Future<List<AssetModel>?> _getGeneralAssets(
     String input,
-    FilterType type,
+    AssetFilterType type,
   ) async {
     final result = await _searchbarService.getGeneralAssets(input, type);
     return result.fold(
@@ -67,7 +67,7 @@ class SearchbarController extends Cubit<SearchbarState> {
     );
   }
 
-  Future<void> retrieve(String input, FilterType type) async {
+  Future<void> retrieve(String input, AssetFilterType type) async {
     assert(state is AssetLoaded);
     final currentState = state as AssetLoaded;
     if (currentState.page == 2) {
@@ -83,7 +83,7 @@ class SearchbarController extends Cubit<SearchbarState> {
 
   Future<List<AssetModel>?> _retrieveNewAssets(
     String input,
-    FilterType type,
+    AssetFilterType type,
     List<AssetModel> assets,
   ) async {
     final result = await _searchbarService.retrieve(input, type, assets);

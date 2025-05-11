@@ -15,7 +15,7 @@ class SearchbarAssetService {
   /// Get Assets from global database then filtered with input user
   Future<Either<Failure, List<AssetModel>>> getGeneralAssets(
     String input,
-    FilterType type,
+    AssetFilterType type,
   ) async {
     try {
       final result = await _repository.getGeneralAssets(type);
@@ -39,7 +39,7 @@ class SearchbarAssetService {
   /// Get new Assets not yet register in global database from chatGpt
   Future<Either<Failure, List<AssetModel>>> retrieve(
     String input,
-    FilterType type,
+    AssetFilterType type,
     List<AssetModel> assets,
   ) async {
     try {
@@ -63,7 +63,7 @@ class SearchbarAssetService {
 
   List<AssetModel> _filter(
     String input,
-    FilterType type,
+    AssetFilterType type,
     List<AssetModel> datas,
   ) {
     final filterByInput = _filterByInput(input, type, datas);
@@ -72,7 +72,7 @@ class SearchbarAssetService {
 
   List<AssetModel> _filterByInput(
     String input,
-    FilterType type,
+    AssetFilterType type,
     List<AssetModel> datas,
   ) {
     return datas
@@ -82,7 +82,7 @@ class SearchbarAssetService {
         .toList();
   }
 
-  List<AssetModel> _filterByType(FilterType type, List<AssetModel> datas) {
+  List<AssetModel> _filterByType(AssetFilterType type, List<AssetModel> datas) {
     return datas.where((asset) => asset.remoteType.name == type.name).toList();
   }
 

@@ -7,7 +7,11 @@ import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/searchbar_asset_service.dart';
 import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_controller.dart';
 
-enum FilterType { bourse, crypto }
+enum AssetFilterType { bourse, crypto }
+
+enum FilterType { bourse, crypto, immo, cash }
+
+enum PrivateFilterType { immo, cash }
 
 class FakeSearchBarWidget extends StatelessWidget {
   const FakeSearchBarWidget({
@@ -17,7 +21,7 @@ class FakeSearchBarWidget extends StatelessWidget {
   });
 
   final Function onPress;
-  final FilterType filter;
+  final AssetFilterType filter;
 
   @override
   Widget build(BuildContext build) {
@@ -35,6 +39,26 @@ class FakeSearchBarWidget extends StatelessWidget {
   }
 }
 
+// For immo and cash (only private asset)
+class PrivateSearchBarProviderWidget extends StatelessWidget {
+  const PrivateSearchBarProviderWidget({
+    super.key,
+    required this.onPress,
+    required this.filter,
+  });
+  final Function onPress;
+  final PrivateFilterType filter;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SearchbarController(di<SearchbarAssetService>()),
+      child: SearchBarWidget(onPress: onPress, filter: filter),
+    );
+  }
+}
+
+// For asset (crypto and stock)
 class SearchBarProviderWidget extends StatelessWidget {
   const SearchBarProviderWidget({
     super.key,
@@ -42,13 +66,118 @@ class SearchBarProviderWidget extends StatelessWidget {
     required this.filter,
   });
   final Function onPress;
-  final FilterType filter;
+  final AssetFilterType filter;
 
   @override
   Widget build(BuildContext build) {
     return BlocProvider(
       create: (context) => SearchbarController(di<SearchbarAssetService>()),
       child: SearchBarWidget(onPress: onPress, filter: filter),
+    );
+  }
+}
+
+class PrivateSearchBarWidget extends StatefulWidget {
+  const PrivateSearchBarWidget({
+    super.key,
+    required this.onPress,
+    required this.filter,
+  });
+  final Function onPress;
+  final PrivateFilterType filter;
+
+  @override
+  State<PrivateSearchBarWidget> createState() => PrivateSearchBarWidgetState();
+}
+
+class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
+  SearchController controller = SearchController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.openView();
+  }
+
+  @override
+  Widget build(BuildContext build) {
+    return SearchAnchor(
+      builder: (BuildContext context, SearchController controller) {
+        return SearchBar(
+          hintText: 'Recherche...',
+          backgroundColor: WidgetStateProperty.all(AppColors.border3),
+          controller: controller,
+          padding: const WidgetStatePropertyAll<EdgeInsets>(
+            EdgeInsets.symmetric(horizontal: 16.0),
+          ),
+          onChanged: (input) {
+            controller.openView();
+            context.read<SearchbarController>().search(input, widget.filter);
+          },
+          leading: const Icon(Icons.search, color: AppColors.interactive3),
+        );
+      },
+      suggestionsBuilder: (BuildContext context, SearchController controller) {
+        return [
+          BlocBuilder<SearchbarController, SearchbarState>(
+            builder: (context, state) {
+              if (state is AssetLoaded) {
+                return ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  itemCount: state.assets.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _AssetElement(
+                      value: state.assets[index],
+                      onPress: () {
+                        widget.onPress;
+                        context.read<SearchbarController>().select(
+                          state.assets[index],
+                        );
+                        setState(() {
+                          controller.text =
+                              "${state.assets[index].name} - ${state.assets[index].ticker}";
+                        });
+                      },
+                    );
+                  },
+                );
+              }
+              if (state is Loading) {
+                return Center(
+                  child: SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(color: AppColors.border1),
+                  ),
+                );
+              }
+              if (state is Error) {
+                return Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(75, 231, 218, 217),
+                        spreadRadius: 1,
+                        blurRadius: 8,
+                        offset: Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(state.message, style: AppTextStyles.title3),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return SizedBox.shrink();
+            },
+          ),
+        ];
+      },
     );
   }
 }
@@ -60,7 +189,7 @@ class SearchBarWidget extends StatefulWidget {
     required this.filter,
   });
   final Function onPress;
-  final FilterType filter;
+  final AssetFilterType filter;
   @override
   State<SearchBarWidget> createState() => SearchBarWidgetState();
 }
