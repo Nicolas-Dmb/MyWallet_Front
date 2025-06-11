@@ -211,10 +211,7 @@ class _SearchQuestionState extends State<_SearchQuestion> {
           Spacer(),
           FakeSearchBarWidget(
             onPress: (selectedValue) => {value = selectedValue},
-            filter:
-                widget.assetType == AssetType.stock
-                    ? AssetFilterType.bourse
-                    : AssetFilterType.crypto,
+            filter: FilterType.fromAssetType(widget.assetType),
           ),
           Spacer(flex: 2),
           CustomTextButton(

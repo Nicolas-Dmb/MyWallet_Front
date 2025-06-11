@@ -34,7 +34,7 @@ class CacheFailure extends Failure {
 class RequestFailure extends Failure {
   const RequestFailure(super.message);
 
-  factory RequestFailure.getMessage(String responseBody, int statusCode) {
+  factory RequestFailure.setMessage(String responseBody, int statusCode) {
     String response = handleErrorResponse(responseBody);
     return RequestFailure("Erreur client : $statusCode = $response");
   }

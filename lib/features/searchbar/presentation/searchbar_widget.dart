@@ -2,16 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/di.dart';
-import 'package:mywallet_mobile/core/theme/app_colors.dart';
-import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
+import 'package:mywallet_mobile/features/searchbar/domain/private_assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/searchbar_asset_service.dart';
+import 'package:mywallet_mobile/features/searchbar/presentation/private_searchbar_controller.dart';
 import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_controller.dart';
+import 'package:mywallet_mobile/features/trading/trading_barrel.dart';
 
-enum AssetFilterType { bourse, crypto }
+enum AssetFilterType {
+  bourse,
+  crypto;
 
-enum FilterType { bourse, crypto, immo, cash }
+  static bool isAssetFilterType(FilterType type) {
+    AssetFilterType.values.map((value) {
+      if (value.name == type.name) {
+        return true;
+      }
+    });
+    return false;
+  }
 
-enum PrivateFilterType { immo, cash }
+  static AssetFilterType fromFilterType(FilterType type) {
+    return AssetFilterType.values.firstWhere(
+      (value) => value.name == type.name,
+    );
+  }
+}
+
+enum FilterType {
+  bourse,
+  crypto,
+  immo,
+  cash;
+
+  static FilterType fromAssetType(AssetType type) {
+    switch (type) {
+      case AssetType.stock:
+        return FilterType.bourse;
+      case AssetType.crypto:
+        return FilterType.crypto;
+      case AssetType.cash:
+        return FilterType.immo;
+      case AssetType.realEstate:
+        return FilterType.cash;
+    }
+  }
+}
+
+enum PrivateFilterType {
+  immo,
+  cash;
+
+  static bool isPrivateFilterType(FilterType type) {
+    PrivateFilterType.values.map((value) {
+      if (value.name == type.name) {
+        return true;
+      }
+    });
+    return false;
+  }
+
+  static PrivateFilterType fromFilterType(FilterType type) {
+    return PrivateFilterType.values.firstWhere(
+      (value) => value.name == type.name,
+    );
+  }
+}
 
 class FakeSearchBarWidget extends StatelessWidget {
   const FakeSearchBarWidget({
@@ -21,7 +76,7 @@ class FakeSearchBarWidget extends StatelessWidget {
   });
 
   final Function onPress;
-  final AssetFilterType filter;
+  final FilterType filter;
 
   @override
   Widget build(BuildContext build) {
@@ -32,14 +87,24 @@ class FakeSearchBarWidget extends StatelessWidget {
         EdgeInsets.symmetric(horizontal: 16.0),
       ),
       onTap: () {
-        SearchBarProviderWidget(onPress: onPress, filter: filter);
+        if (AssetFilterType.isAssetFilterType(filter)) {
+          SearchBarProviderWidget(
+            onPress: onPress,
+            filter: AssetFilterType.fromFilterType(filter),
+          );
+        } else {
+          PrivateSearchBarProviderWidget(
+            onPress: onPress,
+            filter: PrivateFilterType.fromFilterType(filter),
+          );
+        }
       },
       leading: const Icon(Icons.search, color: AppColors.interactive3),
     );
   }
 }
 
-// For immo and cash (only private asset)
+/// only for [PrivateFilterType]
 class PrivateSearchBarProviderWidget extends StatelessWidget {
   const PrivateSearchBarProviderWidget({
     super.key,
@@ -52,13 +117,13 @@ class PrivateSearchBarProviderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SearchbarController(di<SearchbarAssetService>()),
-      child: SearchBarWidget(onPress: onPress, filter: filter),
+      create: (context) => PrivateSearchbarController.inject(filter),
+      child: PrivateSearchBarWidget(onPress: onPress, filter: filter),
     );
   }
 }
 
-// For asset (crypto and stock)
+/// only for [AssetFilterType]
 class SearchBarProviderWidget extends StatelessWidget {
   const SearchBarProviderWidget({
     super.key,
@@ -99,6 +164,31 @@ class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
     controller.openView();
   }
 
+  void setControllerText(PrivateAssetsModel asset) {
+    if (asset is RealEstateModel) {
+      controller.text = asset.address;
+    } else if (asset is CashModel) {
+      controller.text = "${asset.bank} - ${asset.account} - ${asset.amount}";
+    }
+    setState(() {});
+  }
+
+  String extractTitle(PrivateAssetsModel asset) {
+    if (asset is RealEstateModel) {
+      return asset.address;
+    }
+    final currentAsset = asset as CashModel;
+    return currentAsset.bank;
+  }
+
+  String extractSubtext(PrivateAssetsModel asset) {
+    if (asset is RealEstateModel) {
+      return '${asset.purpose} - ${asset.type}';
+    }
+    final currentAsset = asset as CashModel;
+    return '${currentAsset.account} - ${currentAsset.amount}';
+  }
+
   @override
   Widget build(BuildContext build) {
     return SearchAnchor(
@@ -112,37 +202,33 @@ class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
           ),
           onChanged: (input) {
             controller.openView();
-            context.read<SearchbarController>().search(input, widget.filter);
+            context.read<PrivateSearchbarController>().search(input);
           },
           leading: const Icon(Icons.search, color: AppColors.interactive3),
         );
       },
       suggestionsBuilder: (BuildContext context, SearchController controller) {
         return [
-          BlocBuilder<SearchbarController, SearchbarState>(
+          BlocBuilder<PrivateSearchbarController, PrivateSearchbarState>(
             builder: (context, state) {
-              if (state is AssetLoaded) {
+              if (state is PrivateSearchbarLoaded) {
                 return ListView.builder(
                   padding: const EdgeInsets.only(bottom: 20),
                   itemCount: state.assets.length,
                   itemBuilder: (BuildContext context, int index) {
                     return _AssetElement(
-                      value: state.assets[index],
+                      title: extractTitle(state.assetsFiltered[index]),
+                      subtext: extractSubtext(state.assetsFiltered[index]),
                       onPress: () {
                         widget.onPress;
-                        context.read<SearchbarController>().select(
-                          state.assets[index],
-                        );
-                        setState(() {
-                          controller.text =
-                              "${state.assets[index].name} - ${state.assets[index].ticker}";
-                        });
+                        setControllerText(state.assetsFiltered[index]);
                       },
                     );
                   },
                 );
               }
-              if (state is Loading) {
+              if (state is PrivateSearchbarLoading ||
+                  state is PrivateSearchbarInitialing) {
                 return Center(
                   child: SizedBox(
                     height: 50,
@@ -151,7 +237,7 @@ class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
                   ),
                 );
               }
-              if (state is Error) {
+              if (state is PrivateSearchbarError) {
                 return Container(
                   height: 100,
                   decoration: BoxDecoration(
@@ -226,24 +312,41 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
           BlocBuilder<SearchbarController, SearchbarState>(
             builder: (context, state) {
               if (state is AssetLoaded) {
-                return ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  itemCount: state.assets.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _AssetElement(
-                      value: state.assets[index],
-                      onPress: () {
-                        widget.onPress;
-                        context.read<SearchbarController>().select(
-                          state.assets[index],
+                return Column(
+                  children: [
+                    ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: state.assets.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _AssetElement(
+                          title: state.assets[index].name,
+                          subtext: state.assets[index].ticker,
+                          onPress: () {
+                            widget.onPress;
+                            context.read<SearchbarController>().select(
+                              state.assets[index],
+                            );
+                            setState(() {
+                              controller.text =
+                                  "${state.assets[index].name} - ${state.assets[index].ticker}";
+                            });
+                          },
                         );
-                        setState(() {
-                          controller.text =
-                              "${state.assets[index].name} - ${state.assets[index].ticker}";
-                        });
                       },
-                    );
-                  },
+                    ),
+                    state.page == 2
+                        ? SizedBox.shrink()
+                        : _AssetElement(
+                          title: 'Plus de résultat...',
+                          subtext: '',
+                          onPress: () {
+                            context.read<SearchbarController>().retrieve(
+                              controller.text,
+                              widget.filter,
+                            );
+                          },
+                        ),
+                  ],
                 );
               }
               if (state is Loading) {
@@ -287,9 +390,14 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
 }
 
 class _AssetElement extends StatelessWidget {
-  const _AssetElement({required this.value, required this.onPress});
+  const _AssetElement({
+    required this.title,
+    required this.subtext,
+    required this.onPress,
+  });
 
-  final AssetModel value;
+  final String title;
+  final String subtext;
   final Function onPress;
 
   @override
@@ -313,8 +421,8 @@ class _AssetElement extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(value.name, style: AppTextStyles.title3),
-                Text(value.ticker, style: AppTextStyles.italic),
+                Text(title, style: AppTextStyles.title3),
+                Text(subtext, style: AppTextStyles.italic),
               ],
             ),
           ],

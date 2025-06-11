@@ -19,3 +19,4 @@ export 'routing/app_router.dart' show AppRouter;
 export 'application/newtwork_info.dart' show NetworkInfo;
 export 'service/auth_session_service.dart' show AuthService;
 export 'service/timer_service.dart' show TimerService;
+export 'application/api_client.dart' show ApiClient;

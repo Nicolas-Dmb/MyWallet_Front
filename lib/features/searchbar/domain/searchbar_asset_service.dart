@@ -3,6 +3,7 @@ import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/features/searchbar/data/searchbar_repository.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
+import 'package:mywallet_mobile/features/searchbar/domain/private_assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
 
 class SearchbarAssetService {
@@ -97,5 +98,36 @@ class SearchbarAssetService {
       }
     }
     return newList;
+  }
+
+  Future<List<PrivateAssetsModel>> getPrivateAssets(
+    PrivateFilterType type,
+  ) async {
+    final result = await _repository.getPrivateAssets(type);
+    return result.fold((failure) => throw failure, (value) => value);
+  }
+
+  List<PrivateAssetsModel> filter(
+    List<PrivateAssetsModel> assets,
+    String input,
+  ) {
+    return assets.where((asset) {
+      if (asset is CashModel) {
+        return _filterCash(asset, input);
+      } else if (asset is RealEstateModel) {
+        return _filterImmo(asset, input);
+      }
+      return false;
+    }).toList();
+  }
+
+  bool _filterCash(CashModel asset, String input) {
+    return asset.account.contains(input) || asset.bank.contains(input);
+  }
+
+  bool _filterImmo(RealEstateModel asset, String input) {
+    return asset.address.contains(input) ||
+        asset.purpose.contains(input) ||
+        asset.type.contains(input);
   }
 }

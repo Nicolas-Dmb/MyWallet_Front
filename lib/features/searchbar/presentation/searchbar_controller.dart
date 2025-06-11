@@ -34,6 +34,12 @@ class SearchbarController extends Cubit<SearchbarState> {
   final SearchbarAssetService _searchbarService;
 
   Future<void> search(String input, AssetFilterType filter) async {
+    if (state is AssetLoaded) {
+      final currentState = state as AssetLoaded;
+      if (currentState.page == 2) {
+        return;
+      }
+    }
     emit(Loading());
     final ownResult = await _getGeneralAssets(input, filter);
     if (ownResult == null) {

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/error/app_error.dart';
 import 'package:mywallet_mobile/features/authentification/data/data_sources/auth_remote_data_source.dart';
 import 'package:mywallet_mobile/features/authentification/data/model/token_model.dart';
@@ -25,7 +26,6 @@ void main() {
     mockHttpClient = MockClient();
     authRemoteDataSource = IAuthRemoteDataSource(mockHttpClient);
   });
-
   group('signup', () {
     final userData = UserSignup(
       username: "PyTestAll",
@@ -46,7 +46,6 @@ void main() {
         ).thenAnswer(
           (_) async => http.Response(fixture('registration_fixture.json'), 201),
         );
-
         final result = await authRemoteDataSource.signup(userData);
 
         verify(
@@ -75,7 +74,7 @@ void main() {
           (_) async =>
               http.Response(fixture('registration_error_fixture.json'), 400),
         );
-        final requestFailure = RequestFailure.getMessage(
+        final requestFailure = RequestFailure.setMessage(
           fixture('registration_error_fixture.json'),
           400,
         );
@@ -140,7 +139,7 @@ void main() {
         ).thenAnswer(
           (_) async => http.Response(fixture('login_error_fixture.json'), 401),
         );
-        final requestFailure = RequestFailure.getMessage(
+        final requestFailure = RequestFailure.setMessage(
           fixture('login_error_fixture.json'),
           401,
         );
@@ -211,7 +210,7 @@ void main() {
           (_) async =>
               http.Response(fixture('refreshToken_error_fixture.json'), 401),
         );
-        final requestFailure = RequestFailure.getMessage(
+        final requestFailure = RequestFailure.setMessage(
           fixture('refreshToken_error_fixture.json'),
           401,
         );
