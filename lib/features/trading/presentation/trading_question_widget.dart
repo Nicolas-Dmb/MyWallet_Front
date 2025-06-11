@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/theme/app_colors.dart';
 import 'package:mywallet_mobile/core/theme/app_fonts.dart';
 import 'package:mywallet_mobile/core/widgets/components/custom_input_form.dart';
-import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
+import 'package:mywallet_mobile/features/searchbar/presentation/fake_searchbar_widget.dart';
 import 'package:mywallet_mobile/features/trading/domain/entities/question_model.dart';
 import 'package:mywallet_mobile/features/trading/presentation/trading_quizz_controller.dart';
 
@@ -210,8 +211,9 @@ class _SearchQuestionState extends State<_SearchQuestion> {
           Text(widget.question.question, style: AppTextStyles.title2),
           Spacer(),
           FakeSearchBarWidget(
-            onPress: (selectedValue) => {value = selectedValue},
+            onPress: (selectedValue) => {value = selectedValue, context.pop()},
             filter: FilterType.fromAssetType(widget.assetType),
+            text: value,
           ),
           Spacer(flex: 2),
           CustomTextButton(

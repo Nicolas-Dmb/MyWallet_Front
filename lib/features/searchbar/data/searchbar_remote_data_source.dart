@@ -3,11 +3,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mywallet_mobile/core/custom_barrel.dart';
 import 'package:mywallet_mobile/core/di.dart';
-import 'package:mywallet_mobile/core/error/app_error.dart';
-import 'package:mywallet_mobile/core/logger/app_logger.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/private_assets_model.dart';
-import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
+import 'package:mywallet_mobile/features/searchbar/searchbar_screen.dart';
 
 class SearchBarRemoteDataSource {
   SearchBarRemoteDataSource(this._client);

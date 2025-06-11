@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/searchbar_asset_service.dart';
-import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
+import 'package:mywallet_mobile/features/searchbar/searchbar_screen.dart';
 
 abstract class SearchbarState {}
 
@@ -30,6 +31,8 @@ class Selected extends SearchbarState {
 
 class SearchbarController extends Cubit<SearchbarState> {
   SearchbarController(this._searchbarService) : super(Initial());
+
+  SearchbarController.inject() : this(di<SearchbarAssetService>());
 
   final SearchbarAssetService _searchbarService;
 

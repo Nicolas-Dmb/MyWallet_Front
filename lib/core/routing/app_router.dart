@@ -8,6 +8,7 @@ import 'package:mywallet_mobile/core/widgets/pages/splash_screen.dart';
 import 'package:mywallet_mobile/features/authentification/auth_barrel.dart';
 import 'package:mywallet_mobile/features/dashboard/dashboard_screen.dart';
 import 'package:mywallet_mobile/features/documentation/documentation_screen.dart';
+import 'package:mywallet_mobile/features/searchbar/searchbar_barrel.dart';
 import 'package:mywallet_mobile/features/settings/Settings_screen.dart';
 import 'package:mywallet_mobile/features/trading/presentation/trading_quizz_widget.dart';
 import 'package:mywallet_mobile/features/trading/presentation/trading_widget.dart';
@@ -127,6 +128,18 @@ class AppRouter {
                   state,
                   context,
                   DocumentationScreen(),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/searchbar',
+              pageBuilder: (context, state) {
+                lastKnownRoute = '/searchbar';
+                final extra = state.extra as SearchBarParams;
+                return Transition.getAnimation(
+                  state,
+                  context,
+                  SearchBarScreen(onPress: extra.onPress, filter: extra.filter),
                 );
               },
             ),

@@ -4,7 +4,7 @@ import 'package:mywallet_mobile/core/di.dart';
 import 'package:mywallet_mobile/features/searchbar/data/searchbar_remote_data_source.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/assets_model.dart';
 import 'package:mywallet_mobile/features/searchbar/domain/private_assets_model.dart';
-import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
+import 'package:mywallet_mobile/features/searchbar/searchbar_screen.dart';
 
 abstract class SearchbarRepository {
   Future<Either<Failure, List<AssetModel>>> getGeneralAssets(

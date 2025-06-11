@@ -1,4 +1,4 @@
-import 'package:mywallet_mobile/features/searchbar/presentation/searchbar_widget.dart';
+import 'package:mywallet_mobile/features/searchbar/searchbar_screen.dart';
 
 enum RemoteType { bourse, crypto }
 
