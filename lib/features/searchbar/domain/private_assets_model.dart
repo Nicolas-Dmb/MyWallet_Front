@@ -1,6 +1,7 @@
 import 'package:mywallet_mobile/features/searchbar/searchbar_screen.dart';
 
-class PrivateAssetsModel {
+abstract class PrivateAssetsModel {
+  String get id;
   static PrivateAssetsModel fromJson(
     Map<String, dynamic> json,
     PrivateFilterType type,
@@ -21,7 +22,7 @@ class RealEstateModel extends PrivateAssetsModel {
     required this.type,
     required this.purpose,
   });
-
+  @override
   final String id;
   final String address;
   final String type;
@@ -44,6 +45,7 @@ class CashModel extends PrivateAssetsModel {
     required this.account,
     required this.amount,
   });
+  @override
   final String id;
   final String bank;
   final String account;

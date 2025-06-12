@@ -18,11 +18,23 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class SearchBarWidgetState extends State<SearchBarWidget> {
-  SearchController controller = SearchController();
+  late SearchController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = SearchController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && controller.isAttached) {
+        controller.openView();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,9 +49,6 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
           padding: const WidgetStatePropertyAll<EdgeInsets>(
             EdgeInsets.symmetric(horizontal: 16.0),
           ),
-          onTap: () {
-            controller.openView();
-          },
           onChanged: (input) {
             context.read<SearchbarController>().search(input, widget.filter);
           },
@@ -60,10 +69,11 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
                       itemCount: state.assets.length,
                       itemBuilder: (BuildContext context, int index) {
                         return AssetElement(
+                          key: ObjectKey(state.assets[index].id),
                           title: state.assets[index].name,
                           subtext: state.assets[index].ticker,
                           onPress: () {
-                            widget.onPress;
+                            widget.onPress();
                             context.read<SearchbarController>().select(
                               state.assets[index],
                             );
@@ -133,6 +143,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
 
 class AssetElement extends StatelessWidget {
   const AssetElement({
+    super.key,
     required this.title,
     required this.subtext,
     required this.onPress,
@@ -145,7 +156,7 @@ class AssetElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onPress,
+      onTap: () => onPress(),
       child: Container(
         height: 100,
         decoration: BoxDecoration(

@@ -21,21 +21,35 @@ class PrivateSearchBarWidget extends StatefulWidget {
 }
 
 class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
-  SearchController controller = SearchController();
+  late SearchController controller;
 
   @override
   void initState() {
     super.initState();
-    controller.openView();
+    controller = SearchController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && controller.isAttached) {
+        controller.openView();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   void setControllerText(PrivateAssetsModel asset) {
+    if (!mounted) return;
     if (asset is RealEstateModel) {
       controller.text = asset.address;
     } else if (asset is CashModel) {
       controller.text = "${asset.bank} - ${asset.account} - ${asset.amount}";
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   String extractTitle(PrivateAssetsModel asset) {
@@ -55,7 +69,7 @@ class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
   }
 
   @override
-  Widget build(BuildContext build) {
+  Widget build(BuildContext context) {
     return SearchAnchor(
       builder: (BuildContext context, SearchController controller) {
         return SearchBar(
@@ -66,7 +80,6 @@ class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
             EdgeInsets.symmetric(horizontal: 16.0),
           ),
           onChanged: (input) {
-            controller.openView();
             context.read<PrivateSearchbarController>().search(input);
           },
           leading: const Icon(Icons.search, color: AppColors.interactive3),
@@ -78,15 +91,21 @@ class PrivateSearchBarWidgetState extends State<PrivateSearchBarWidget> {
             builder: (context, state) {
               if (state is PrivateSearchbarLoaded) {
                 return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(bottom: 20),
-                  itemCount: state.assets.length,
+                  itemCount: state.assetsFiltered.length,
                   itemBuilder: (BuildContext context, int index) {
                     return AssetElement(
+                      key: ValueKey(
+                        'private_asset_${state.assetsFiltered[index].id}',
+                      ),
                       title: extractTitle(state.assetsFiltered[index]),
                       subtext: extractSubtext(state.assetsFiltered[index]),
                       onPress: () {
-                        widget.onPress;
+                        widget.onPress();
                         setControllerText(state.assetsFiltered[index]);
+                        controller.closeView(null);
                       },
                     );
                   },

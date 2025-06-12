@@ -6,6 +6,7 @@ abstract class AssetModel {
   RemoteType get remoteType;
   String get name;
   String get ticker;
+  String get id;
   static AssetModel fromJson(Map<String, dynamic> json, AssetFilterType type) {
     switch (type) {
       case AssetFilterType.bourse:
@@ -26,6 +27,7 @@ class CryptoModel extends AssetModel {
     this.error,
     required this.remoteType,
   });
+  @override
   final String id;
   @override
   final String ticker;
@@ -62,7 +64,7 @@ class StockModel extends AssetModel {
     this.error,
     required this.remoteType,
   });
-
+  @override
   final String id;
   @override
   final String ticker;

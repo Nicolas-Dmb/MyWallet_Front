@@ -54,13 +54,16 @@ class SearchBarScreen extends StatelessWidget {
   final FilterType filter;
   @override
   Widget build(BuildContext context) {
+    final keyPrefix = '${filter.runtimeType}_${filter.toString()}';
     if (AssetFilterType.isAssetFilterType(filter)) {
       return SearchBarProviderWidget(
+        key: ObjectKey('asset_provider_$keyPrefix'),
         onPress: onPress,
         filter: AssetFilterType.fromFilterType(filter),
       );
     } else {
       return PrivateSearchBarProviderWidget(
+        key: ObjectKey('private_provider_$keyPrefix'),
         onPress: onPress,
         filter: PrivateFilterType.fromFilterType(filter),
       );
@@ -80,9 +83,13 @@ class SearchBarProviderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext build) {
-    return BlocProvider(
+    return BlocProvider<SearchbarController>(
       create: (context) => SearchbarController.inject(),
-      child: SearchBarWidget(onPress: onPress, filter: filter),
+      child: SearchBarWidget(
+        key: ValueKey('searchbar_widget_${filter.toString()}'),
+        onPress: onPress,
+        filter: filter,
+      ),
     );
   }
 }
@@ -99,9 +106,13 @@ class PrivateSearchBarProviderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<PrivateSearchbarController>(
       create: (context) => PrivateSearchbarController.inject(filter),
-      child: PrivateSearchBarWidget(onPress: onPress, filter: filter),
+      child: PrivateSearchBarWidget(
+        key: ValueKey('private_searchbar_widget_${filter.toString()}'),
+        onPress: onPress,
+        filter: filter,
+      ),
     );
   }
 }
